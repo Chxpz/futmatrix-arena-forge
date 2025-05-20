@@ -1,12 +1,36 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useEffect } from 'react';
+import NavBar from '../components/NavBar';
+import HeroSection from '../components/HeroSection';
+import FeaturesSection from '../components/FeaturesSection';
+import FeatureDetail from '../components/FeatureDetail';
+import PricingSection from '../components/PricingSection';
+import CtaSection from '../components/CtaSection';
+import Footer from '../components/Footer';
+import ScrollReveal from '../components/ScrollReveal';
 
 const Index = () => {
+  useEffect(() => {
+    // Update page title
+    document.title = 'Futmatrix - Elite Platform for EAFC25 Players';
+    
+    // Update description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Futmatrix is the elite platform for EAFC25 players chasing performance, money and visibility.');
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="flex flex-col min-h-screen bg-matrix-darker overflow-hidden">
+      <ScrollReveal />
+      <NavBar />
+      <HeroSection />
+      <FeaturesSection />
+      <FeatureDetail />
+      <PricingSection />
+      <CtaSection />
+      <Footer />
     </div>
   );
 };
