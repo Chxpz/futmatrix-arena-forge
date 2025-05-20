@@ -27,11 +27,8 @@ const NavBar = () => {
           <img 
             src="/lovable-uploads/43b4aae5-404e-48b7-9d0b-f05717d5161a.png" 
             alt="Futmatrix" 
-            className="h-10 mr-2" 
+            className="h-14 w-auto hover:opacity-90 transition-opacity" 
           />
-          <span className="text-lg font-bold text-white">
-            <span className="glow-text text-neon-green">FUT</span>MATRIX
-          </span>
         </div>
         
         <div className="hidden md:flex items-center space-x-6">

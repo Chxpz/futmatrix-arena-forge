@@ -4,15 +4,12 @@ const Footer = () => {
     <footer className="py-12 bg-matrix-darker relative">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-6 md:mb-0 flex items-center">
+          <div className="mb-6 md:mb-0">
             <img 
               src="/lovable-uploads/43b4aae5-404e-48b7-9d0b-f05717d5161a.png" 
               alt="Futmatrix" 
-              className="h-8 mr-2" 
+              className="h-10 w-auto" 
             />
-            <span className="text-lg font-bold text-white">
-              <span className="glow-text text-neon-green">FUT</span>MATRIX
-            </span>
           </div>
           
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
