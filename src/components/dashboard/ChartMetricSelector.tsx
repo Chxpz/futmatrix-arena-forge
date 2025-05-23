@@ -5,19 +5,22 @@ type ChartMetricSelectorProps = {
   selectedMetric: string;
   onMetricChange: (value: string) => void;
   metricOptions: Array<{ value: string; label: string }>;
+  label?: string;
 };
 
 const ChartMetricSelector = ({
   selectedMetric,
   onMetricChange,
   metricOptions,
+  label,
 }: ChartMetricSelectorProps) => {
   if (!metricOptions || metricOptions.length === 0) {
     return null;
   }
   
   return (
-    <div className="flex justify-end">
+    <div className="flex items-center gap-2 justify-end">
+      {label && <span className="text-sm text-gray-400">{label}:</span>}
       <Select
         value={selectedMetric}
         onValueChange={(value) => {

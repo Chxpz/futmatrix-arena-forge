@@ -8,6 +8,7 @@ type TrendLineChartProps = {
   metricColor: string;
   isEfficiency: boolean;
   height: number;
+  showMovingAverage?: boolean;
 };
 
 const TrendLineChart = ({
@@ -16,6 +17,7 @@ const TrendLineChart = ({
   metricColor,
   isEfficiency,
   height,
+  showMovingAverage = false,
 }: TrendLineChartProps) => {
   // Validate the data and metric before rendering
   const hasValidData = Array.isArray(data) && data.length > 0 && 
@@ -29,10 +31,27 @@ const TrendLineChart = ({
     );
   }
   
+  // Calculate 3-match moving average if needed
+  const dataWithMovingAvg = showMovingAverage ? data.map((item, index, arr) => {
+    if (index >= 2) {
+      const movingAvg = (
+        arr[index][selectedMetric] + 
+        arr[index - 1][selectedMetric] + 
+        arr[index - 2][selectedMetric]
+      ) / 3;
+      
+      return {
+        ...item,
+        [`${selectedMetric}_avg`]: parseFloat(movingAvg.toFixed(1))
+      };
+    }
+    return item;
+  }) : data;
+  
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart
-        data={data}
+        data={dataWithMovingAvg}
         margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" stroke="#333333" />
@@ -56,6 +75,7 @@ const TrendLineChart = ({
         />
         <ChartLegend />
         
+        {/* Primary metric line */}
         <Line
           type="monotone"
           dataKey={selectedMetric}
@@ -66,6 +86,22 @@ const TrendLineChart = ({
           animationDuration={500}
           isAnimationActive={true}
         />
+        
+        {/* Moving average line if enabled */}
+        {showMovingAverage && index > 1 && (
+          <Line
+            type="monotone"
+            dataKey={`${selectedMetric}_avg`}
+            name="3-Match Avg"
+            stroke="#FFFFFF"
+            strokeWidth={2}
+            strokeDasharray="5 5"
+            dot={false}
+            activeDot={false}
+            animationDuration={500}
+            isAnimationActive={true}
+          />
+        )}
       </LineChart>
     </ResponsiveContainer>
   );

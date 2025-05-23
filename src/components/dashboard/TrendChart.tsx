@@ -18,6 +18,8 @@ const TrendChart = ({ type, timeFilter, height }: TrendChartProps) => {
   const [selectedMetric, setSelectedMetric] = useState<string>(
     isEfficiency ? 'overallPerformance' : 'goalsScored'
   );
+  
+  const [showMovingAverage, setShowMovingAverage] = useState<boolean>(isEfficiency);
 
   useEffect(() => {
     // Ensure we have a valid selected metric when the type changes
@@ -27,8 +29,11 @@ const TrendChart = ({ type, timeFilter, height }: TrendChartProps) => {
       setSelectedMetric('goalsScored');
     }
 
+    // Set moving average default based on chart type
+    setShowMovingAverage(isEfficiency);
+
     console.log(`TrendChart mounted with ${data?.length || 0} data points`);
-  }, [data, type, selectedMetric]);
+  }, [data, type, selectedMetric, isEfficiency]);
 
   // Get the color for the selected metric
   const metricColor = config[selectedMetric as keyof typeof config]?.color || '#FFFFFF';
@@ -40,11 +45,26 @@ const TrendChart = ({ type, timeFilter, height }: TrendChartProps) => {
 
   return (
     <div className="space-y-4 h-full">
-      <ChartMetricSelector
-        selectedMetric={selectedMetric}
-        onMetricChange={handleMetricChange}
-        metricOptions={metricOptions}
-      />
+      <div className="flex justify-between items-center">
+        <div className="flex items-center">
+          {isEfficiency && (
+            <label className="flex items-center text-sm cursor-pointer">
+              <input
+                type="checkbox"
+                className="mr-2 h-4 w-4 rounded border-gray-300 text-neon-green"
+                checked={showMovingAverage}
+                onChange={(e) => setShowMovingAverage(e.target.checked)}
+              />
+              Show 3-Match Moving Average
+            </label>
+          )}
+        </div>
+        <ChartMetricSelector
+          selectedMetric={selectedMetric}
+          onMetricChange={handleMetricChange}
+          metricOptions={metricOptions}
+        />
+      </div>
       
       <div className="h-[250px]">
         <ChartContainer className="h-full w-full" config={config}>
@@ -54,6 +74,7 @@ const TrendChart = ({ type, timeFilter, height }: TrendChartProps) => {
             metricColor={metricColor}
             isEfficiency={isEfficiency}
             height={height}
+            showMovingAverage={showMovingAverage}
           />
         </ChartContainer>
       </div>

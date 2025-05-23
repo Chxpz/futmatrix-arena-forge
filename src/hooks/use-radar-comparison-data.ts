@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 
-// Mock data for efficiency comparison
+// More comprehensive mock data for efficiency comparison
 const efficiencyComparisonData = [
   { subject: 'Possession', recent: 74, average: 68 },
   { subject: 'Shots', recent: 63, average: 56 },
@@ -10,13 +10,14 @@ const efficiencyComparisonData = [
   { subject: 'Overall', recent: 72, average: 66 }
 ];
 
-// Mock data for match metrics comparison
+// More comprehensive mock data for match metrics comparison
 const matchMetricsComparisonData = [
   { subject: 'Goals', recent: 2, average: 1.7 },
   { subject: 'Possession %', recent: 62, average: 55 },
   { subject: 'Shots', recent: 13, average: 10 },
   { subject: 'Pass Accuracy', recent: 86, average: 83 },
-  { subject: 'Tackles', recent: 16, average: 14 }
+  { subject: 'Tackles', recent: 16, average: 14 },
+  { subject: 'Passes', recent: 502, average: 460 }
 ];
 
 export const chartConfig = {
@@ -31,11 +32,21 @@ export const useRadarComparisonData = (type: RadarChartType, timeFilter: string)
     type === 'efficiency' ? efficiencyComparisonData : matchMetricsComparisonData
   );
   
+  const [isLoading, setIsLoading] = useState(false);
+  
   // In real app, would fetch data based on timeFilter and type
   useEffect(() => {
     console.log("Loading radar data for", type, "with filter", timeFilter);
-    setData(type === 'efficiency' ? efficiencyComparisonData : matchMetricsComparisonData);
+    setIsLoading(true);
+    
+    // Simulate API call delay
+    const timer = setTimeout(() => {
+      setData(type === 'efficiency' ? efficiencyComparisonData : matchMetricsComparisonData);
+      setIsLoading(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, [type, timeFilter]);
   
-  return { data, config: chartConfig };
+  return { data, config: chartConfig, isLoading };
 };

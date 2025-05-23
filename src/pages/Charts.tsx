@@ -5,7 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import TrendChart from '@/components/dashboard/TrendChart';
 import RadarComparisonChart from '@/components/dashboard/RadarComparisonChart';
+import MatchHistoryTable from '@/components/dashboard/MatchHistoryTable';
+import StatsSummary from '@/components/dashboard/StatsSummary';
+import InsightsPanel from '@/components/dashboard/InsightsPanel';
 import { toast } from 'sonner';
+import { ChartArea, ChartBar, ChartLine, Radar } from 'lucide-react';
 
 // Filter options
 type TimeFilter = 'last5' | 'lastMonth' | 'last3Months' | 'allTime';
@@ -21,7 +25,7 @@ const Charts = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight">Performance Charts</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Performance Analytics</h1>
         
         {/* Time filter buttons */}
         <div className="flex flex-wrap gap-2">
@@ -60,11 +64,28 @@ const Charts = () => {
         </div>
       </div>
 
+      {/* Player Overview Section */}
+      <StatsSummary timeFilter={timeFilter} />
+
       {/* Tabs for different metric views */}
       <Tabs defaultValue="trends" className="w-full">
         <TabsList className="bg-matrix-darker border border-matrix-gray/30">
-          <TabsTrigger value="trends">Performance Trends</TabsTrigger>
-          <TabsTrigger value="comparison">Comparative Analysis</TabsTrigger>
+          <TabsTrigger value="trends" className="flex items-center gap-1">
+            <ChartLine className="h-4 w-4" />
+            Performance Trends
+          </TabsTrigger>
+          <TabsTrigger value="comparison" className="flex items-center gap-1">
+            <Radar className="h-4 w-4" />
+            Comparative Analysis
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex items-center gap-1">
+            <ChartBar className="h-4 w-4" />
+            Match History
+          </TabsTrigger>
+          <TabsTrigger value="insights" className="flex items-center gap-1">
+            <ChartArea className="h-4 w-4" />
+            Insights & Tips
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="trends" className="mt-4">
@@ -133,6 +154,22 @@ const Charts = () => {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="history" className="mt-4">
+          <Card className="bg-matrix-dark border-matrix-gray/30">
+            <CardHeader>
+              <CardTitle>Match History</CardTitle>
+              <CardDescription>Review past match performances</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <MatchHistoryTable timeFilter={timeFilter} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="insights" className="mt-4">
+          <InsightsPanel timeFilter={timeFilter} />
         </TabsContent>
       </Tabs>
     </div>
