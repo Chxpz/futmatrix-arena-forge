@@ -5,7 +5,8 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
-import { UploadCloud, Image, X, Check } from 'lucide-react';
+import { UploadCloud, Image, X, Check, Loader2 } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 
 // This would come from user authentication context
 const PLAN_TYPE = 'basic'; // or 'advanced'
@@ -14,6 +15,7 @@ const Upload = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   
   const maxUploads = PLAN_TYPE === 'basic' ? 1 : 5;
   
@@ -59,19 +61,53 @@ const Upload = () => {
     }
     
     setIsUploading(true);
+    setUploadProgress(0);
     
     try {
-      // Simulate API call - replace with your backend logic
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const apiUrl = import.meta.env.VITE_MATCH_UPLOAD_API_URL || '/api/matches/upload';
       
+      // Create FormData to send files
+      const formData = new FormData();
+      files.forEach((file, index) => {
+        formData.append(`match_image_${index}`, file);
+      });
+      
+      // Simulate progress updates
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          const newProgress = prev + Math.random() * 15;
+          return newProgress >= 90 ? 90 : newProgress;
+        });
+      }, 500);
+      
+      // Send to backend
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
+      if (!response.ok) {
+        throw new Error(`Upload failed with status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // Success feedback
       toast({
         title: "Upload successful",
-        description: `${files.length} ${files.length === 1 ? 'image has' : 'images have'} been uploaded successfully`,
+        description: "Metrix has registered your metrics",
       });
       
       // Clear form after successful upload
-      setFiles([]);
-      setPreviews([]);
+      setTimeout(() => {
+        setFiles([]);
+        setPreviews([]);
+        setUploadProgress(0);
+      }, 1500);
+      
     } catch (error) {
       console.error("Upload error:", error);
       toast({
@@ -80,7 +116,9 @@ const Upload = () => {
         variant: "destructive",
       });
     } finally {
-      setIsUploading(false);
+      setTimeout(() => {
+        setIsUploading(false);
+      }, 1000);
     }
   };
   
@@ -163,6 +201,19 @@ const Upload = () => {
                     ))}
                   </div>
                   
+                  {isUploading && (
+                    <div className="mt-4 space-y-3">
+                      <div className="flex justify-between text-xs mb-1">
+                        <span>Uploading and processing...</span>
+                        <span>{Math.round(uploadProgress)}%</span>
+                      </div>
+                      <Progress value={uploadProgress} className="h-2 bg-matrix-gray/30" />
+                      <p className="text-xs text-gray-400 text-center">
+                        Please wait while we analyze your match statistics (3-5 seconds)
+                      </p>
+                    </div>
+                  )}
+                  
                   <Button
                     onClick={handleSubmit}
                     className="w-full mt-4 bg-neon-green text-black hover:bg-neon-green/90"
@@ -170,8 +221,8 @@ const Upload = () => {
                   >
                     {isUploading ? (
                       <>
-                        <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
-                        Uploading...
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Processing...
                       </>
                     ) : (
                       <>

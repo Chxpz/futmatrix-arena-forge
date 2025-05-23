@@ -44,6 +44,7 @@ Set up the following environment variables in your Supabase project's environmen
 ```
 VITE_SUPABASE_URL=https://[YOUR-SUPABASE-PROJECT-ID].supabase.co
 VITE_SUPABASE_ANON_KEY=[YOUR-SUPABASE-ANON-KEY]
+VITE_MATCH_UPLOAD_API_URL=https://api.futmatrix.com/api/matches/upload
 ```
 
 You can add these environment variables through the Supabase integration in Lovable:
@@ -71,6 +72,43 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 3. Click "Sign up with Google"
 4. Complete Google's authentication flow
 5. You should be redirected to the dashboard upon successful authentication
+
+## API Endpoints
+
+### Match Image Upload API
+
+**Endpoint**: `POST /api/matches/upload` (configured via `VITE_MATCH_UPLOAD_API_URL` environment variable)
+
+**Description**: Uploads match images for AI analysis and metric extraction
+
+**Authentication**: Requires valid user authentication token
+
+**Request Format**:
+- Content-Type: `multipart/form-data`
+- Body: One or more image files with form field names `match_image_0`, `match_image_1`, etc.
+
+**Response Format**:
+```json
+{
+  "success": true,
+  "message": "Match images processed successfully",
+  "data": {
+    "matchId": "uuid-of-processed-match",
+    "metrics": {
+      "possessionPercentage": 56,
+      "shots": 12,
+      "shotsOnTarget": 8,
+      /* Additional metrics */
+    }
+  }
+}
+```
+
+**Error Responses**:
+- 400: Invalid request format or missing images
+- 401: Unauthorized access (missing or invalid token)
+- 413: Payload too large (images exceed size limit)
+- 500: Server processing error
 
 ## How can I edit this code?
 
