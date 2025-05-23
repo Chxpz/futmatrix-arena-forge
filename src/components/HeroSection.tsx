@@ -1,5 +1,6 @@
 
 import { useEffect, useRef } from 'react';
+import AICoach3D from './AICoach3D';
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -92,6 +93,10 @@ const HeroSection = () => {
                 </div>
                 
                 <div className="text-xs text-gray-400 text-right">Next match in: <span className="text-neon-green">14:26</span></div>
+              </div>
+
+              <div className="mt-8 h-96 w-full">
+                <AICoach3D />
               </div>
             </div>
           </div>
