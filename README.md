@@ -48,6 +48,7 @@ src/
 │   ├── Charts.tsx         # Detailed charts view
 │   ├── Upload.tsx         # Match image upload
 │   ├── Profile.tsx        # User profile management
+│   ├── Rivalizer.tsx      # Player matchmaking system
 │   └── [other pages]
 └── layouts/
     └── DashboardLayout.tsx # Common dashboard layout
@@ -92,6 +93,43 @@ interface UserProfile {
   email: string;
   planType: 'free' | 'basic' | 'premium';
   maxUploads: number;        // Based on plan: free=1, basic=3, premium=5
+}
+```
+
+#### Rivalizer Data Structures
+
+##### Match Proposal
+```typescript
+interface MatchProposal {
+  id: string;
+  opponent: {
+    name: string;
+    avatar: string;          // URL to avatar image or empty string
+    rank: string;            // Format: "#123"
+    winRate: number;         // Percentage (0-100)
+  };
+  proposedTime: string;      // Format: "Today, 8:30 PM" or "Tomorrow, 7:00 PM"
+  expiresIn: string;         // Format: "3 hours", "12 hours"
+  status?: 'pending' | 'accepted' | 'declined' | 'expired';
+}
+```
+
+##### Scheduled Match
+```typescript
+interface ScheduledMatch {
+  id: string;
+  opponent: {
+    name: string;
+    avatar: string;          // URL to avatar image or empty string
+    rank: string;            // Format: "#123"
+  };
+  date: Date;                // Match date
+  time: string;              // Format: "8:30 PM"
+  status: 'upcoming' | 'completed';
+  result?: {                 // Only present if status is 'completed'
+    playerScore: number;
+    opponentScore: number;
+  };
 }
 ```
 
@@ -174,6 +212,100 @@ interface UserProfile {
 }
 ```
 
+#### 4. Rivalizer - Match Proposals
+
+##### Get Pending Match Proposals
+**Endpoint**: `GET /api/rivalizer/proposals`
+
+**Expected Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "proposals": [MatchProposal[]],
+    "totalCount": number
+  }
+}
+```
+
+##### Accept Match Proposal
+**Endpoint**: `POST /api/rivalizer/proposals/{proposalId}/accept`
+
+**Expected Response**:
+```json
+{
+  "success": true,
+  "message": "Match proposal accepted",
+  "data": {
+    "scheduledMatch": {
+      "id": "match-uuid",
+      "opponent": {
+        "name": "Opponent Name",
+        "avatar": "avatar-url",
+        "rank": "#123"
+      },
+      "date": "2024-05-24",
+      "time": "8:30 PM",
+      "status": "upcoming"
+    }
+  }
+}
+```
+
+##### Decline Match Proposal
+**Endpoint**: `POST /api/rivalizer/proposals/{proposalId}/decline`
+
+**Expected Response**:
+```json
+{
+  "success": true,
+  "message": "Match proposal declined"
+}
+```
+
+#### 5. Rivalizer - Scheduled Matches
+
+##### Get Scheduled Matches
+**Endpoint**: `GET /api/rivalizer/matches`
+
+**Query Parameters**:
+- `status`: "upcoming" | "completed" | "all" (default: "all")
+- `startDate`: ISO date string (optional)
+- `endDate`: ISO date string (optional)
+
+**Expected Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "matches": [ScheduledMatch[]],
+    "totalCount": number
+  }
+}
+```
+
+##### Update Match Results
+**Endpoint**: `PUT /api/rivalizer/matches/{matchId}/results`
+
+**Request Body**:
+```json
+{
+  "playerScore": number,
+  "opponentScore": number
+}
+```
+
+**Expected Response**:
+```json
+{
+  "success": true,
+  "message": "Match results updated",
+  "data": {
+    "updatedMatch": ScheduledMatch
+  }
+}
+```
+
 ### Frontend Data Processing
 
 #### Chart Data Transformations
@@ -241,6 +373,8 @@ The backend should be configurable via environment variables for:
 - `RATE_LIMITED`: User exceeded plan limits
 - `PROCESSING_ERROR`: AI analysis failed
 - `FILE_TOO_LARGE`: Upload exceeds size limits
+- `MATCH_PROPOSAL_EXPIRED`: Attempt to accept an expired match proposal
+- `MATCH_ALREADY_COMPLETED`: Attempt to update results of a completed match
 
 ## Performance Requirements
 
@@ -249,12 +383,14 @@ The backend should be configurable via environment variables for:
 - Image processing completion: 3-5 seconds
 - Match history retrieval: < 1 second
 - Profile data: < 500ms
+- Match proposals retrieval: < 500ms
+- Match scheduling operations: < 1 second
 
 ### Rate Limiting
 Implement rate limiting based on user plans:
-- **Free**: 1 upload/day, 100 API calls/hour
-- **Basic**: 3 uploads/day, 500 API calls/hour  
-- **Premium**: 5 uploads/day, 1000 API calls/hour
+- **Free**: 1 upload/day, 100 API calls/hour, max 3 pending match proposals
+- **Basic**: 3 uploads/day, 500 API calls/hour, max 5 pending match proposals
+- **Premium**: 5 uploads/day, 1000 API calls/hour, max 10 pending match proposals
 
 ## Database Schema Recommendations
 
@@ -264,11 +400,48 @@ Implement rate limiting based on user plans:
 3. **match_images**: Uploaded image metadata
 4. **user_sessions**: Authentication sessions
 5. **usage_tracking**: API usage for rate limiting
+6. **match_proposals**: Rivalizer match proposals
+7. **scheduled_matches**: Confirmed and scheduled matches
+8. **player_stats**: Player performance statistics for matchmaking
 
 ### Key Relationships
 - Users have many Matches
 - Matches have many Match Images
 - Users have Usage Tracking records
+- Users can have many Match Proposals (both sent and received)
+- Users can have many Scheduled Matches
+- Users have one Player Stats record
+
+## Rivalizer Feature
+
+### Feature Overview
+The Rivalizer system enables players to:
+1. Receive match proposals from other players
+2. Accept or decline match proposals
+3. View a calendar of upcoming and past matches
+4. Record match results
+5. Track their performance against other players
+
+### Match Proposal Workflow
+1. Player receives match proposals in the Rivalizer dashboard
+2. Each proposal shows opponent details, proposed time, and expiration
+3. Player can accept or decline the proposal
+4. On acceptance, a scheduled match is created in both players' calendars
+5. On decline, the proposal is removed from the system
+
+### Match Calendar Features
+1. Visual calendar showing all scheduled matches
+2. Date-based filtering of matches
+3. Display of match details for selected dates
+4. Differentiation between upcoming and completed matches
+5. Display of match results for completed matches
+
+### Matchmaking System (Future Feature)
+1. Player ranking system based on match results
+2. Skill-based matchmaking for fair competition
+3. Geographic proximity considerations for in-person matches
+4. Time zone matching for online matches
+5. Automated match proposals based on player availability
 
 ## AI Processing Pipeline
 
@@ -318,6 +491,8 @@ For smooth backend integration, ensure:
 - [ ] CORS configuration for frontend domains
 - [ ] SSL/HTTPS configuration
 - [ ] Monitoring and logging setup
+- [ ] Rivalizer match proposal system implementation
+- [ ] Match calendar and scheduling system implementation
 
 ## Support & Documentation
 
@@ -326,6 +501,7 @@ For smooth backend integration, ensure:
 - Charts view: `/charts` 
 - Upload interface: `/upload`
 - User profile: `/profile`
+- Rivalizer interface: `/rivalizer`
 
 ### Key Hook Functions
 - `useTrendChartData()`: Manages chart data and filtering
@@ -333,3 +509,49 @@ For smooth backend integration, ensure:
 - `useUploadImages()`: Manages file upload process
 
 For questions about frontend integration, refer to the component documentation in the respective TypeScript files.
+
+```
+
+### Rivalizer Component Implementation
+
+The Rivalizer page (`src/pages/Rivalizer.tsx`) is a comprehensive matchmaking system with the following key features:
+
+1. **Match Proposals Section**:
+   - Displays pending match proposals from other players
+   - Shows opponent details (name, avatar, rank, win rate)
+   - Shows proposed match time and expiration time
+   - Provides accept/decline functionality
+
+2. **Match Calendar Section**:
+   - Visual calendar showing scheduled matches
+   - Date selection to view matches on specific days
+   - Displays upcoming and completed matches
+   - Shows match results for completed matches
+
+3. **Match Details Dialog**:
+   - Detailed view of match proposals
+   - Opponent information and statistics
+   - Accept/decline buttons with confirmation
+
+When integrating with the backend, the Rivalizer component expects the following data flows:
+
+1. **Get Match Proposals**:
+   - Fetch pending match proposals on page load
+   - Update proposals in real-time when changes occur
+
+2. **Accept/Decline Proposals**:
+   - Send acceptance/rejection to the backend
+   - Update the UI based on response
+   - Display toast notifications for confirmation
+
+3. **Calendar Integration**:
+   - Fetch scheduled matches for calendar display
+   - Support date-based filtering
+   - Update match status and results
+
+4. **Real-time Updates**:
+   - Update proposals when they expire
+   - Notify users of new match proposals
+   - Update match results in real-time
+
+The current implementation uses mock data and local state management, which should be replaced with API calls to the endpoints described in the API section.
