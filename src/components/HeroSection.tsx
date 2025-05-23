@@ -1,5 +1,6 @@
 
 import { useEffect, useRef } from 'react';
+import AIAgent3D from './AIAgent3D';
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -51,48 +52,11 @@ const HeroSection = () => {
           </div>
           
           <div className="lg:w-1/2 reveal">
-            <div className="relative">
+            <div className="relative h-[500px] w-full">
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-neon-green/20 rounded-full filter blur-3xl"></div>
               <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-neon-blue/10 rounded-full filter blur-3xl"></div>
               
-              <div className="hud-panel p-6 animate-float">
-                <div className="text-xs text-neon-green/80 uppercase mb-2 flex justify-between">
-                  <span>Performance Analytics</span>
-                  <span className="text-2xs text-gray-500">LIVE DATA</span>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="bg-matrix-dark/60 p-3 rounded border border-matrix-gray">
-                    <div className="text-2xs text-gray-400 mb-1">WIN RATE</div>
-                    <div className="text-xl font-bold text-white">78<span className="text-neon-green">%</span></div>
-                  </div>
-                  <div className="bg-matrix-dark/60 p-3 rounded border border-matrix-gray">
-                    <div className="text-2xs text-gray-400 mb-1">MATCHES</div>
-                    <div className="text-xl font-bold text-white">156</div>
-                  </div>
-                  <div className="bg-matrix-dark/60 p-3 rounded border border-matrix-gray">
-                    <div className="text-2xs text-gray-400 mb-1">RANK</div>
-                    <div className="text-xl font-bold text-neon-blue">#231</div>
-                  </div>
-                  <div className="bg-matrix-dark/60 p-3 rounded border border-matrix-gray">
-                    <div className="text-2xs text-gray-400 mb-1">EARNINGS</div>
-                    <div className="text-xl font-bold text-neon-yellow">$147</div>
-                  </div>
-                </div>
-                
-                <div className="bg-matrix-dark/40 p-3 rounded border border-matrix-gray mb-4">
-                  <div className="text-2xs text-gray-400 mb-2">LATEST MATCH RESULTS</div>
-                  <div className="flex space-x-1">
-                    <div className="h-1 flex-1 bg-neon-green rounded"></div>
-                    <div className="h-1 flex-1 bg-neon-green rounded"></div>
-                    <div className="h-1 flex-1 bg-red-500 rounded"></div>
-                    <div className="h-1 flex-1 bg-neon-green rounded"></div>
-                    <div className="h-1 flex-1 bg-neon-green rounded"></div>
-                  </div>
-                </div>
-                
-                <div className="text-xs text-gray-400 text-right">Next match in: <span className="text-neon-green">14:26</span></div>
-              </div>
+              <AIAgent3D />
             </div>
           </div>
         </div>
