@@ -1,6 +1,5 @@
 
 import { useEffect, useRef } from 'react';
-import AIAgent3D from './AIAgent3D';
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -53,10 +52,7 @@ const HeroSection = () => {
           
           <div className="lg:w-1/2 reveal">
             <div className="relative h-[500px] w-full">
-              <div className="absolute -top-10 -left-10 w-40 h-40 bg-neon-green/20 rounded-full filter blur-3xl"></div>
-              <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-neon-blue/10 rounded-full filter blur-3xl"></div>
-              
-              <AIAgent3D />
+              {/* Space reserved for future video content */}
             </div>
           </div>
         </div>
