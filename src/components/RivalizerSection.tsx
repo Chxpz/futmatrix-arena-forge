@@ -36,17 +36,18 @@ const RivalizerSection = () => {
           {/* Left side - Content */}
           <div className="lg:w-1/2 space-y-8 reveal">
             <div className="inline-block py-2 px-4 rounded-full bg-neon-green/20 border border-neon-green/40 text-sm text-neon-green mb-6 animate-glow-pulse">
-              <span className="mr-2">⚔️</span> AI RIVALIZER MODULE
+              <span className="mr-2">🤖</span> MEET THE RIVALIZER AI
             </div>
             
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-              <span className="glow-text text-neon-green">Dominate</span> Your<br/>
-              Competition & <span className="text-neon-green">Earn Big</span>
+              Your <span className="glow-text text-neon-green">AI Matchmaker</span><br/>
+              for <span className="text-neon-green">Elite Competition</span>
             </h2>
             
             <p className="text-gray-300 text-xl max-w-lg leading-relaxed">
-              Turn your skills into <span className="text-neon-green font-semibold">cold hard cash</span>. Challenge elite players, 
-              climb the ranks, and prove you're the best while earning real money through competitive matches.
+              Meet the <span className="text-neon-green font-semibold">Rivalizer</span> - our advanced AI agent that creates perfect matches, 
+              manages betting pools, and ensures you maximize your <span className="text-neon-green font-semibold">earning potential</span> 
+              against players of your skill level.
             </p>
             
             {/* Stats */}
@@ -61,7 +62,7 @@ const RivalizerSection = () => {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-neon-green">95%</div>
-                <div className="text-sm text-gray-400">Payout Rate</div>
+                <div className="text-sm text-gray-400">Fair Matches</div>
               </div>
             </div>
             
@@ -71,25 +72,25 @@ const RivalizerSection = () => {
                 <div className="rounded-full bg-neon-green/20 p-2 border border-neon-green/30">
                   <Trophy className="h-4 w-4 text-neon-green" />
                 </div>
-                <span className="text-gray-300">Ranked competitive matches with real stakes</span>
+                <span className="text-gray-300">AI-powered skill-based matchmaking system</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="rounded-full bg-neon-green/20 p-2 border border-neon-green/30">
                   <DollarSign className="h-4 w-4 text-neon-green" />
                 </div>
-                <span className="text-gray-300">Instant payouts for every victory</span>
+                <span className="text-gray-300">Automated betting pools with secure payouts</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="rounded-full bg-neon-green/20 p-2 border border-neon-green/30">
                   <Target className="h-4 w-4 text-neon-green" />
                 </div>
-                <span className="text-gray-300">AI-powered matchmaking for fair competition</span>
+                <span className="text-gray-300">Real-time performance analysis and optimization</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="rounded-full bg-neon-green/20 p-2 border border-neon-green/30">
                   <Zap className="h-4 w-4 text-neon-green" />
                 </div>
-                <span className="text-gray-300">Real-time performance tracking during matches</span>
+                <span className="text-gray-300">Instant match proposals and earnings tracking</span>
               </div>
             </div>
             
@@ -114,24 +115,13 @@ const RivalizerSection = () => {
               <div className="relative z-10 transform hover:scale-105 transition-transform duration-500">
                 <div className="relative">
                   <img 
-                    src="/lovable-uploads/b5a7b547-fee9-4374-9c3f-17544c371d1f.png"
-                    alt="AI Agent Rivalizer"
+                    src="/lovable-uploads/28d9ee8b-04af-4935-87dd-c242ddbeaefc.png"
+                    alt="Rivalizer AI Agent - Your Elite Matchmaking Assistant"
                     className="max-w-full max-h-[500px] object-contain drop-shadow-2xl"
                     style={{ 
                       filter: 'drop-shadow(0 0 30px rgba(0, 255, 65, 0.4)) drop-shadow(0 0 60px rgba(0, 255, 65, 0.2))'
                     }}
                   />
-                  
-                  {/* Floating elements */}
-                  <div className="absolute -top-8 -right-8 bg-neon-green/90 text-black px-3 py-1 rounded-full text-sm font-bold animate-bounce">
-                    +$127
-                  </div>
-                  <div className="absolute -bottom-4 -left-8 bg-matrix-dark border border-neon-green/40 px-3 py-1 rounded-full text-xs text-neon-green animate-pulse">
-                    🏆 Rank #1
-                  </div>
-                  <div className="absolute top-1/3 -left-12 bg-matrix-dark border border-neon-green/40 px-3 py-1 rounded-full text-xs text-neon-green animate-pulse delay-500">
-                    💰 Prize Pool: $5K
-                  </div>
                 </div>
               </div>
               
