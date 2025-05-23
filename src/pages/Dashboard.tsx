@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Trophy, TrendingUp, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import PerformanceMetrics from '@/components/dashboard/PerformanceMetrics';
 
 const StatsCard = ({ icon: Icon, title, value, description }: { 
   icon: React.ElementType; 
@@ -83,6 +84,9 @@ const Dashboard = () => {
           <StatsCard key={index} {...stat} />
         ))}
       </div>
+
+      {/* Performance Metrics Section */}
+      <PerformanceMetrics />
 
       {/* Upcoming matches */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
