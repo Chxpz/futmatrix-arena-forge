@@ -11,11 +11,11 @@ interface CoachModelProps {
 const CoachModel = ({ scrollOffset }: CoachModelProps) => {
   const meshRef = useRef<THREE.Group>(null);
   
-  // Using a working demo GLB file instead of the broken URL
-  const demoModelUrl = 'https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
+  // Using the Netlify hosted GLB file
+  const coachModelUrl = 'https://darling-gaufre-9b53cc.netlify.app/Coach_0523175336_stylize.glb';
   
   try {
-    const { scene } = useGLTF(demoModelUrl);
+    const { scene } = useGLTF(coachModelUrl);
     
     useFrame((state) => {
       if (!meshRef.current) return;
