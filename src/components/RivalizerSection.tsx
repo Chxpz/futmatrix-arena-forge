@@ -107,42 +107,16 @@ const RivalizerSection = () => {
           {/* Right side - AI Agent Image */}
           <div className="lg:w-1/2 reveal">
             <div className="relative h-[600px] w-full flex items-center justify-center">
-              {/* Glow effects */}
-              <div className="absolute -top-20 -left-20 w-80 h-80 bg-neon-green/20 rounded-full filter blur-3xl animate-pulse"></div>
-              <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-neon-green/15 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
-              
-              {/* Main image container */}
+              {/* Main image container - clean with no overlays */}
               <div className="relative z-10 transform hover:scale-105 transition-transform duration-500">
-                <div className="relative">
-                  <img 
-                    src="/lovable-uploads/28d9ee8b-04af-4935-87dd-c242ddbeaefc.png"
-                    alt="Rivalizer AI Agent - Your Elite Matchmaking Assistant"
-                    className="max-w-full max-h-[500px] object-contain drop-shadow-2xl"
-                    style={{ 
-                      filter: 'drop-shadow(0 0 30px rgba(0, 255, 65, 0.4)) drop-shadow(0 0 60px rgba(0, 255, 65, 0.2))'
-                    }}
-                  />
-                </div>
-              </div>
-              
-              {/* Circuit lines */}
-              <div className="absolute inset-0 pointer-events-none">
-                <svg className="w-full h-full opacity-20" viewBox="0 0 400 400">
-                  <path
-                    d="M50,200 Q200,50 350,200 Q200,350 50,200"
-                    stroke="rgba(0, 255, 65, 0.3)"
-                    strokeWidth="1"
-                    fill="none"
-                    className="animate-pulse"
-                  />
-                  <path
-                    d="M100,100 L300,100 L300,300 L100,300 Z"
-                    stroke="rgba(0, 255, 65, 0.2)"
-                    strokeWidth="1"
-                    fill="none"
-                    className="animate-pulse delay-700"
-                  />
-                </svg>
+                <img 
+                  src="/lovable-uploads/344f0c59-5812-4192-a509-3a456ba2e72d.png"
+                  alt="Rivalizer AI Agent - Your Elite Matchmaking Assistant"
+                  className="max-w-full max-h-[500px] object-contain drop-shadow-2xl"
+                  style={{ 
+                    filter: 'drop-shadow(0 0 30px rgba(0, 255, 65, 0.4)) drop-shadow(0 0 60px rgba(0, 255, 65, 0.2))'
+                  }}
+                />
               </div>
             </div>
           </div>
