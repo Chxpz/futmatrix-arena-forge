@@ -1,5 +1,10 @@
 
+import { Button } from './ui/button';
+import { useNavigate } from 'react-router-dom';
+
 const CtaSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section id="join" className="py-20 relative special-glow">
       <div className="container mx-auto px-4">
@@ -11,22 +16,23 @@ const CtaSection = () => {
               Ready to <span className="text-neon-green glow-text">compete</span> for real?
             </h2>
             <p className="text-gray-300 max-w-xl mx-auto mb-8">
-              Join the Futmatrix community today and start your journey to becoming an elite EAFC25 player.
+              Join the Futmatrix platform today and start your journey to becoming an elite EAFC25 player.
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a 
-                href="{BASIC_WHOP_LINK}" 
-                className="px-6 py-3 bg-neon-green text-black font-medium rounded-md hover:bg-neon-green/90 transition-all button-glow"
+              <Button
+                onClick={() => navigate('/signup')}
+                className="px-6 py-6 bg-neon-green text-black font-medium rounded-md hover:bg-neon-green/90 button-glow"
               >
-                Join Basic Plan
-              </a>
-              <a 
-                href="{ADVANCED_WHOP_LINK}" 
-                className="px-6 py-3 bg-transparent border border-neon-green text-neon-green rounded-md hover:bg-neon-green/10 transition-all button-glow"
+                Create Account
+              </Button>
+              <Button
+                onClick={() => navigate('/login')}
+                variant="outline" 
+                className="px-6 py-6 bg-transparent border border-neon-green text-neon-green rounded-md hover:bg-neon-green/10 button-glow"
               >
-                Join Advanced Plan
-              </a>
+                Sign In
+              </Button>
             </div>
           </div>
         </div>
