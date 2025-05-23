@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import { Trophy, DollarSign, Target, Zap } from 'lucide-react';
 
@@ -97,9 +96,6 @@ const RivalizerSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
               <a href="/rivalizer" className="px-8 py-4 bg-neon-green text-black font-bold text-lg rounded-md hover:bg-neon-green/90 transition-all button-glow shadow-neon-green">
                 Start Earning Now
-              </a>
-              <a href="#pricing" className="px-8 py-4 bg-transparent border-2 border-neon-green/60 text-neon-green font-medium text-lg rounded-md hover:bg-neon-green/10 transition-all button-glow">
-                View Prize Pools
               </a>
             </div>
           </div>
