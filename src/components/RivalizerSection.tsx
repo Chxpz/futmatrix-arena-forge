@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import { Trophy, DollarSign, Target, Zap } from 'lucide-react';
 
@@ -30,10 +31,10 @@ const RivalizerSection = () => {
       <div className="matrix-grid opacity-30"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="flex flex-col items-center justify-center">
           
-          {/* Left side - Content */}
-          <div className="lg:w-1/2 space-y-8 reveal">
+          {/* Content - Now centered and taking full width */}
+          <div className="w-full max-w-2xl space-y-8 reveal">
             <div className="inline-block py-2 px-4 rounded-full bg-neon-green/20 border border-neon-green/40 text-sm text-neon-green mb-6 animate-glow-pulse">
               <span className="mr-2">🤖</span> MEET THE RIVALIZER AI
             </div>
@@ -93,29 +94,14 @@ const RivalizerSection = () => {
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
+            <div className="flex flex-col sm:flex-row gap-4 pt-6 justify-center">
               <a href="/rivalizer" className="px-8 py-4 bg-neon-green text-black font-bold text-lg rounded-md hover:bg-neon-green/90 transition-all button-glow shadow-neon-green">
                 Start Earning Now
               </a>
             </div>
           </div>
           
-          {/* Right side - AI Agent Image */}
-          <div className="lg:w-1/2 reveal">
-            <div className="relative h-[600px] w-full flex items-center justify-center">
-              {/* Main image container - clean with no overlays */}
-              <div className="relative z-10 transform hover:scale-105 transition-transform duration-500">
-                <img 
-                  src="/lovable-uploads/344f0c59-5812-4192-a509-3a456ba2e72d.png"
-                  alt="Rivalizer AI Agent - Your Elite Matchmaking Assistant"
-                  className="max-w-full max-h-[500px] object-contain drop-shadow-2xl"
-                  style={{ 
-                    filter: 'drop-shadow(0 0 30px rgba(0, 255, 65, 0.4)) drop-shadow(0 0 60px rgba(0, 255, 65, 0.2))'
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+          {/* Removed the right side with the AI Agent Image */}
         </div>
       </div>
       
