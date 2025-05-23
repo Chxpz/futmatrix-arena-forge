@@ -58,7 +58,7 @@ const DashboardShowcaseSection = () => {
               {/* Main dashboard container */}
               <div className="relative bg-gradient-to-br from-matrix-dark/90 to-matrix-darker/90 backdrop-blur-xl rounded-3xl border border-neon-green/40 p-6 shadow-2xl">
                 <img 
-                  src="/lovable-uploads/43b4aae5-404e-48b7-9d0b-f05717d5161a.png"
+                  src="/lovable-uploads/b5a7b547-fee9-4374-9c3f-17544c371d1f.png"
                   alt="Futmatrix Elite Dashboard - AI-Powered Performance Analytics Command Center"
                   className="w-full h-auto rounded-2xl shadow-2xl"
                   style={{ 
