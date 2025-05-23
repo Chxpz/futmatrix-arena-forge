@@ -14,17 +14,12 @@ const CoachModel = ({ scrollOffset }: CoachModelProps) => {
   // Using the Netlify hosted GLB file
   const coachModelUrl = 'https://darling-gaufre-9b53cc.netlify.app/Coach_0523175336_stylize.glb';
   
-  console.log('Attempting to load 3D model from:', coachModelUrl);
+  console.log('Loading 3D model from:', coachModelUrl);
   
-  let scene;
-  try {
-    const gltf = useGLTF(coachModelUrl);
-    scene = gltf.scene;
-    console.log('3D model loaded successfully:', scene);
-  } catch (error) {
-    console.error('Failed to load 3D model:', error);
-    return null;
-  }
+  // Use the hook properly - it should return the loaded GLTF
+  const { scene } = useGLTF(coachModelUrl);
+  
+  console.log('3D model loaded:', scene);
   
   useFrame((state) => {
     if (!meshRef.current) return;
@@ -41,6 +36,43 @@ const CoachModel = ({ scrollOffset }: CoachModelProps) => {
   return (
     <group ref={meshRef} position={[0, -1, 0]} scale={[2, 2, 2]}>
       <primitive object={scene} />
+    </group>
+  );
+};
+
+// Error boundary component for the 3D model
+const ModelErrorBoundary = ({ children, onError }: { children: React.ReactNode; onError: () => void }) => {
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('Model loading error caught:', event.error);
+      onError();
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error('Unhandled promise rejection:', event.reason);
+      onError();
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, [onError]);
+
+  return <>{children}</>;
+};
+
+const LoadingFallback = () => {
+  console.log('3D model is loading...');
+  return (
+    <group>
+      <mesh>
+        <boxGeometry args={[1, 2, 0.5]} />
+        <meshStandardMaterial color="#00FF41" transparent opacity={0.3} />
+      </mesh>
     </group>
   );
 };
@@ -76,8 +108,8 @@ const AIAgent3D = () => {
     };
   }, []);
   
-  const handleError = (error: any) => {
-    console.error('Canvas error:', error);
+  const handleModelError = () => {
+    console.log('Setting model error to true');
     setModelError(true);
   };
   
@@ -98,30 +130,32 @@ const AIAgent3D = () => {
   
   return (
     <div ref={containerRef} className="relative w-full h-full">
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 45 }}
-        style={{ background: 'transparent' }}
-        gl={{ alpha: true, antialias: true }}
-        onError={handleError}
-      >
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 5, 5]} intensity={0.8} />
-        <pointLight position={[0, 2, 2]} intensity={0.5} color="#00FF41" />
-        
-        <Suspense fallback={null}>
-          <CoachModel scrollOffset={scrollOffset} />
-        </Suspense>
-        
-        <OrbitControls 
-          enableZoom={false}
-          enablePan={false}
-          maxPolarAngle={Math.PI / 2}
-          minPolarAngle={Math.PI / 2}
-          autoRotate={false}
-          dampingFactor={0.05}
-          enableDamping={true}
-        />
-      </Canvas>
+      <ModelErrorBoundary onError={handleModelError}>
+        <Canvas
+          camera={{ position: [0, 0, 5], fov: 45 }}
+          style={{ background: 'transparent' }}
+          gl={{ alpha: true, antialias: true }}
+          onCreated={() => console.log('Canvas created successfully')}
+        >
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, 5, 5]} intensity={0.8} />
+          <pointLight position={[0, 2, 2]} intensity={0.5} color="#00FF41" />
+          
+          <Suspense fallback={<LoadingFallback />}>
+            <CoachModel scrollOffset={scrollOffset} />
+          </Suspense>
+          
+          <OrbitControls 
+            enableZoom={false}
+            enablePan={false}
+            maxPolarAngle={Math.PI / 2}
+            minPolarAngle={Math.PI / 2}
+            autoRotate={false}
+            dampingFactor={0.05}
+            enableDamping={true}
+          />
+        </Canvas>
+      </ModelErrorBoundary>
     </div>
   );
 };
