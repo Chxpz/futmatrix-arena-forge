@@ -1,5 +1,5 @@
 
-import { ChartLegend, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { ChartLegend } from '@/components/ui/chart';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
 type TrendLineChartProps = {
@@ -17,16 +17,11 @@ const TrendLineChart = ({
   isEfficiency,
   height,
 }: TrendLineChartProps) => {
-  console.log("Rendering TrendLineChart with data:", data);
-  console.log("Selected metric:", selectedMetric);
-  console.log("Metric color:", metricColor);
-  
   // Validate the data and metric before rendering
   const hasValidData = Array.isArray(data) && data.length > 0 && 
     data.some(item => selectedMetric in item);
   
   if (!hasValidData) {
-    console.error("No valid data for selected metric:", selectedMetric);
     return (
       <div className="flex items-center justify-center h-full w-full bg-matrix-darker border border-matrix-gray/20 rounded-lg p-4">
         <p className="text-gray-400">No data available for the selected metric</p>
@@ -38,7 +33,7 @@ const TrendLineChart = ({
     <ResponsiveContainer width="100%" height={height}>
       <LineChart
         data={data}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" stroke="#333333" />
         <XAxis 

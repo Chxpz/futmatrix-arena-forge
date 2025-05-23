@@ -20,17 +20,15 @@ const TrendChart = ({ type, timeFilter, height }: TrendChartProps) => {
   );
 
   useEffect(() => {
-    console.log("TrendChart mounted/updated with data:", data);
-    console.log("Chart type:", type);
-    console.log("Available metrics:", metricOptions);
-    
     // Ensure we have a valid selected metric when the type changes
     if (type === 'efficiency' && !selectedMetric.includes('Efficiency') && selectedMetric !== 'overallPerformance') {
       setSelectedMetric('overallPerformance');
     } else if (type === 'matchMetrics' && (selectedMetric.includes('Efficiency') || selectedMetric === 'overallPerformance')) {
       setSelectedMetric('goalsScored');
     }
-  }, [data, type, metricOptions, selectedMetric]);
+
+    console.log(`TrendChart mounted with ${data?.length || 0} data points`);
+  }, [data, type, selectedMetric]);
 
   // Get the color for the selected metric
   const metricColor = config[selectedMetric as keyof typeof config]?.color || '#FFFFFF';
@@ -41,22 +39,24 @@ const TrendChart = ({ type, timeFilter, height }: TrendChartProps) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 h-full">
       <ChartMetricSelector
         selectedMetric={selectedMetric}
         onMetricChange={handleMetricChange}
         metricOptions={metricOptions}
       />
       
-      <ChartContainer className="aspect-auto h-full" config={config}>
-        <TrendLineChart
-          data={data}
-          selectedMetric={selectedMetric}
-          metricColor={metricColor}
-          isEfficiency={isEfficiency}
-          height={height}
-        />
-      </ChartContainer>
+      <div className="h-[250px]">
+        <ChartContainer className="h-full w-full" config={config}>
+          <TrendLineChart
+            data={data}
+            selectedMetric={selectedMetric}
+            metricColor={metricColor}
+            isEfficiency={isEfficiency}
+            height={height}
+          />
+        </ChartContainer>
+      </div>
     </div>
   );
 };

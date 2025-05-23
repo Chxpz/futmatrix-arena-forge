@@ -1,8 +1,8 @@
 
-import { ChartContainer, ChartLegend, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { ChartContainer, ChartLegend } from '@/components/ui/chart';
 import { 
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, 
-  Radar, ResponsiveContainer
+  Radar, ResponsiveContainer, Tooltip
 } from 'recharts';
 import { useRadarComparisonData, RadarChartType } from '@/hooks/use-radar-comparison-data';
 
@@ -15,15 +15,30 @@ type RadarComparisonChartProps = {
 const RadarComparisonChart = ({ type, timeFilter, height }: RadarComparisonChartProps) => {
   const { data, config } = useRadarComparisonData(type, timeFilter);
   
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full w-full">
+        <p className="text-gray-400">No data available</p>
+      </div>
+    );
+  }
+  
   return (
-    <ChartContainer className="aspect-auto h-full" config={config}>
+    <ChartContainer className="w-full h-full" config={config}>
       <ResponsiveContainer width="100%" height={height}>
-        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+        <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
           <PolarGrid stroke="#333333" />
           <PolarAngleAxis dataKey="subject" tick={{ fill: '#9ca3af', fontSize: 12 }} />
           <PolarRadiusAxis tick={{ fill: '#9ca3af' }} axisLine={{ stroke: '#333333' }} />
           
-          <ChartTooltip content={<ChartTooltipContent />} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#1a1a1a', 
+              border: '1px solid #333333',
+              color: '#ffffff'
+            }}
+            labelStyle={{ color: '#9ca3af' }}
+          />
           
           <Radar
             name="Recent"

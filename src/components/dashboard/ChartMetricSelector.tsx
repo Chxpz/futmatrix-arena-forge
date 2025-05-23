@@ -12,8 +12,9 @@ const ChartMetricSelector = ({
   onMetricChange,
   metricOptions,
 }: ChartMetricSelectorProps) => {
-  console.log("ChartMetricSelector render with options:", metricOptions);
-  console.log("Currently selected metric:", selectedMetric);
+  if (!metricOptions || metricOptions.length === 0) {
+    return null;
+  }
   
   return (
     <div className="flex justify-end">

@@ -12,11 +12,11 @@ const efficiencyComparisonData = [
 
 // Mock data for match metrics comparison
 const matchMetricsComparisonData = [
-  { subject: 'Goals', recent: 2, average: 1.7, fullMark: 3 },
-  { subject: 'Possession %', recent: 62, average: 55, fullMark: 100 },
-  { subject: 'Shots', recent: 13, average: 10, fullMark: 15 },
-  { subject: 'Pass Accuracy', recent: 86, average: 83, fullMark: 100 },
-  { subject: 'Tackles', recent: 16, average: 14, fullMark: 20 }
+  { subject: 'Goals', recent: 2, average: 1.7 },
+  { subject: 'Possession %', recent: 62, average: 55 },
+  { subject: 'Shots', recent: 13, average: 10 },
+  { subject: 'Pass Accuracy', recent: 86, average: 83 },
+  { subject: 'Tackles', recent: 16, average: 14 }
 ];
 
 export const chartConfig = {
@@ -33,6 +33,7 @@ export const useRadarComparisonData = (type: RadarChartType, timeFilter: string)
   
   // In real app, would fetch data based on timeFilter and type
   useEffect(() => {
+    console.log("Loading radar data for", type, "with filter", timeFilter);
     setData(type === 'efficiency' ? efficiencyComparisonData : matchMetricsComparisonData);
   }, [type, timeFilter]);
   

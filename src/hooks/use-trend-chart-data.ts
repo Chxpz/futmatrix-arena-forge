@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Mock data for efficiencies
 const efficiencyData = [
@@ -133,16 +133,21 @@ export const useTrendChartData = (
   type: ChartType,
   timeFilter: string
 ): TrendChartData => {
-  const isEfficiency = type === 'efficiency';
-  const data = isEfficiency ? efficiencyData : matchMetricsData;
-  const config = isEfficiency ? efficiencyConfig : matchMetricsConfig;
+  const [data, setData] = useState<Array<Record<string, any>>>([]);
+  const config = type === 'efficiency' ? efficiencyConfig : matchMetricsConfig;
   
   const metricOptions = Object.entries(config).map(([key, value]) => ({
     value: key,
     label: value.label,
   }));
 
-  // In a real app, you'd filter data based on timeFilter here
+  useEffect(() => {
+    console.log("Loading trend data for", type, "with filter", timeFilter);
+    // Simulate data loading
+    setTimeout(() => {
+      setData(type === 'efficiency' ? efficiencyData : matchMetricsData);
+    }, 100);
+  }, [type, timeFilter]);
   
   return {
     data,
