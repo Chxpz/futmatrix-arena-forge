@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X 
 } from 'lucide-react';
+import RankingsMenu from '@/components/RankingsMenu';
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -94,6 +95,9 @@ const DashboardLayout = () => {
                 {link.name}
               </NavLink>
             ))}
+            
+            {/* Rankings Menu with submenu */}
+            <RankingsMenu />
           </nav>
 
           {/* Logout button */}
