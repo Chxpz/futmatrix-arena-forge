@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import HeroSection from '../components/HeroSection';
+import CoachSection from '../components/CoachSection';
 import FeaturesSection from '../components/FeaturesSection';
 import RivalizerSection from '../components/RivalizerSection';
 import FeatureDetail from '../components/FeatureDetail';
@@ -27,6 +28,7 @@ const Index = () => {
       <ScrollReveal />
       <NavBar />
       <HeroSection />
+      <CoachSection />
       <FeaturesSection />
       <RivalizerSection />
       <FeatureDetail />
