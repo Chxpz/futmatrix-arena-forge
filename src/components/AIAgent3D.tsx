@@ -10,30 +10,40 @@ interface CoachModelProps {
 
 const CoachModel = ({ scrollOffset }: CoachModelProps) => {
   const meshRef = useRef<THREE.Group>(null);
-  const { scene } = useGLTF('https://cdn.jsdelivr.net/gh/Chxpz/3d-assets@main/Coach_0523175336_stylize.glb');
   
-  useFrame((state) => {
-    if (!meshRef.current) return;
-    
-    // Subtle breathing animation
-    const breathingScale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.02;
-    meshRef.current.scale.setScalar(breathingScale);
-    
-    // Scroll-based tilt
-    const tiltAmount = scrollOffset * 0.1;
-    meshRef.current.rotation.z = tiltAmount;
-  });
+  // Using a working demo GLB file instead of the broken URL
+  const demoModelUrl = 'https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
   
-  return (
-    <group ref={meshRef} position={[0, -1, 0]} scale={[2, 2, 2]}>
-      <primitive object={scene} />
-    </group>
-  );
+  try {
+    const { scene } = useGLTF(demoModelUrl);
+    
+    useFrame((state) => {
+      if (!meshRef.current) return;
+      
+      // Subtle breathing animation
+      const breathingScale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.02;
+      meshRef.current.scale.setScalar(breathingScale);
+      
+      // Scroll-based tilt
+      const tiltAmount = scrollOffset * 0.1;
+      meshRef.current.rotation.z = tiltAmount;
+    });
+    
+    return (
+      <group ref={meshRef} position={[0, -1, 0]} scale={[2, 2, 2]}>
+        <primitive object={scene} />
+      </group>
+    );
+  } catch (error) {
+    console.error('Failed to load 3D model:', error);
+    return null;
+  }
 };
 
 const AIAgent3D = () => {
   const [scrollOffset, setScrollOffset] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [modelError, setModelError] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -61,8 +71,8 @@ const AIAgent3D = () => {
     };
   }, []);
   
-  // Fallback to static image on mobile
-  if (isMobile) {
+  // Fallback to static image on mobile or model error
+  if (isMobile || modelError) {
     return (
       <div className="relative w-full h-full flex items-center justify-center">
         <img 
@@ -81,6 +91,7 @@ const AIAgent3D = () => {
         camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ background: 'transparent' }}
         gl={{ alpha: true, antialias: true }}
+        onError={() => setModelError(true)}
       >
         <ambientLight intensity={0.6} />
         <directionalLight position={[5, 5, 5]} intensity={0.8} />
@@ -103,8 +114,5 @@ const AIAgent3D = () => {
     </div>
   );
 };
-
-// Preload the model
-useGLTF.preload('https://cdn.jsdelivr.net/gh/Chxpz/3d-assets@main/Coach_0523175336_stylize.glb');
 
 export default AIAgent3D;
