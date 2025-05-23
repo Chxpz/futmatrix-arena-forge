@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import { Brain, TrendingUp, Award, Trophy, DollarSign, Target, Zap } from 'lucide-react';
 
@@ -33,7 +32,7 @@ const AIAgentsSection = () => {
       {/* Main Section Header */}
       <div className="py-20 relative z-10">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 reveal">
+          <div className="text-center mb-12 reveal">
             <div className="inline-block py-2 px-4 rounded-full bg-neon-green/20 border border-neon-green/40 text-sm text-neon-green mb-6 animate-glow-pulse">
               <span className="mr-2">🤖</span> MEET OUR AI AGENTS
             </div>
@@ -50,7 +49,7 @@ const AIAgentsSection = () => {
       </div>
 
       {/* Coach AI Section */}
-      <div className="py-16 relative z-10">
+      <div className="py-12 relative z-10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
             
