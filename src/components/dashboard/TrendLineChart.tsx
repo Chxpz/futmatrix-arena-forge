@@ -17,6 +17,10 @@ const TrendLineChart = ({
   isEfficiency,
   height,
 }: TrendLineChartProps) => {
+  console.log("Rendering TrendLineChart with data:", data);
+  console.log("Selected metric:", selectedMetric);
+  console.log("Metric color:", metricColor);
+  
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart

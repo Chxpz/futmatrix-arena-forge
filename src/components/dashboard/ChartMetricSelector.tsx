@@ -12,11 +12,17 @@ const ChartMetricSelector = ({
   onMetricChange,
   metricOptions,
 }: ChartMetricSelectorProps) => {
+  console.log("ChartMetricSelector render with options:", metricOptions);
+  console.log("Currently selected metric:", selectedMetric);
+  
   return (
     <div className="flex justify-end">
       <Select
         value={selectedMetric}
-        onValueChange={onMetricChange}
+        onValueChange={(value) => {
+          console.log("Metric selected:", value);
+          onMetricChange(value);
+        }}
       >
         <SelectTrigger className="w-[180px] bg-matrix-darker border-matrix-gray/30">
           <SelectValue placeholder="Select metric" />
