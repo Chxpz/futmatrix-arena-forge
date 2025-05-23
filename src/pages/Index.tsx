@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import HeroSection from '../components/HeroSection';
 import FeaturesSection from '../components/FeaturesSection';
-import FeatureDetail from '../components/FeatureDetail';
+import DashboardShowcaseSection from '../components/DashboardShowcaseSection';
 import PricingSection from '../components/PricingSection';
 import CtaSection from '../components/CtaSection';
 import Footer from '../components/Footer';
@@ -29,7 +29,7 @@ const Index = () => {
       <HeroSection />
       <AIAgentsSection />
       <FeaturesSection />
-      <FeatureDetail />
+      <DashboardShowcaseSection />
       <PricingSection />
       <CtaSection />
       <Footer />
