@@ -1,179 +1,335 @@
 
-# Welcome to your Lovable project - Futmatrix
+# Futmatrix - Football Analytics Dashboard
 
-## Project info
+## Project Overview
 
 **URL**: https://lovable.dev/projects/d1b94ff4-fb4b-4b38-b956-dd2000b91102
 
-## Authentication Setup
+Futmatrix is a comprehensive football analytics platform that processes match images using AI to extract performance metrics and provides detailed visualizations for player analysis. The frontend is built with React, TypeScript, and modern data visualization libraries.
 
-To set up the Google authentication flow for Futmatrix, follow these steps:
+## Frontend Architecture
 
-### 1. Supabase Configuration
+### Technology Stack
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **Charts**: Recharts library for data visualizations
+- **State Management**: @tanstack/react-query for server state
+- **Routing**: React Router DOM
 
-1. **Connect to Supabase**: Click the green Supabase button in the top right of the Lovable interface to connect your project to Supabase.
-
-2. **Create Database Tables**: Run the SQL script found in `supabase/schema.sql` in your Supabase SQL editor to create all necessary tables, triggers, and policies.
-
-3. **Configure Authentication Provider**:
-   - Go to your Supabase project dashboard
-   - Navigate to Authentication > Providers
-   - Enable Google provider
-   - Follow Supabase's instructions to set up OAuth credentials in Google Cloud Console
-   - Add your Google Client ID and Secret to the Supabase configuration
-
-### 2. Google Cloud Console Setup
-
-1. **Create OAuth credentials**:
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a new project or use an existing one
-   - Navigate to APIs & Services > Credentials
-   - Click "Create Credentials" > "OAuth client ID"
-   - Select "Web application" as application type
-   - Add authorized JavaScript origins:
-     - Your local development URL (e.g., `http://localhost:5173`)
-     - Your Lovable preview URL
-     - Your production URL (if applicable)
-   - Add authorized redirect URIs:
-     - `https://[YOUR-SUPABASE-PROJECT-URL]/auth/v1/callback`
-
-### 3. Project Environment Variables
-
-Set up the following environment variables in your Supabase project's environment:
+### Key Components Structure
 
 ```
-VITE_SUPABASE_URL=https://[YOUR-SUPABASE-PROJECT-ID].supabase.co
-VITE_SUPABASE_ANON_KEY=[YOUR-SUPABASE-ANON-KEY]
-VITE_MATCH_UPLOAD_API_URL=https://api.futmatrix.com/api/matches/upload
+src/
+├── components/
+│   ├── dashboard/          # Analytics dashboard components
+│   │   ├── TrendLineChart.tsx        # Line charts with moving averages
+│   │   ├── RadarComparisonChart.tsx  # Performance comparison charts
+│   │   ├── TrendChart.tsx           # Main trend analysis component
+│   │   ├── ChartMetricSelector.tsx   # Metric selection controls
+│   │   ├── PerformanceMetrics.tsx    # KPI cards display
+│   │   ├── MatchHistoryTable.tsx     # Match history with filtering
+│   │   ├── StatsSummary.tsx          # Overview statistics
+│   │   └── InsightsPanel.tsx         # AI insights and recommendations
+│   ├── upload/             # Image upload functionality
+│   │   ├── UploadCard.tsx           # Main upload interface
+│   │   ├── UploadArea.tsx           # Drag & drop area
+│   │   ├── PreviewArea.tsx          # Image preview with progress
+│   │   ├── ImagePreview.tsx         # Individual image preview
+│   │   ├── UploadProgress.tsx       # Upload progress indicator
+│   │   └── InstructionsCard.tsx     # Upload instructions
+│   └── ui/                 # Reusable UI components (shadcn/ui)
+├── hooks/
+│   ├── use-trend-chart-data.ts      # Chart data management
+│   ├── use-radar-comparison-data.ts # Radar chart data
+│   └── use-upload-images.ts         # Image upload logic
+├── pages/
+│   ├── Dashboard.tsx       # Main analytics dashboard
+│   ├── Charts.tsx         # Detailed charts view
+│   ├── Upload.tsx         # Match image upload
+│   ├── Profile.tsx        # User profile management
+│   └── [other pages]
+└── layouts/
+    └── DashboardLayout.tsx # Common dashboard layout
 ```
 
-You can add these environment variables through the Supabase integration in Lovable:
-1. Click on the green Supabase button
-2. Go to "Environment Variables" 
-3. Add the variables there
+## Data Structures & API Integration
 
-### 4. Implement Supabase Client
+### Core Data Models
 
-Create a Supabase client configuration file at `src/lib/supabase.ts`:
-
+#### Match Data Structure
 ```typescript
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+interface MatchData {
+  matchId: string | number;
+  date: string;              // Format: "MMM D" (e.g., "Apr 1")
+  opponent?: string;         // Optional opponent name
+  result?: string;           // Optional match result
+  
+  // Efficiency Metrics (0-100 scale)
+  possessionEfficiency: number;
+  shotEfficiency: number;
+  passEfficiency: number;
+  defensiveEfficiency: number;
+  overallPerformance: number;
+  
+  // Match Statistics
+  goalsScored: number;
+  possession: number;        // Possession percentage (0-100)
+  shots: number;
+  passesAttempted: number;
+  passAccuracy: number;      // Pass accuracy percentage (0-100)
+  tackles: number;
+  
+  // Optional metadata
+  imageUrl?: string;         // URL to match image
+}
 ```
 
-### 5. Testing Authentication Flow
+#### User Profile Structure
+```typescript
+interface UserProfile {
+  id: string;
+  email: string;
+  planType: 'free' | 'basic' | 'premium';
+  maxUploads: number;        // Based on plan: free=1, basic=3, premium=5
+}
+```
 
-1. Start your development server
-2. Navigate to the signup page
-3. Click "Sign up with Google"
-4. Complete Google's authentication flow
-5. You should be redirected to the dashboard upon successful authentication
+### Required API Endpoints
 
-## API Endpoints
-
-### Match Image Upload API
-
-**Endpoint**: `POST /api/matches/upload` (configured via `VITE_MATCH_UPLOAD_API_URL` environment variable)
-
-**Description**: Uploads match images for AI analysis and metric extraction
-
-**Authentication**: Requires valid user authentication token
+#### 1. Match Image Upload & Processing
+**Endpoint**: `POST /api/matches/upload`
 
 **Request Format**:
 - Content-Type: `multipart/form-data`
-- Body: One or more image files with form field names `match_image_0`, `match_image_1`, etc.
+- Authentication: Bearer token in Authorization header
+- Body: Image files with field names `match_image_0`, `match_image_1`, etc.
 
-**Response Format**:
+**Expected Response**:
 ```json
 {
   "success": true,
   "message": "Match images processed successfully",
   "data": {
-    "matchId": "uuid-of-processed-match",
+    "matchId": "uuid-string",
     "metrics": {
-      "possessionPercentage": 56,
-      "shots": 12,
-      "shotsOnTarget": 8,
-      /* Additional metrics */
+      "possessionEfficiency": 74,
+      "shotEfficiency": 63,
+      "passEfficiency": 82,
+      "defensiveEfficiency": 71,
+      "overallPerformance": 72,
+      "goalsScored": 2,
+      "possession": 62,
+      "shots": 13,
+      "passesAttempted": 502,
+      "passAccuracy": 86,
+      "tackles": 16
+    },
+    "date": "2024-05-23",
+    "imageUrl": "https://storage.url/match-image.jpg"
+  }
+}
+```
+
+#### 2. Match History Retrieval
+**Endpoint**: `GET /api/matches`
+
+**Query Parameters**:
+- `timeFilter`: "last5" | "lastMonth" | "last3Months" | "allTime"
+- `limit`: number (optional)
+- `offset`: number (optional for pagination)
+
+**Expected Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "matches": [MatchData[]],
+    "totalCount": number,
+    "summary": {
+      "totalMatches": number,
+      "averageGoalsPerMatch": number,
+      "averageOverallPerformance": number,
+      "lastMatchDate": "2024-05-23"
     }
   }
 }
 ```
 
-**Error Responses**:
-- 400: Invalid request format or missing images
-- 401: Unauthorized access (missing or invalid token)
-- 413: Payload too large (images exceed size limit)
-- 500: Server processing error
+#### 3. User Profile & Plan Information
+**Endpoint**: `GET /api/user/profile`
 
-## How can I edit this code?
+**Expected Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "user-uuid",
+    "email": "user@example.com",
+    "planType": "premium",
+    "maxUploads": 5,
+    "matchesThisMonth": 12,
+    "totalMatches": 45
+  }
+}
+```
 
-There are several ways of editing your application.
+### Frontend Data Processing
 
-**Use Lovable**
+#### Chart Data Transformations
+The frontend expects data in specific formats for different chart types:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d1b94ff4-fb4b-4b38-b956-dd2000b91102) and start prompting.
+1. **Line Charts**: Array of MatchData objects sorted by date
+2. **Radar Charts**: Comparison objects with `recent` vs `average` values
+3. **Moving Averages**: Calculated client-side for last 3 matches
 
-Changes made via Lovable will be committed automatically to this repo.
+#### Time Filtering
+The frontend implements client-side filtering but can also send filter parameters to the backend:
+- `last5`: Last 5 matches
+- `lastMonth`: Last 30 days
+- `last3Months`: Last 90 days
+- `allTime`: All historical data
 
-**Use your preferred IDE**
+## Authentication & Security
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Required Authentication Flow
+1. Users authenticate via Supabase (Google OAuth recommended)
+2. Frontend receives JWT token from Supabase
+3. All API calls include `Authorization: Bearer <token>` header
+4. Backend should verify JWT with Supabase public key
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### File Upload Security
+- Maximum file size: 10MB per image
+- Allowed formats: PNG, JPG, JPEG
+- Maximum files per upload based on user plan
+- Virus scanning recommended on backend
 
-Follow these steps:
+## Environment Variables
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Frontend Environment Variables
+```env
+VITE_SUPABASE_URL=https://[project-id].supabase.co
+VITE_SUPABASE_ANON_KEY=[anon-key]
+VITE_MATCH_UPLOAD_API_URL=https://api.futmatrix.com/api/matches/upload
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Expected Backend Configuration
+The backend should be configurable via environment variables for:
+- Database connection strings
+- Supabase JWT verification
+- File storage configuration (AWS S3, etc.)
+- AI processing service URLs
+- Rate limiting settings
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Error Handling
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Expected Error Response Format
+```json
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "User-friendly error message",
+    "details": "Technical details for debugging"
+  }
+}
+```
+
+### Common Error Codes
+- `VALIDATION_ERROR`: Invalid request data
+- `UNAUTHORIZED`: Invalid or missing authentication
+- `RATE_LIMITED`: User exceeded plan limits
+- `PROCESSING_ERROR`: AI analysis failed
+- `FILE_TOO_LARGE`: Upload exceeds size limits
+
+## Performance Requirements
+
+### Response Time Expectations
+- Image upload acknowledgment: < 2 seconds
+- Image processing completion: 3-5 seconds
+- Match history retrieval: < 1 second
+- Profile data: < 500ms
+
+### Rate Limiting
+Implement rate limiting based on user plans:
+- **Free**: 1 upload/day, 100 API calls/hour
+- **Basic**: 3 uploads/day, 500 API calls/hour  
+- **Premium**: 5 uploads/day, 1000 API calls/hour
+
+## Database Schema Recommendations
+
+### Core Tables Needed
+1. **users**: User profiles and plan information
+2. **matches**: Match data and metrics
+3. **match_images**: Uploaded image metadata
+4. **user_sessions**: Authentication sessions
+5. **usage_tracking**: API usage for rate limiting
+
+### Key Relationships
+- Users have many Matches
+- Matches have many Match Images
+- Users have Usage Tracking records
+
+## AI Processing Pipeline
+
+### Image Analysis Requirements
+The backend AI should extract these metrics from football match images:
+1. **Possession data**: Ball control percentages
+2. **Shot data**: Total shots, shots on target
+3. **Pass data**: Attempted passes, successful passes
+4. **Defensive data**: Tackles, interceptions
+5. **Goal data**: Goals scored
+
+### Processing Workflow
+1. Receive uploaded images
+2. Queue for AI processing
+3. Extract raw statistics
+4. Calculate efficiency percentages
+5. Store results in database
+6. Notify frontend of completion
+
+## Testing & Development
+
+### Mock Data
+The frontend currently uses comprehensive mock data for development. Replace with real API calls by updating the hooks in `src/hooks/`.
+
+### Development Setup
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Build & Deployment
+```bash
+npm run build
+npm run preview
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Integration Checklist
 
-**Use GitHub Codespaces**
+For smooth backend integration, ensure:
+- [ ] All API endpoints match expected request/response formats
+- [ ] Authentication with Supabase JWT verification
+- [ ] File upload handling with size/type validation
+- [ ] Error responses follow the specified format
+- [ ] Rate limiting implementation
+- [ ] Database schema supports all required fields
+- [ ] AI processing pipeline extracts all metrics
+- [ ] CORS configuration for frontend domains
+- [ ] SSL/HTTPS configuration
+- [ ] Monitoring and logging setup
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Support & Documentation
 
-## What technologies are used for this project?
+### Frontend Contact Points
+- Main dashboard: `/dashboard`
+- Charts view: `/charts` 
+- Upload interface: `/upload`
+- User profile: `/profile`
 
-This project is built with:
+### Key Hook Functions
+- `useTrendChartData()`: Manages chart data and filtering
+- `useRadarComparisonData()`: Handles comparison analytics
+- `useUploadImages()`: Manages file upload process
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/d1b94ff4-fb4b-4b38-b956-dd2000b91102) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+For questions about frontend integration, refer to the component documentation in the respective TypeScript files.
