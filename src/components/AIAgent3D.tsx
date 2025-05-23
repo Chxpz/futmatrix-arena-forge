@@ -14,30 +14,35 @@ const CoachModel = ({ scrollOffset }: CoachModelProps) => {
   // Using the Netlify hosted GLB file
   const coachModelUrl = 'https://darling-gaufre-9b53cc.netlify.app/Coach_0523175336_stylize.glb';
   
+  console.log('Attempting to load 3D model from:', coachModelUrl);
+  
+  let scene;
   try {
-    const { scene } = useGLTF(coachModelUrl);
-    
-    useFrame((state) => {
-      if (!meshRef.current) return;
-      
-      // Subtle breathing animation
-      const breathingScale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.02;
-      meshRef.current.scale.setScalar(breathingScale);
-      
-      // Scroll-based tilt
-      const tiltAmount = scrollOffset * 0.1;
-      meshRef.current.rotation.z = tiltAmount;
-    });
-    
-    return (
-      <group ref={meshRef} position={[0, -1, 0]} scale={[2, 2, 2]}>
-        <primitive object={scene} />
-      </group>
-    );
+    const gltf = useGLTF(coachModelUrl);
+    scene = gltf.scene;
+    console.log('3D model loaded successfully:', scene);
   } catch (error) {
     console.error('Failed to load 3D model:', error);
     return null;
   }
+  
+  useFrame((state) => {
+    if (!meshRef.current) return;
+    
+    // Subtle breathing animation
+    const breathingScale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.02;
+    meshRef.current.scale.setScalar(breathingScale);
+    
+    // Scroll-based tilt
+    const tiltAmount = scrollOffset * 0.1;
+    meshRef.current.rotation.z = tiltAmount;
+  });
+  
+  return (
+    <group ref={meshRef} position={[0, -1, 0]} scale={[2, 2, 2]}>
+      <primitive object={scene} />
+    </group>
+  );
 };
 
 const AIAgent3D = () => {
@@ -71,8 +76,14 @@ const AIAgent3D = () => {
     };
   }, []);
   
+  const handleError = (error: any) => {
+    console.error('Canvas error:', error);
+    setModelError(true);
+  };
+  
   // Fallback to static image on mobile or model error
   if (isMobile || modelError) {
+    console.log('Using fallback image. Mobile:', isMobile, 'ModelError:', modelError);
     return (
       <div className="relative w-full h-full flex items-center justify-center">
         <img 
@@ -91,7 +102,7 @@ const AIAgent3D = () => {
         camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ background: 'transparent' }}
         gl={{ alpha: true, antialias: true }}
-        onError={() => setModelError(true)}
+        onError={handleError}
       >
         <ambientLight intensity={0.6} />
         <directionalLight position={[5, 5, 5]} intensity={0.8} />
