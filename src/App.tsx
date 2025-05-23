@@ -16,6 +16,7 @@ import Rivalizer from "./pages/Rivalizer";
 import Coach from "./pages/Coach";
 import Upload from "./pages/Upload";
 import Rankings from "./pages/Rankings";
+import Charts from "./pages/Charts";
 
 // Layouts
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/coach" element={<Coach />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/rankings" element={<Rankings />} />
+            <Route path="/charts" element={<Charts />} />
           </Route>
           
           {/* Catch-all route */}

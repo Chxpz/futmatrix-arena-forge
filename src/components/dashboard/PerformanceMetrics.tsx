@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { BarChart } from 'lucide-react';
 import StatsSummary from './StatsSummary';
-import TrendChart from './TrendChart';
-import RadarComparisonChart from './RadarComparisonChart';
 import MatchHistoryTable from './MatchHistoryTable';
 import InsightsPanel from './InsightsPanel';
 
@@ -14,6 +14,7 @@ type TimeFilter = 'last5' | 'lastMonth' | 'last3Months' | 'allTime';
 
 const PerformanceMetrics = () => {
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('last5');
+  const navigate = useNavigate();
   
   return (
     <div className="space-y-6">
@@ -59,83 +60,24 @@ const PerformanceMetrics = () => {
 
       {/* Player overview with key metrics */}
       <StatsSummary timeFilter={timeFilter} />
+      
+      {/* View Charts Button */}
+      <div className="flex justify-end">
+        <Button 
+          onClick={() => navigate('/charts')}
+          className="bg-neon-green text-black hover:bg-neon-green/90 flex items-center gap-2"
+        >
+          <BarChart className="h-4 w-4" />
+          View Detailed Charts
+        </Button>
+      </div>
 
       {/* Tabs for different metric views */}
-      <Tabs defaultValue="trends" className="w-full">
+      <Tabs defaultValue="matches" className="w-full">
         <TabsList className="bg-matrix-darker border border-matrix-gray/30">
-          <TabsTrigger value="trends">Performance Trends</TabsTrigger>
-          <TabsTrigger value="comparison">Comparative Analysis</TabsTrigger>
           <TabsTrigger value="matches">Match History</TabsTrigger>
           <TabsTrigger value="insights">Insights & Tips</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="trends" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Efficiency Trends */}
-            <Card className="bg-matrix-dark border-matrix-gray/30">
-              <CardHeader>
-                <CardTitle>Core Efficiencies</CardTitle>
-                <CardDescription>Performance trends with 3-match moving average</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <TrendChart 
-                  type="efficiency"
-                  timeFilter={timeFilter} 
-                  height={300}
-                />
-              </CardContent>
-            </Card>
-            
-            {/* Match Metrics Trends */}
-            <Card className="bg-matrix-dark border-matrix-gray/30">
-              <CardHeader>
-                <CardTitle>Match Metrics</CardTitle>
-                <CardDescription>Key statistics from recent matches</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <TrendChart 
-                  type="matchMetrics"
-                  timeFilter={timeFilter} 
-                  height={300}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="comparison" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Efficiency Comparison */}
-            <Card className="bg-matrix-dark border-matrix-gray/30">
-              <CardHeader>
-                <CardTitle>Efficiency Comparison</CardTitle>
-                <CardDescription>Last 3 matches vs overall average</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <RadarComparisonChart 
-                  type="efficiency" 
-                  timeFilter={timeFilter} 
-                  height={300}
-                />
-              </CardContent>
-            </Card>
-            
-            {/* Match Metrics Comparison */}
-            <Card className="bg-matrix-dark border-matrix-gray/30">
-              <CardHeader>
-                <CardTitle>Match Metrics Comparison</CardTitle>
-                <CardDescription>Last match vs overall average</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <RadarComparisonChart 
-                  type="matchMetrics" 
-                  timeFilter={timeFilter} 
-                  height={300}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
         
         <TabsContent value="matches" className="mt-4">
           <Card className="bg-matrix-dark border-matrix-gray/30">
