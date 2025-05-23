@@ -1,9 +1,8 @@
+
 import { useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import HeroSection from '../components/HeroSection';
-import CoachSection from '../components/CoachSection';
 import FeaturesSection from '../components/FeaturesSection';
-import RivalizerSection from '../components/RivalizerSection';
 import FeatureDetail from '../components/FeatureDetail';
 import PricingSection from '../components/PricingSection';
 import CtaSection from '../components/CtaSection';
