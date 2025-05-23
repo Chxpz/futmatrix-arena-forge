@@ -23,7 +23,14 @@ const TrendChart = ({ type, timeFilter, height }: TrendChartProps) => {
     console.log("TrendChart mounted/updated with data:", data);
     console.log("Chart type:", type);
     console.log("Available metrics:", metricOptions);
-  }, [data, type, metricOptions]);
+    
+    // Ensure we have a valid selected metric when the type changes
+    if (type === 'efficiency' && !selectedMetric.includes('Efficiency') && selectedMetric !== 'overallPerformance') {
+      setSelectedMetric('overallPerformance');
+    } else if (type === 'matchMetrics' && (selectedMetric.includes('Efficiency') || selectedMetric === 'overallPerformance')) {
+      setSelectedMetric('goalsScored');
+    }
+  }, [data, type, metricOptions, selectedMetric]);
 
   // Get the color for the selected metric
   const metricColor = config[selectedMetric as keyof typeof config]?.color || '#FFFFFF';

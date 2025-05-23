@@ -1,6 +1,6 @@
 
 import { ChartLegend, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 
 type TrendLineChartProps = {
   data: Array<Record<string, any>>;
@@ -21,6 +21,19 @@ const TrendLineChart = ({
   console.log("Selected metric:", selectedMetric);
   console.log("Metric color:", metricColor);
   
+  // Validate the data and metric before rendering
+  const hasValidData = Array.isArray(data) && data.length > 0 && 
+    data.some(item => selectedMetric in item);
+  
+  if (!hasValidData) {
+    console.error("No valid data for selected metric:", selectedMetric);
+    return (
+      <div className="flex items-center justify-center h-full w-full bg-matrix-darker border border-matrix-gray/20 rounded-lg p-4">
+        <p className="text-gray-400">No data available for the selected metric</p>
+      </div>
+    );
+  }
+  
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart
@@ -38,9 +51,13 @@ const TrendLineChart = ({
           axisLine={{ stroke: '#333333' }}
           domain={isEfficiency ? [0, 100] : ['auto', 'auto']}
         />
-        <ChartTooltip 
-          content={<ChartTooltipContent />} 
-          cursor={{ stroke: '#666666' }}
+        <Tooltip
+          contentStyle={{ 
+            backgroundColor: '#1a1a1a', 
+            border: '1px solid #333333',
+            color: '#ffffff'
+          }}
+          labelStyle={{ color: '#9ca3af' }}
         />
         <ChartLegend />
         
@@ -49,9 +66,10 @@ const TrendLineChart = ({
           dataKey={selectedMetric}
           stroke={metricColor}
           strokeWidth={2}
-          dot={{ r: 4, strokeWidth: 2 }}
-          activeDot={{ r: 6, strokeWidth: 0 }}
+          dot={{ r: 4, strokeWidth: 2, fill: metricColor }}
+          activeDot={{ r: 6, strokeWidth: 0, fill: metricColor }}
           animationDuration={500}
+          isAnimationActive={true}
         />
       </LineChart>
     </ResponsiveContainer>
