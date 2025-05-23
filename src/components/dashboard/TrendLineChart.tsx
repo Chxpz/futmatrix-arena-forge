@@ -88,7 +88,7 @@ const TrendLineChart = ({
         />
         
         {/* Moving average line if enabled */}
-        {showMovingAverage && index > 1 && (
+        {showMovingAverage && dataWithMovingAvg.length > 2 && (
           <Line
             type="monotone"
             dataKey={`${selectedMetric}_avg`}
