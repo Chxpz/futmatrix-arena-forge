@@ -5,6 +5,7 @@ import HeroSection from '../components/HeroSection';
 import FeaturesSection from '../components/FeaturesSection';
 import FeatureDetail from '../components/FeatureDetail';
 import AnalyticsShowcaseSection from '../components/AnalyticsShowcaseSection';
+import DashboardShowcaseSection from '../components/DashboardShowcaseSection';
 import PricingSection from '../components/PricingSection';
 import CtaSection from '../components/CtaSection';
 import Footer from '../components/Footer';
@@ -31,6 +32,7 @@ const Index = () => {
       <AIAgentsSection />
       <FeaturesSection />
       <FeatureDetail />
+      <DashboardShowcaseSection />
       <AnalyticsShowcaseSection />
       <PricingSection />
       <CtaSection />
