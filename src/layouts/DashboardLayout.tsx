@@ -1,10 +1,9 @@
-
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart 
+  User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Swords 
 } from 'lucide-react';
 import RankingsMenu from '@/components/RankingsMenu';
 
@@ -24,6 +23,7 @@ const DashboardLayout = () => {
     { name: 'Profile', path: '/profile', icon: User },
     { name: 'Rivalizer', path: '/rivalizer', icon: Calendar },
     { name: 'AI Coach', path: '/coach', icon: MessageCircle },
+    { name: 'AI Rivalizer', path: '/ai-rivalizer', icon: Swords },
     { name: 'Charts', path: '/charts', icon: BarChart },
     { name: 'Upload', path: '/upload', icon: Upload },
   ];
