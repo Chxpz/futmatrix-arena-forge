@@ -36,6 +36,17 @@ const DashboardLayout = () => {
     navigate('/');
   };
 
+  const getActiveStyles = (linkPath: string) => {
+    switch (linkPath) {
+      case '/ai-rivalizer':
+        return 'bg-red-500/10 text-red-400 border border-red-500/30';
+      case '/ai-coach':
+        return 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30';
+      default:
+        return 'bg-neon-green/10 text-neon-green border border-neon-green/30';
+    }
+  };
+
   return (
     <div className="flex h-screen bg-matrix-darker">
       {/* Mobile sidebar toggle */}
@@ -87,7 +98,7 @@ const DashboardLayout = () => {
                 className={({ isActive }) => `
                   flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
                   ${isActive 
-                    ? 'bg-neon-green/10 text-neon-green border border-neon-green/30' 
+                    ? getActiveStyles(link.path)
                     : 'text-gray-300 hover:bg-matrix-gray/20 hover:text-white'
                   }
                 `}
