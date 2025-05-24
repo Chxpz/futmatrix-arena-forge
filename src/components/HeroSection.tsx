@@ -25,8 +25,25 @@ const HeroSection = () => {
   }, []);
   
   return (
-    <section className="relative min-h-screen pt-24 pb-16 flex items-center hero-glow overflow-hidden" ref={heroRef}>
-      <div className="matrix-grid"></div>
+    <section className="relative min-h-screen pt-24 pb-16 flex items-center overflow-hidden" ref={heroRef}>
+      {/* Stadium Background with Overlays */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="/lovable-uploads/25ab6b21-2c68-4f52-93e7-5203eb406fa6.png" 
+          alt="Stadium Background"
+          className="w-full h-full object-cover"
+        />
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-matrix-darker/80"></div>
+        {/* Gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-r from-matrix-darker/90 via-matrix-darker/60 to-matrix-darker/90"></div>
+        {/* Matrix grid overlay */}
+        <div className="absolute inset-0 matrix-grid opacity-30"></div>
+        {/* Neon glow effect */}
+        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-neon-green/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-neon-blue/10 rounded-full blur-3xl"></div>
+      </div>
+
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="lg:w-1/2 space-y-6 reveal">
@@ -61,7 +78,7 @@ const HeroSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-neon-green/10 to-transparent rounded-xl animate-slide-up opacity-30"></div>
                 
                 {/* Image container with border effects */}
-                <div className="relative overflow-hidden rounded-xl border border-neon-green/30 group-hover:border-neon-green/60 transition-all duration-300">
+                <div className="relative overflow-hidden rounded-xl border border-neon-green/30 group-hover:border-neon-green/60 transition-all duration-300 bg-matrix-dark/30 backdrop-blur-sm">
                   {/* Corner accents */}
                   <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-neon-green/80 z-10"></div>
                   <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-neon-green/80 z-10"></div>
