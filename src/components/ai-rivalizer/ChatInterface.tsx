@@ -40,7 +40,7 @@ const ChatInterface = ({ messages, setMessages }: ChatInterfaceProps) => {
         content: "🎯 Excellent question! Let me analyze the competitive landscape and find you the perfect opponent. Based on your skill level and recent performance, I have some exciting match proposals...",
         timestamp: new Date().toLocaleTimeString(),
       };
-      setMessages(prev => [...prev, aiResponse]);
+      setMessages([...messages, newMessage, aiResponse]);
     }, 1000);
   };
 
