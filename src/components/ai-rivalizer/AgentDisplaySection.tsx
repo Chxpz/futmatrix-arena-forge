@@ -1,7 +1,6 @@
 
 import { Flame } from 'lucide-react';
 import CompetitionStatsCards from './CompetitionStatsCards';
-import QuickActionsSection from './QuickActionsSection';
 
 const AgentDisplaySection = () => {
   return (
@@ -53,7 +52,6 @@ const AgentDisplaySection = () => {
         {/* Competition Data */}
         <div className="space-y-4 mt-6">
           <CompetitionStatsCards />
-          <QuickActionsSection />
         </div>
       </div>
     </div>
