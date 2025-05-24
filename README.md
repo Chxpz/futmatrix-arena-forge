@@ -1,3 +1,4 @@
+
 # Futmatrix - Football Analytics Dashboard
 
 ## Project Overview
@@ -6,7 +7,815 @@
 
 Futmatrix is a comprehensive football analytics platform that processes match images using AI to extract performance metrics and provides detailed visualizations for player analysis. The frontend is built with React, TypeScript, and modern data visualization libraries.
 
-## Development Setup
+## Data Requirements & API Specifications
+
+### Core Data Models
+
+#### User Profile Structure
+```typescript
+interface UserProfile {
+  id: string;
+  email: string;
+  nickname?: string;
+  eaname?: string;
+  bio?: string;
+  avatar_url?: string;
+  plan_type: 'basic' | 'advanced';
+  
+  // Performance metrics
+  win_rate: number;           // Percentage (0-100)
+  goals_per_match: number;    // Average goals per match
+  pass_accuracy: number;      // Percentage (0-100)
+  
+  // Rankings
+  global_rank?: number;       // Global ranking position
+  
+  // Timestamps
+  created_at: string;
+  updated_at: string;
+  last_login?: string;
+}
+```
+
+#### Match Data Structure
+```typescript
+interface MatchData {
+  id: string;
+  user_id: string;
+  date: string;              // ISO date string
+  opponent?: string;         // Optional opponent name
+  result?: 'Win' | 'Loss' | 'Draw';
+  
+  // Core match statistics
+  goals_scored: number;
+  goals_conceded: number;
+  possession: number;        // Percentage (0-100)
+  shots: number;
+  shots_on_target: number;
+  passes_attempted: number;
+  passes_completed: number;
+  pass_accuracy: number;     // Percentage (0-100)
+  tackles: number;
+  tackles_won: number;
+  
+  // Efficiency metrics (calculated)
+  possession_efficiency: number;    // 0-100
+  shot_efficiency: number;         // 0-100
+  pass_efficiency: number;         // 0-100
+  defensive_efficiency: number;    // 0-100
+  overall_performance: number;     // 0-100
+  
+  // Metadata
+  image_urls?: string[];     // URLs to match images
+  processed: boolean;        // Whether AI processing is complete
+  created_at: string;
+  updated_at: string;
+}
+```
+
+#### Match Proposal Structure (AI Rivalizer)
+```typescript
+interface MatchProposal {
+  id: string;
+  challenger_id: string;     // User who sent the proposal
+  opponent_id: string;       // User who received the proposal
+  proposed_time: string;     // ISO datetime string
+  expires_at: string;        // ISO datetime string
+  status: 'pending' | 'accepted' | 'declined' | 'expired';
+  
+  // Opponent details (populated from user profile)
+  opponent: {
+    name: string;            // nickname or eaname
+    avatar: string;          // avatar_url or empty string
+    rank: string;            // Format: "#123" from global_rank
+    win_rate: number;        // Percentage (0-100)
+  };
+  
+  created_at: string;
+  updated_at: string;
+}
+```
+
+#### Scheduled Match Structure (AI Rivalizer)
+```typescript
+interface ScheduledMatch {
+  id: string;
+  player_one_id: string;
+  player_two_id: string;
+  scheduled_time: string;    // ISO datetime string
+  status: 'scheduled' | 'completed' | 'cancelled';
+  
+  // Match results (only if completed)
+  player_one_score?: number;
+  player_two_score?: number;
+  
+  // Opponent details for current user view
+  opponent: {
+    name: string;
+    avatar: string;
+    rank: string;
+  };
+  
+  created_at: string;
+  updated_at: string;
+}
+```
+
+#### AI Coach Recommendation Structure
+```typescript
+interface CoachRecommendation {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  category: 'finishing' | 'defense' | 'passing' | 'fitness' | 'tactics';
+  priority: 'low' | 'medium' | 'high';
+  progress: number;          // Percentage (0-100)
+  status: 'active' | 'completed' | 'paused';
+  created_at: string;
+  updated_at: string;
+}
+```
+
+#### Rankings Data Structure
+```typescript
+interface RankingEntry {
+  rank: number;
+  user_id: string;
+  name: string;              // nickname or eaname
+  avatar_url?: string;
+  overall_rating: number;    // 0-100
+  matches_played: number;
+  win_rate: number;          // Percentage (0-100)
+  goals_per_match: number;
+  recent_form: string;       // e.g., "WWLWD" (last 5 matches)
+  trend: 'up' | 'down' | 'stable';
+}
+```
+
+### Required API Endpoints
+
+#### 1. Authentication & User Management
+**Base URL**: `/api/auth` and `/api/users`
+
+##### Get Current User Profile
+```
+GET /api/users/profile
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": UserProfile
+}
+```
+
+##### Update User Profile
+```
+PUT /api/users/profile
+Authorization: Bearer <token>
+Content-Type: application/json
+
+Body:
+{
+  "nickname": string,
+  "eaname": string,
+  "bio": string,
+  "avatar_url": string
+}
+
+Response:
+{
+  "success": true,
+  "data": UserProfile
+}
+```
+
+#### 2. Match Data Management
+**Base URL**: `/api/matches`
+
+##### Upload Match Images
+```
+POST /api/matches/upload
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+
+Body: FormData with image files
+
+Response:
+{
+  "success": true,
+  "message": "Match images uploaded successfully",
+  "data": {
+    "match_id": string,
+    "processing_status": "queued" | "processing" | "completed",
+    "estimated_completion": string // ISO datetime
+  }
+}
+```
+
+##### Get Match Results
+```
+GET /api/matches/{match_id}
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": MatchData
+}
+```
+
+##### Get Match History
+```
+GET /api/matches
+Authorization: Bearer <token>
+
+Query Parameters:
+- time_filter: "last5" | "lastMonth" | "last3Months" | "allTime"
+- limit: number (default: 50)
+- offset: number (default: 0)
+- sort: "date" | "performance" | "goals" (default: "date")
+- order: "asc" | "desc" (default: "desc")
+
+Response:
+{
+  "success": true,
+  "data": {
+    "matches": MatchData[],
+    "total_count": number,
+    "summary": {
+      "total_matches": number,
+      "average_goals": number,
+      "average_performance": number,
+      "win_rate": number,
+      "last_match_date": string
+    }
+  }
+}
+```
+
+##### Get Dashboard Statistics
+```
+GET /api/matches/dashboard-stats
+Authorization: Bearer <token>
+
+Query Parameters:
+- time_filter: "last5" | "lastMonth" | "last3Months" | "allTime"
+
+Response:
+{
+  "success": true,
+  "data": {
+    "total_matches": number,
+    "average_goals": number,
+    "overall_performance": number,
+    "last_match": {
+      "date": string,
+      "result": "Win" | "Loss" | "Draw",
+      "opponent": string,
+      "score": string // e.g., "3-1"
+    },
+    "trends": {
+      "matches_increase": boolean,
+      "goals_increase": boolean,
+      "performance_increase": boolean
+    },
+    "recent_form": string // e.g., "WWLWD"
+  }
+}
+```
+
+##### Get Chart Data
+```
+GET /api/matches/chart-data
+Authorization: Bearer <token>
+
+Query Parameters:
+- type: "efficiency" | "matchMetrics" | "radar"
+- time_filter: "last5" | "lastMonth" | "last3Months" | "allTime"
+- metric?: string // specific metric for trend charts
+
+Response:
+{
+  "success": true,
+  "data": {
+    "chart_data": Array<any>, // Format depends on chart type
+    "available_metrics": string[], // Available metrics for selection
+    "summary": {
+      "avg_performance": number,
+      "best_performance": number,
+      "worst_performance": number,
+      "improvement_rate": number
+    }
+  }
+}
+```
+
+#### 3. AI Rivalizer System
+**Base URL**: `/api/rivalizer`
+
+##### Get Match Proposals
+```
+GET /api/rivalizer/proposals
+Authorization: Bearer <token>
+
+Query Parameters:
+- status: "pending" | "all" (default: "pending")
+- type: "received" | "sent" | "all" (default: "received")
+
+Response:
+{
+  "success": true,
+  "data": {
+    "proposals": MatchProposal[],
+    "total_count": number
+  }
+}
+```
+
+##### Send Match Proposal
+```
+POST /api/rivalizer/proposals
+Authorization: Bearer <token>
+Content-Type: application/json
+
+Body:
+{
+  "opponent_id": string,
+  "proposed_time": string, // ISO datetime
+  "message": string // optional
+}
+
+Response:
+{
+  "success": true,
+  "message": "Match proposal sent successfully",
+  "data": MatchProposal
+}
+```
+
+##### Accept Match Proposal
+```
+POST /api/rivalizer/proposals/{proposal_id}/accept
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "message": "Match proposal accepted",
+  "data": {
+    "scheduled_match": ScheduledMatch
+  }
+}
+```
+
+##### Decline Match Proposal
+```
+POST /api/rivalizer/proposals/{proposal_id}/decline
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "message": "Match proposal declined"
+}
+```
+
+##### Get Scheduled Matches
+```
+GET /api/rivalizer/matches
+Authorization: Bearer <token>
+
+Query Parameters:
+- status: "upcoming" | "completed" | "all" (default: "all")
+- start_date: string // ISO date (optional)
+- end_date: string // ISO date (optional)
+
+Response:
+{
+  "success": true,
+  "data": {
+    "matches": ScheduledMatch[],
+    "total_count": number,
+    "upcoming_count": number,
+    "completed_count": number
+  }
+}
+```
+
+##### Update Match Results
+```
+PUT /api/rivalizer/matches/{match_id}/results
+Authorization: Bearer <token>
+Content-Type: application/json
+
+Body:
+{
+  "player_score": number,
+  "opponent_score": number
+}
+
+Response:
+{
+  "success": true,
+  "message": "Match results updated successfully",
+  "data": ScheduledMatch
+}
+```
+
+##### Find Potential Opponents
+```
+GET /api/rivalizer/find-opponents
+Authorization: Bearer <token>
+
+Query Parameters:
+- skill_range: number // +/- rating range (default: 100)
+- limit: number (default: 10)
+
+Response:
+{
+  "success": true,
+  "data": {
+    "opponents": Array<{
+      "user_id": string,
+      "name": string,
+      "avatar_url": string,
+      "rank": number,
+      "win_rate": number,
+      "compatibility_score": number, // 0-100
+      "last_active": string
+    }>
+  }
+}
+```
+
+#### 4. AI Coach System
+**Base URL**: `/api/coach`
+
+##### Get Coach Recommendations
+```
+GET /api/coach/recommendations
+Authorization: Bearer <token>
+
+Query Parameters:
+- status: "active" | "completed" | "all" (default: "active")
+- category?: string // optional filter
+
+Response:
+{
+  "success": true,
+  "data": {
+    "recommendations": CoachRecommendation[],
+    "total_count": number,
+    "categories": string[]
+  }
+}
+```
+
+##### Update Recommendation Progress
+```
+PUT /api/coach/recommendations/{recommendation_id}/progress
+Authorization: Bearer <token>
+Content-Type: application/json
+
+Body:
+{
+  "progress": number, // 0-100
+  "status": "active" | "completed" | "paused"
+}
+
+Response:
+{
+  "success": true,
+  "message": "Progress updated successfully",
+  "data": CoachRecommendation
+}
+```
+
+##### Generate New Recommendations
+```
+POST /api/coach/analyze
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "message": "Analysis complete",
+  "data": {
+    "new_recommendations": CoachRecommendation[],
+    "insights": Array<{
+      "type": "strength" | "weakness" | "improvement",
+      "title": string,
+      "description": string,
+      "trend": "up" | "down" | "stable"
+    }>
+  }
+}
+```
+
+##### Get Chat Messages (AI Coach Interface)
+```
+GET /api/coach/chat/messages
+Authorization: Bearer <token>
+
+Query Parameters:
+- limit: number (default: 50)
+- before: string // message ID for pagination
+
+Response:
+{
+  "success": true,
+  "data": {
+    "messages": Array<{
+      "id": string,
+      "type": "ai" | "user",
+      "content": string,
+      "timestamp": string,
+      "metadata": any // optional
+    }>
+  }
+}
+```
+
+##### Send Chat Message (AI Coach Interface)
+```
+POST /api/coach/chat/messages
+Authorization: Bearer <token>
+Content-Type: application/json
+
+Body:
+{
+  "content": string,
+  "context": any // optional context data
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "user_message": {
+      "id": string,
+      "type": "user",
+      "content": string,
+      "timestamp": string
+    },
+    "ai_response": {
+      "id": string,
+      "type": "ai",
+      "content": string,
+      "timestamp": string
+    }
+  }
+}
+```
+
+#### 5. Rankings System
+**Base URL**: `/api/rankings`
+
+##### Get Global Rankings
+```
+GET /api/rankings/global
+Authorization: Bearer <token>
+
+Query Parameters:
+- limit: number (default: 100)
+- offset: number (default: 0)
+- category: "overall" | "goals" | "winRate" | "efficiency" (default: "overall")
+
+Response:
+{
+  "success": true,
+  "data": {
+    "rankings": RankingEntry[],
+    "total_count": number,
+    "user_rank": number, // Current user's rank
+    "user_position": RankingEntry // Current user's ranking data
+  }
+}
+```
+
+##### Get Regional Rankings
+```
+GET /api/rankings/regional
+Authorization: Bearer <token>
+
+Query Parameters:
+- region: string // user's region
+- limit: number (default: 50)
+- offset: number (default: 0)
+
+Response:
+{
+  "success": true,
+  "data": {
+    "rankings": RankingEntry[],
+    "total_count": number,
+    "user_rank": number
+  }
+}
+```
+
+##### Get Friends Rankings
+```
+GET /api/rankings/friends
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": {
+    "rankings": RankingEntry[],
+    "total_count": number,
+    "user_rank": number
+  }
+}
+```
+
+### Data Processing Requirements
+
+#### AI Image Processing Pipeline
+The backend must process uploaded match images to extract:
+
+1. **Basic Match Statistics**:
+   - Goals scored/conceded
+   - Total shots and shots on target
+   - Possession percentage
+   - Pass completion stats
+   - Tackle statistics
+
+2. **Calculated Efficiency Metrics**:
+   ```typescript
+   // Efficiency calculations (0-100 scale)
+   possession_efficiency = (possession_percentage / 100) * performance_multiplier
+   shot_efficiency = (shots_on_target / total_shots) * 100
+   pass_efficiency = (passes_completed / passes_attempted) * 100
+   defensive_efficiency = (tackles_won / tackles_attempted) * 100
+   overall_performance = weighted_average(all_efficiency_metrics)
+   ```
+
+3. **Performance Analysis**:
+   - Trend analysis over time
+   - Comparison with previous matches
+   - Identification of strengths/weaknesses
+   - Generation of improvement recommendations
+
+#### Real-time Data Updates
+Implement WebSocket connections or Server-Sent Events for:
+- Live match proposal notifications
+- Real-time chat updates (AI Coach/Rivalizer)
+- Match result updates
+- Ranking changes
+
+#### Caching Strategy
+Implement caching for:
+- User rankings (TTL: 5 minutes)
+- Match statistics summaries (TTL: 1 hour)
+- Chart data (TTL: 30 minutes)
+- AI recommendations (TTL: 1 day)
+
+### Database Schema Requirements
+
+#### Core Tables
+1. **profiles** - User profile data (already defined in schema.sql)
+2. **matches** - Individual match records with statistics
+3. **match_proposals** - Rivalizer match proposals (already defined)
+4. **scheduled_matches** - Confirmed matches (already defined)
+5. **uploaded_images** - Match image metadata (already defined)
+
+#### Additional Required Tables
+```sql
+-- AI Coach recommendations
+CREATE TABLE coach_recommendations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES public.profiles(id) NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  category TEXT NOT NULL,
+  priority TEXT DEFAULT 'medium',
+  progress INTEGER DEFAULT 0,
+  status TEXT DEFAULT 'active',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Chat messages for AI interfaces
+CREATE TABLE chat_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES public.profiles(id) NOT NULL,
+  interface_type TEXT NOT NULL, -- 'coach' | 'rivalizer'
+  message_type TEXT NOT NULL, -- 'user' | 'ai'
+  content TEXT NOT NULL,
+  metadata JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User rankings cache
+CREATE TABLE user_rankings (
+  user_id UUID REFERENCES public.profiles(id) PRIMARY KEY,
+  global_rank INTEGER,
+  regional_rank INTEGER,
+  overall_rating FLOAT DEFAULT 0,
+  calculated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Match statistics (detailed)
+CREATE TABLE match_statistics (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  match_id UUID REFERENCES public.scheduled_matches(id),
+  user_id UUID REFERENCES public.profiles(id) NOT NULL,
+  goals_scored INTEGER DEFAULT 0,
+  goals_conceded INTEGER DEFAULT 0,
+  possession INTEGER DEFAULT 0,
+  shots INTEGER DEFAULT 0,
+  shots_on_target INTEGER DEFAULT 0,
+  passes_attempted INTEGER DEFAULT 0,
+  passes_completed INTEGER DEFAULT 0,
+  tackles INTEGER DEFAULT 0,
+  tackles_won INTEGER DEFAULT 0,
+  -- Calculated efficiency metrics
+  possession_efficiency FLOAT DEFAULT 0,
+  shot_efficiency FLOAT DEFAULT 0,
+  pass_efficiency FLOAT DEFAULT 0,
+  defensive_efficiency FLOAT DEFAULT 0,
+  overall_performance FLOAT DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+### Error Handling
+
+#### Standard Error Response Format
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "User-friendly error message",
+    "details": "Technical details for debugging",
+    "timestamp": "2024-01-01T00:00:00Z"
+  }
+}
+```
+
+#### Common Error Codes
+- `VALIDATION_ERROR` - Invalid request data
+- `UNAUTHORIZED` - Invalid or missing authentication
+- `FORBIDDEN` - User lacks permission for this action
+- `NOT_FOUND` - Requested resource doesn't exist
+- `RATE_LIMITED` - User exceeded plan limits
+- `PROCESSING_ERROR` - AI analysis failed
+- `FILE_TOO_LARGE` - Upload exceeds size limits
+- `MATCH_PROPOSAL_EXPIRED` - Proposal no longer valid
+- `MATCH_ALREADY_COMPLETED` - Cannot modify completed match
+- `INSUFFICIENT_DATA` - Not enough data for analysis
+
+### Performance Requirements
+
+#### Response Time Targets
+- Authentication: < 500ms
+- Profile operations: < 500ms
+- Match history retrieval: < 1 second
+- Chart data generation: < 2 seconds
+- Image upload acknowledgment: < 2 seconds
+- AI processing completion: 30-60 seconds
+- Real-time notifications: < 100ms
+- Rankings data: < 1 second
+
+#### Rate Limiting (per plan)
+**Basic Plan**:
+- API calls: 1000/hour
+- Image uploads: 3/day
+- Match proposals: 5 active simultaneously
+- AI chat messages: 50/day
+
+**Advanced Plan**:
+- API calls: 5000/hour
+- Image uploads: 10/day
+- Match proposals: 15 active simultaneously
+- AI chat messages: 200/day
+
+### Security Requirements
+
+#### Authentication & Authorization
+- JWT token validation for all protected endpoints
+- Token refresh mechanism (15-minute access tokens, 7-day refresh tokens)
+- Role-based access control (basic/advanced plans)
+- Rate limiting per user and IP address
+
+#### Data Validation
+- Input sanitization for all user data
+- File type/size validation for uploads
+- SQL injection prevention
+- XSS protection for user-generated content
+
+#### Privacy & Compliance
+- GDPR compliance for EU users
+- Data retention policies (match data: 2 years, chat logs: 30 days)
+- User data export functionality
+- Right to deletion implementation
+
+### Development Setup
 
 ### Prerequisites
 
@@ -284,431 +1093,7 @@ src/
     └── DashboardLayout.tsx # Common dashboard layout
 ```
 
-## Data Structures & API Integration
-
-### Core Data Models
-
-#### Match Data Structure
-```typescript
-interface MatchData {
-  matchId: string | number;
-  date: string;              // Format: "MMM D" (e.g., "Apr 1")
-  opponent?: string;         // Optional opponent name
-  result?: string;           // Optional match result
-  
-  // Efficiency Metrics (0-100 scale)
-  possessionEfficiency: number;
-  shotEfficiency: number;
-  passEfficiency: number;
-  defensiveEfficiency: number;
-  overallPerformance: number;
-  
-  // Match Statistics
-  goalsScored: number;
-  possession: number;        // Possession percentage (0-100)
-  shots: number;
-  passesAttempted: number;
-  passAccuracy: number;      // Pass accuracy percentage (0-100)
-  tackles: number;
-  
-  // Optional metadata
-  imageUrl?: string;         // URL to match image
-}
-```
-
-#### User Profile Structure
-```typescript
-interface UserProfile {
-  id: string;
-  email: string;
-  planType: 'free' | 'basic' | 'premium';
-  maxUploads: number;        // Based on plan: free=1, basic=3, premium=5
-}
-```
-
-#### Rivalizer Data Structures
-
-##### Match Proposal
-```typescript
-interface MatchProposal {
-  id: string;
-  opponent: {
-    name: string;
-    avatar: string;          // URL to avatar image or empty string
-    rank: string;            // Format: "#123"
-    winRate: number;         // Percentage (0-100)
-  };
-  proposedTime: string;      // Format: "Today, 8:30 PM" or "Tomorrow, 7:00 PM"
-  expiresIn: string;         // Format: "3 hours", "12 hours"
-  status?: 'pending' | 'accepted' | 'declined' | 'expired';
-}
-```
-
-##### Scheduled Match
-```typescript
-interface ScheduledMatch {
-  id: string;
-  opponent: {
-    name: string;
-    avatar: string;          // URL to avatar image or empty string
-    rank: string;            // Format: "#123"
-  };
-  date: Date;                // Match date
-  time: string;              // Format: "8:30 PM"
-  status: 'upcoming' | 'completed';
-  result?: {                 // Only present if status is 'completed'
-    playerScore: number;
-    opponentScore: number;
-  };
-}
-```
-
-### Required API Endpoints
-
-#### 1. Match Image Upload & Processing
-**Endpoint**: `POST /api/matches/upload`
-
-**Request Format**:
-- Content-Type: `multipart/form-data`
-- Authentication: Bearer token in Authorization header
-- Body: Image files with field names `match_image_0`, `match_image_1`, etc.
-
-**Expected Response**:
-```json
-{
-  "success": true,
-  "message": "Match images processed successfully",
-  "data": {
-    "matchId": "uuid-string",
-    "metrics": {
-      "possessionEfficiency": 74,
-      "shotEfficiency": 63,
-      "passEfficiency": 82,
-      "defensiveEfficiency": 71,
-      "overallPerformance": 72,
-      "goalsScored": 2,
-      "possession": 62,
-      "shots": 13,
-      "passesAttempted": 502,
-      "passAccuracy": 86,
-      "tackles": 16
-    },
-    "date": "2024-05-23",
-    "imageUrl": "https://storage.url/match-image.jpg"
-  }
-}
-```
-
-#### 2. Match History Retrieval
-**Endpoint**: `GET /api/matches`
-
-**Query Parameters**:
-- `timeFilter`: "last5" | "lastMonth" | "last3Months" | "allTime"
-- `limit`: number (optional)
-- `offset`: number (optional for pagination)
-
-**Expected Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "matches": [MatchData[]],
-    "totalCount": number,
-    "summary": {
-      "totalMatches": number,
-      "averageGoalsPerMatch": number,
-      "averageOverallPerformance": number,
-      "lastMatchDate": "2024-05-23"
-    }
-  }
-}
-```
-
-#### 3. User Profile & Plan Information
-**Endpoint**: `GET /api/user/profile`
-
-**Expected Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "id": "user-uuid",
-    "email": "user@example.com",
-    "planType": "premium",
-    "maxUploads": 5,
-    "matchesThisMonth": 12,
-    "totalMatches": 45
-  }
-}
-```
-
-#### 4. Rivalizer - Match Proposals
-
-##### Get Pending Match Proposals
-**Endpoint**: `GET /api/rivalizer/proposals`
-
-**Expected Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "proposals": [MatchProposal[]],
-    "totalCount": number
-  }
-}
-```
-
-##### Accept Match Proposal
-**Endpoint**: `POST /api/rivalizer/proposals/{proposalId}/accept`
-
-**Expected Response**:
-```json
-{
-  "success": true,
-  "message": "Match proposal accepted",
-  "data": {
-    "scheduledMatch": {
-      "id": "match-uuid",
-      "opponent": {
-        "name": "Opponent Name",
-        "avatar": "avatar-url",
-        "rank": "#123"
-      },
-      "date": "2024-05-24",
-      "time": "8:30 PM",
-      "status": "upcoming"
-    }
-  }
-}
-```
-
-##### Decline Match Proposal
-**Endpoint**: `POST /api/rivalizer/proposals/{proposalId}/decline`
-
-**Expected Response**:
-```json
-{
-  "success": true,
-  "message": "Match proposal declined"
-}
-```
-
-#### 5. Rivalizer - Scheduled Matches
-
-##### Get Scheduled Matches
-**Endpoint**: `GET /api/rivalizer/matches`
-
-**Query Parameters**:
-- `status`: "upcoming" | "completed" | "all" (default: "all")
-- `startDate`: ISO date string (optional)
-- `endDate`: ISO date string (optional)
-
-**Expected Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "matches": [ScheduledMatch[]],
-    "totalCount": number
-  }
-}
-```
-
-##### Update Match Results
-**Endpoint**: `PUT /api/rivalizer/matches/{matchId}/results`
-
-**Request Body**:
-```json
-{
-  "playerScore": number,
-  "opponentScore": number
-}
-```
-
-**Expected Response**:
-```json
-{
-  "success": true,
-  "message": "Match results updated",
-  "data": {
-    "updatedMatch": ScheduledMatch
-  }
-}
-```
-
-### Frontend Data Processing
-
-#### Chart Data Transformations
-The frontend expects data in specific formats for different chart types:
-
-1. **Line Charts**: Array of MatchData objects sorted by date
-2. **Radar Charts**: Comparison objects with `recent` vs `average` values
-3. **Moving Averages**: Calculated client-side for last 3 matches
-
-#### Time Filtering
-The frontend implements client-side filtering but can also send filter parameters to the backend:
-- `last5`: Last 5 matches
-- `lastMonth`: Last 30 days
-- `last3Months`: Last 90 days
-- `allTime`: All historical data
-
-## Authentication & Security
-
-### Required Authentication Flow
-1. Users authenticate via Supabase (Google OAuth recommended)
-2. Frontend receives JWT token from Supabase
-3. All API calls include `Authorization: Bearer <token>` header
-4. Backend should verify JWT with Supabase public key
-
-### File Upload Security
-- Maximum file size: 10MB per image
-- Allowed formats: PNG, JPG, JPEG
-- Maximum files per upload based on user plan
-- Virus scanning recommended on backend
-
-## Environment Variables
-
-### Frontend Environment Variables
-```env
-VITE_SUPABASE_URL=https://[project-id].supabase.co
-VITE_SUPABASE_ANON_KEY=[anon-key]
-VITE_MATCH_UPLOAD_API_URL=https://api.futmatrix.com/api/matches/upload
-```
-
-### Expected Backend Configuration
-The backend should be configurable via environment variables for:
-- Database connection strings
-- Supabase JWT verification
-- File storage configuration (AWS S3, etc.)
-- AI processing service URLs
-- Rate limiting settings
-
-## Error Handling
-
-### Expected Error Response Format
-```json
-{
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "User-friendly error message",
-    "details": "Technical details for debugging"
-  }
-}
-```
-
-### Common Error Codes
-- `VALIDATION_ERROR`: Invalid request data
-- `UNAUTHORIZED`: Invalid or missing authentication
-- `RATE_LIMITED`: User exceeded plan limits
-- `PROCESSING_ERROR`: AI analysis failed
-- `FILE_TOO_LARGE`: Upload exceeds size limits
-- `MATCH_PROPOSAL_EXPIRED`: Attempt to accept an expired match proposal
-- `MATCH_ALREADY_COMPLETED`: Attempt to update results of a completed match
-
-## Performance Requirements
-
-### Response Time Expectations
-- Image upload acknowledgment: < 2 seconds
-- Image processing completion: 3-5 seconds
-- Match history retrieval: < 1 second
-- Profile data: < 500ms
-- Match proposals retrieval: < 500ms
-- Match scheduling operations: < 1 second
-
-### Rate Limiting
-Implement rate limiting based on user plans:
-- **Free**: 1 upload/day, 100 API calls/hour, max 3 pending match proposals
-- **Basic**: 3 uploads/day, 500 API calls/hour, max 5 pending match proposals
-- **Premium**: 5 uploads/day, 1000 API calls/hour, max 10 pending match proposals
-
-## Database Schema Recommendations
-
-### Core Tables Needed
-1. **users**: User profiles and plan information
-2. **matches**: Match data and metrics
-3. **match_images**: Uploaded image metadata
-4. **user_sessions**: Authentication sessions
-5. **usage_tracking**: API usage for rate limiting
-6. **match_proposals**: Rivalizer match proposals
-7. **scheduled_matches**: Confirmed and scheduled matches
-8. **player_stats**: Player performance statistics for matchmaking
-
-### Key Relationships
-- Users have many Matches
-- Matches have many Match Images
-- Users have Usage Tracking records
-- Users can have many Match Proposals (both sent and received)
-- Users can have many Scheduled Matches
-- Users have one Player Stats record
-
-## Rivalizer Feature
-
-### Feature Overview
-The Rivalizer system enables players to:
-1. Receive match proposals from other players
-2. Accept or decline match proposals
-3. View a calendar of upcoming and past matches
-4. Record match results
-5. Track their performance against other players
-
-### Match Proposal Workflow
-1. Player receives match proposals in the Rivalizer dashboard
-2. Each proposal shows opponent details, proposed time, and expiration
-3. Player can accept or decline the proposal
-4. On acceptance, a scheduled match is created in both players' calendars
-5. On decline, the proposal is removed from the system
-
-### Match Calendar Features
-1. Visual calendar showing all scheduled matches
-2. Date-based filtering of matches
-3. Display of match details for selected dates
-4. Differentiation between upcoming and completed matches
-5. Display of match results for completed matches
-
-### Matchmaking System (Future Feature)
-1. Player ranking system based on match results
-2. Skill-based matchmaking for fair competition
-3. Geographic proximity considerations for in-person matches
-4. Time zone matching for online matches
-5. Automated match proposals based on player availability
-
-## AI Processing Pipeline
-
-### Image Analysis Requirements
-The backend AI should extract these metrics from football match images:
-1. **Possession data**: Ball control percentages
-2. **Shot data**: Total shots, shots on target
-3. **Pass data**: Attempted passes, successful passes
-4. **Defensive data**: Tackles, interceptions
-5. **Goal data**: Goals scored
-
-### Processing Workflow
-1. Receive uploaded images
-2. Queue for AI processing
-3. Extract raw statistics
-4. Calculate efficiency percentages
-5. Store results in database
-6. Notify frontend of completion
-
-## Testing & Development
-
-### Mock Data
-The frontend currently uses comprehensive mock data for development. Replace with real API calls by updating the hooks in `src/hooks/`.
-
-### Development Setup
-```bash
-npm install
-npm run dev
-```
-
-### Build & Deployment
-```bash
-npm run build
-npm run preview
-```
-
-## Integration Checklist
+### Integration Checklist
 
 For smooth backend integration, ensure:
 - [ ] All API endpoints match expected request/response formats
@@ -723,67 +1108,23 @@ For smooth backend integration, ensure:
 - [ ] Monitoring and logging setup
 - [ ] Rivalizer match proposal system implementation
 - [ ] Match calendar and scheduling system implementation
+- [ ] AI Coach chat interface with real-time responses
+- [ ] Rankings calculation and caching system
 
-## Support & Documentation
+### Support & Documentation
 
-### Frontend Contact Points
+#### Frontend Contact Points
 - Main dashboard: `/dashboard`
 - Charts view: `/charts` 
 - Upload interface: `/upload`
 - User profile: `/profile`
 - Rivalizer interface: `/rivalizer`
+- AI Rivalizer agent: `/ai-rivalizer`
+- AI Coach agent: `/ai-coach`
 
-### Key Hook Functions
+#### Key Hook Functions
 - `useTrendChartData()`: Manages chart data and filtering
 - `useRadarComparisonData()`: Handles comparison analytics
 - `useUploadImages()`: Manages file upload process
 
 For questions about frontend integration, refer to the component documentation in the respective TypeScript files.
-
-```
-
-### Rivalizer Component Implementation
-
-The Rivalizer page (`src/pages/Rivalizer.tsx`) is a comprehensive matchmaking system with the following key features:
-
-1. **Match Proposals Section**:
-   - Displays pending match proposals from other players
-   - Shows opponent details (name, avatar, rank, win rate)
-   - Shows proposed match time and expiration time
-   - Provides accept/decline functionality
-
-2. **Match Calendar Section**:
-   - Visual calendar showing scheduled matches
-   - Date selection to view matches on specific days
-   - Displays upcoming and completed matches
-   - Shows match results for completed matches
-
-3. **Match Details Dialog**:
-   - Detailed view of match proposals
-   - Opponent information and statistics
-   - Accept/decline buttons with confirmation
-
-When integrating with the backend, the Rivalizer component expects the following data flows:
-
-1. **Get Match Proposals**:
-   - Fetch pending match proposals on page load
-   - Update proposals in real-time when changes occur
-
-2. **Accept/Decline Proposals**:
-   - Send acceptance/rejection to the backend
-   - Update the UI based on response
-   - Display toast notifications for confirmation
-
-3. **Calendar Integration**:
-   - Fetch scheduled matches for calendar display
-   - Support date-based filtering
-   - Update match status and results
-
-4. **Real-time Updates**:
-   - Update proposals when they expire
-   - Notify users of new match proposals
-   - Update match results in real-time
-
-The current implementation uses mock data and local state management, which should be replaced with API calls to the endpoints described in the API section.
-
-</edits_to_apply>
