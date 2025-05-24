@@ -1,15 +1,15 @@
-
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Swords, Brain, Edit 
+  User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Swords, Brain, Edit, ChevronDown, ChevronRight 
 } from 'lucide-react';
 import RankingsMenu from '@/components/RankingsMenu';
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dashboardExpanded, setDashboardExpanded] = useState(false);
   const navigate = useNavigate();
   
   // Placeholder user data - this would come from your auth context
@@ -20,11 +20,9 @@ const DashboardLayout = () => {
   };
 
   const navLinks = [
-    { name: 'Dashboard', path: '/dashboard', icon: Home },
     { name: 'Rivalizer Arena', path: '/rivalizer', icon: Calendar },
     { name: 'Rivalizer Agent', path: '/ai-rivalizer', icon: Swords },
     { name: 'Coach Agent', path: '/ai-coach', icon: Brain },
-    { name: 'Charts', path: '/charts', icon: BarChart },
     { name: 'Upload', path: '/upload', icon: Upload },
   ];
 
@@ -103,6 +101,47 @@ const DashboardLayout = () => {
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+            {/* Dashboard section with Charts submenu */}
+            <div>
+              <button
+                onClick={() => {
+                  navigate('/dashboard');
+                  setDashboardExpanded(!dashboardExpanded);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  location.pathname === '/dashboard' || location.pathname === '/charts'
+                    ? 'bg-neon-green/10 text-neon-green border border-neon-green/30'
+                    : 'text-gray-300 hover:bg-matrix-gray/20 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center">
+                  <Home className="mr-3 h-5 w-5" />
+                  Dashboard
+                </div>
+                {dashboardExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              </button>
+              
+              {dashboardExpanded && (
+                <div className="ml-8 mt-1">
+                  <NavLink
+                    to="/charts"
+                    className={({ isActive }) => `
+                      flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
+                      ${isActive 
+                        ? 'bg-neon-green/10 text-neon-green border border-neon-green/30'
+                        : 'text-gray-300 hover:bg-matrix-gray/20 hover:text-white'
+                      }
+                    `}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <BarChart className="mr-3 h-5 w-5" />
+                    Charts
+                  </NavLink>
+                </div>
+              )}
+            </div>
+
+            {/* Other navigation links */}
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
