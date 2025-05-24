@@ -1,9 +1,10 @@
+
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Swords, Brain, Edit, ChevronDown, ChevronRight 
+  User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Edit, ChevronDown, ChevronRight 
 } from 'lucide-react';
 import RankingsMenu from '@/components/RankingsMenu';
 
@@ -21,8 +22,18 @@ const DashboardLayout = () => {
 
   const navLinks = [
     { name: 'Rivalizer Arena', path: '/rivalizer', icon: Calendar },
-    { name: 'Rivalizer Agent', path: '/ai-rivalizer', icon: Swords },
-    { name: 'Coach Agent', path: '/ai-coach', icon: Brain },
+    { 
+      name: 'Rivalizer Agent', 
+      path: '/ai-rivalizer', 
+      icon: null,
+      agentImage: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=400&h=400&fit=crop&crop=face'
+    },
+    { 
+      name: 'Coach Agent', 
+      path: '/ai-coach', 
+      icon: null,
+      agentImage: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop&crop=face'
+    },
     { name: 'Upload', path: '/upload', icon: Upload },
   ];
 
@@ -155,7 +166,16 @@ const DashboardLayout = () => {
                 `}
                 onClick={() => setSidebarOpen(false)}
               >
-                <link.icon className="mr-3 h-5 w-5" />
+                {link.agentImage ? (
+                  <Avatar className="mr-3 h-5 w-5">
+                    <AvatarImage src={link.agentImage} alt={link.name} className="object-cover" />
+                    <AvatarFallback className="text-xs bg-gray-600 text-white">
+                      {link.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <link.icon className="mr-3 h-5 w-5" />
+                )}
                 {link.name}
               </NavLink>
             ))}
