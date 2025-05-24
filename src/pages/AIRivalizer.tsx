@@ -49,39 +49,8 @@ const AIRivalizer = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-matrix-darker via-red-950/20 to-matrix-darker">
       <div className="flex flex-col lg:flex-row h-screen">
-        {/* Sidebar with Competition Stats at top */}
+        {/* Sidebar */}
         <div className="lg:w-80 border-r border-red-900/30 bg-gradient-to-b from-red-950/10 to-transparent p-6 space-y-6 overflow-y-auto">
-          {/* Competition Status - Moved to top */}
-          <div>
-            <h3 className="text-lg font-semibold text-red-300 flex items-center mb-4">
-              <Trophy className="w-5 h-5 mr-2" />
-              Your Competition Stats
-            </h3>
-            
-            <div className="space-y-3">
-              <Card className="p-4 bg-red-950/20 border-red-800/30 hover:bg-red-950/30 transition-colors">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300">Active Challenges</span>
-                  <span className="text-red-400 font-bold text-lg">3</span>
-                </div>
-              </Card>
-              
-              <Card className="p-4 bg-red-950/20 border-red-800/30 hover:bg-red-950/30 transition-colors">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300">Win Streak</span>
-                  <span className="text-red-400 font-bold text-lg">7</span>
-                </div>
-              </Card>
-              
-              <Card className="p-4 bg-red-950/20 border-red-800/30 hover:bg-red-950/30 transition-colors">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300">Rank Position</span>
-                  <span className="text-red-400 font-bold text-lg">#42</span>
-                </div>
-              </Card>
-            </div>
-          </div>
-
           {/* Rivalizer's Current Focus */}
           <div className="bg-gradient-to-r from-red-950/30 to-red-900/20 border border-red-800/30 rounded-lg p-4">
             <h3 className="text-lg font-semibold text-red-300 flex items-center mb-3">
@@ -162,28 +131,50 @@ const AIRivalizer = () => {
                 </div>
               </div>
 
-              {/* Agent Stats Display */}
-              <div className="flex space-x-8 mt-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-400">247</div>
-                  <div className="text-sm text-gray-400">Matches Arranged</div>
+              {/* Competition Data */}
+              <div className="space-y-4 mt-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <Card className="p-4 bg-red-950/20 border-red-800/30 hover:bg-red-950/30 transition-colors">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-400 mb-1">Active Challenges</div>
+                      <div className="text-2xl font-bold text-red-400">3</div>
+                    </div>
+                  </Card>
+                  
+                  <Card className="p-4 bg-red-950/20 border-red-800/30 hover:bg-red-950/30 transition-colors">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-400 mb-1">Win Streak</div>
+                      <div className="text-2xl font-bold text-red-400">7</div>
+                    </div>
+                  </Card>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-400">89%</div>
-                  <div className="text-sm text-gray-400">Success Rate</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-400">24/7</div>
-                  <div className="text-sm text-gray-400">Availability</div>
-                </div>
+                
+                <Card className="p-4 bg-red-950/20 border-red-800/30 hover:bg-red-950/30 transition-colors">
+                  <div className="text-center">
+                    <div className="text-sm text-gray-400 mb-1">Rank Position</div>
+                    <div className="text-2xl font-bold text-red-400">#42</div>
+                  </div>
+                </Card>
+                
+                <Card className="p-4 bg-red-950/20 border-red-800/30 hover:bg-red-950/30 transition-colors">
+                  <div className="text-center">
+                    <div className="text-sm text-gray-400 mb-2">Current Focus</div>
+                    <div className="text-sm text-red-300">"Scanning for opponents matching your skill level... 3 potential matches found!"</div>
+                  </div>
+                </Card>
               </div>
 
-              {/* Agent Description */}
-              <div className="text-center max-w-md">
-                <p className="text-red-300 font-medium text-lg mb-2">Your Personal Competition Agent</p>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  Advanced AI engineered for competitive excellence. Analyzing opponents, creating strategic challenges, and maximizing your winning potential in every match.
-                </p>
+              {/* Quick Actions */}
+              <div className="flex space-x-3 mt-6">
+                <Button className="bg-red-600 hover:bg-red-700 text-white border-red-500 transition-all hover:shadow-lg hover:shadow-red-600/20">
+                  Find Opponent
+                </Button>
+                <Button variant="outline" className="border-red-600 text-red-400 hover:bg-red-950/30 transition-all">
+                  View Challenges
+                </Button>
+                <Button variant="outline" className="border-red-600 text-red-400 hover:bg-red-950/30 transition-all">
+                  Match History
+                </Button>
               </div>
             </div>
           </div>
