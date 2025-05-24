@@ -1,4 +1,3 @@
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
@@ -18,6 +17,7 @@ import AICoach from "./pages/AICoach";
 import Upload from "./pages/Upload";
 import Rankings from "./pages/Rankings";
 import Charts from "./pages/Charts";
+import ProductionChecklist from "./pages/ProductionChecklist";
 
 // Layouts
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -35,6 +35,11 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          
+          {/* Development only route - remove in production */}
+          {import.meta.env.DEV && (
+            <Route path="/production-checklist" element={<ProductionChecklist />} />
+          )}
           
           {/* Protected dashboard routes */}
           <Route path="/" element={<DashboardLayout />}>
