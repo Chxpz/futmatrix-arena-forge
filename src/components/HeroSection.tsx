@@ -117,7 +117,7 @@ const HeroSection = () => {
           </div>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center">
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center">
           <span className="text-xs text-gray-400 mb-2">Scroll to explore</span>
           <svg className="animate-bounce h-5 w-5 text-neon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
