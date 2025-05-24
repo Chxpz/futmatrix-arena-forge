@@ -51,8 +51,43 @@ const HeroSection = () => {
           </div>
           
           <div className="lg:w-1/2 reveal">
-            <div className="relative h-[500px] w-full">
-              {/* Space reserved for future video content */}
+            <div className="relative h-[500px] w-full flex items-center justify-center">
+              {/* High-tech image container with multiple effects */}
+              <div className="relative group">
+                {/* Outer glow effect */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-neon-green/20 via-neon-blue/20 to-neon-green/20 rounded-2xl blur-xl opacity-70 group-hover:opacity-100 transition-all duration-300 animate-pulse"></div>
+                
+                {/* Scanner lines effect */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-neon-green/10 to-transparent rounded-xl animate-slide-up opacity-30"></div>
+                
+                {/* Image container with border effects */}
+                <div className="relative overflow-hidden rounded-xl border border-neon-green/30 group-hover:border-neon-green/60 transition-all duration-300">
+                  {/* Corner accents */}
+                  <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-neon-green/80 z-10"></div>
+                  <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-neon-green/80 z-10"></div>
+                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-neon-green/80 z-10"></div>
+                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-neon-green/80 z-10"></div>
+                  
+                  {/* Holographic overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-neon-green/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                  
+                  {/* Main image */}
+                  <img 
+                    src="/lovable-uploads/49656df3-fd56-4961-8db9-4b24bd9621bc.png" 
+                    alt="Futuristic Gaming AI Agents"
+                    className="w-full h-auto max-w-lg transform group-hover:scale-105 transition-transform duration-500 filter brightness-110 contrast-110 saturate-110"
+                  />
+                  
+                  {/* Scanning line animation */}
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon-green to-transparent opacity-60 animate-slide-up"></div>
+                </div>
+                
+                {/* Floating particles effect */}
+                <div className="absolute -top-2 -left-2 w-2 h-2 bg-neon-green rounded-full animate-float opacity-80"></div>
+                <div className="absolute -bottom-2 -right-2 w-2 h-2 bg-neon-blue rounded-full animate-float opacity-80" style={{animationDelay: '1s'}}></div>
+                <div className="absolute top-1/3 -left-4 w-1 h-1 bg-neon-green rounded-full animate-float opacity-60" style={{animationDelay: '2s'}}></div>
+                <div className="absolute bottom-1/3 -right-4 w-1 h-1 bg-neon-blue rounded-full animate-float opacity-60" style={{animationDelay: '0.5s'}}></div>
+              </div>
             </div>
           </div>
         </div>
