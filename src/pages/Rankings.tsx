@@ -1,8 +1,5 @@
-
 import { useState } from 'react';
-import { 
-  Tabs, TabsContent, TabsList, TabsTrigger 
-} from '@/components/ui/tabs';
+import { useLocation } from 'react-router-dom';
 import { 
   Table, TableBody, TableCaption, TableCell, 
   TableHead, TableHeader, TableRow 
@@ -403,180 +400,178 @@ const PositionIndicator = ({ change }: { change: 'up' | 'down' | 'same' }) => {
 };
 
 const Rankings = () => {
-  const [activeTab, setActiveTab] = useState("week-on-fire");
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const currentTab = searchParams.get('tab') || 'week-on-fire';
+
+  const renderWeekOnFireTable = () => (
+    <Card className="bg-matrix-dark border-matrix-gray/30">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2">
+          <Flame className="h-5 w-5 text-neon-yellow" />
+          Week on-Fire Rankings
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="rounded-md overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableCaption>Players with the best performance this week</TableCaption>
+              <TableHeader className="bg-matrix-darker">
+                <TableRow>
+                  <TableHead className="w-12">Pos</TableHead>
+                  <TableHead>Player</TableHead>
+                  <TableHead className="text-center">Form</TableHead>
+                  <TableHead className="text-right">Goals +/-</TableHead>
+                  <TableHead className="text-right">Points</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {weekOnFireData.map((player, index) => (
+                  <TableRow key={index} className={index < 3 ? "bg-matrix-gray/10" : ""}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center">
+                        {index === 0 && <Trophy className="h-4 w-4 text-yellow-500 mr-1" />}
+                        {index === 1 && <Medal className="h-4 w-4 text-gray-400 mr-1" />}
+                        {index === 2 && <Award className="h-4 w-4 text-amber-700 mr-1" />}
+                        {player.position}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={player.avatar} alt={player.player} />
+                          <AvatarFallback className="bg-neon-green/20 text-neon-green text-xs">
+                            {player.nickname.substring(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{player.player}</div>
+                          <div className="text-xs text-gray-400">{player.nickname}</div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex gap-1 justify-center">
+                        {player.form.split('').map((result, idx) => (
+                          <FormIndicator key={idx} result={result} />
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className={`text-right ${player.goalsDiff > 0 ? 'text-green-500' : player.goalsDiff < 0 ? 'text-red-500' : ''}`}>
+                      {player.goalsDiff > 0 ? `+${player.goalsDiff}` : player.goalsDiff}
+                    </TableCell>
+                    <TableCell className="text-right font-bold">{player.points}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const renderRivalizerArenaTable = () => (
+    <Card className="bg-matrix-dark border-matrix-gray/30">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2">
+          <Swords className="h-5 w-5 text-neon-blue" />
+          Rivalizer Arena Standings
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="rounded-md overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableCaption>Season standings in the Rivalizer Arena</TableCaption>
+              <TableHeader className="bg-matrix-darker">
+                <TableRow>
+                  <TableHead className="w-12">Pos</TableHead>
+                  <TableHead>Player</TableHead>
+                  <TableHead className="text-center">MP</TableHead>
+                  <TableHead className="text-center">W</TableHead>
+                  <TableHead className="text-center">D</TableHead>
+                  <TableHead className="text-center">L</TableHead>
+                  <TableHead className="text-right">Pts</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {rivalizerArenaData.map((player, index) => {
+                  let rowClass = "";
+                  // Styling based on position (similar to football league tables)
+                  if (index < 4) rowClass = "border-l-4 border-neon-blue bg-matrix-gray/10"; // Champions League spots
+                  if (index >= 4 && index < 6) rowClass = "border-l-4 border-neon-green/70 bg-matrix-gray/5"; // Europa League spots
+                  if (index >= rivalizerArenaData.length - 3) rowClass = "border-l-4 border-red-500/70 bg-matrix-gray/5"; // Relegation zone
+                  
+                  return (
+                    <TableRow key={index} className={rowClass}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center">
+                          {index === 0 && <Trophy className="h-4 w-4 text-yellow-500 mr-1" />}
+                          {player.position}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={player.avatar} alt={player.player} />
+                            <AvatarFallback className="bg-neon-green/20 text-neon-green text-xs">
+                              {player.nickname.substring(0, 2)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">{player.player}</div>
+                            <div className="text-xs text-gray-400">{player.nickname}</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">{player.played}</TableCell>
+                      <TableCell className="text-center text-green-500">{player.won}</TableCell>
+                      <TableCell className="text-center text-yellow-500">{player.drawn}</TableCell>
+                      <TableCell className="text-center text-red-500">{player.lost}</TableCell>
+                      <TableCell className="text-right font-bold">{player.points}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+          
+          <div className="mt-4 flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-xs">
+              <div className="w-3 h-3 rounded-full bg-neon-blue"></div>
+              <span className="text-gray-300">Futmatrix Champions positions</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <div className="w-3 h-3 rounded-full bg-neon-green"></div>
+              <span className="text-gray-300">Qualification positions</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <span className="text-gray-300">Relegation zone</span>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Rankings</h1>
-        <p className="text-sm text-gray-400 mt-1">See how players are performing across Futmatrix</p>
+        <h1 className="text-2xl font-bold tracking-tight">
+          {currentTab === 'week-on-fire' ? 'Week on-Fire Rankings' : 'Rivalizer Arena Standings'}
+        </h1>
+        <p className="text-sm text-gray-400 mt-1">
+          {currentTab === 'week-on-fire' 
+            ? 'Players with the best performance this week' 
+            : 'Season standings in the Rivalizer Arena'
+          }
+        </p>
       </div>
 
-      <Tabs defaultValue="week-on-fire" className="w-full" onValueChange={setActiveTab}>
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="week-on-fire" className="flex items-center gap-2">
-            <Flame className="h-4 w-4" />
-            Week on-Fire
-          </TabsTrigger>
-          <TabsTrigger value="rivalizer-arena" className="flex items-center gap-2">
-            <Swords className="h-4 w-4" />
-            Rivalizer Arena
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="week-on-fire" className="mt-4">
-          <Card className="bg-matrix-dark border-matrix-gray/30">
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2">
-                <Flame className="h-5 w-5 text-neon-yellow" />
-                Week on-Fire Rankings
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md overflow-hidden">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableCaption>Players with the best performance this week</TableCaption>
-                    <TableHeader className="bg-matrix-darker">
-                      <TableRow>
-                        <TableHead className="w-12">Pos</TableHead>
-                        <TableHead>Player</TableHead>
-                        <TableHead className="text-center">Form</TableHead>
-                        <TableHead className="text-right">Goals +/-</TableHead>
-                        <TableHead className="text-right">Points</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {weekOnFireData.map((player, index) => (
-                        <TableRow key={index} className={index < 3 ? "bg-matrix-gray/10" : ""}>
-                          <TableCell className="font-medium">
-                            <div className="flex items-center">
-                              {index === 0 && <Trophy className="h-4 w-4 text-yellow-500 mr-1" />}
-                              {index === 1 && <Medal className="h-4 w-4 text-gray-400 mr-1" />}
-                              {index === 2 && <Award className="h-4 w-4 text-amber-700 mr-1" />}
-                              {player.position}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Avatar className="h-8 w-8">
-                                <AvatarImage src={player.avatar} alt={player.player} />
-                                <AvatarFallback className="bg-neon-green/20 text-neon-green text-xs">
-                                  {player.nickname.substring(0, 2)}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <div className="font-medium">{player.player}</div>
-                                <div className="text-xs text-gray-400">{player.nickname}</div>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <div className="flex gap-1 justify-center">
-                              {player.form.split('').map((result, idx) => (
-                                <FormIndicator key={idx} result={result} />
-                              ))}
-                            </div>
-                          </TableCell>
-                          <TableCell className={`text-right ${player.goalsDiff > 0 ? 'text-green-500' : player.goalsDiff < 0 ? 'text-red-500' : ''}`}>
-                            {player.goalsDiff > 0 ? `+${player.goalsDiff}` : player.goalsDiff}
-                          </TableCell>
-                          <TableCell className="text-right font-bold">{player.points}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="rivalizer-arena" className="mt-4">
-          <Card className="bg-matrix-dark border-matrix-gray/30">
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2">
-                <Swords className="h-5 w-5 text-neon-blue" />
-                Rivalizer Arena Standings
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md overflow-hidden">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableCaption>Season standings in the Rivalizer Arena</TableCaption>
-                    <TableHeader className="bg-matrix-darker">
-                      <TableRow>
-                        <TableHead className="w-12">Pos</TableHead>
-                        <TableHead>Player</TableHead>
-                        <TableHead className="text-center">MP</TableHead>
-                        <TableHead className="text-center">W</TableHead>
-                        <TableHead className="text-center">D</TableHead>
-                        <TableHead className="text-center">L</TableHead>
-                        <TableHead className="text-right">Pts</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {rivalizerArenaData.map((player, index) => {
-                        let rowClass = "";
-                        // Styling based on position (similar to football league tables)
-                        if (index < 4) rowClass = "border-l-4 border-neon-blue bg-matrix-gray/10"; // Champions League spots
-                        if (index >= 4 && index < 6) rowClass = "border-l-4 border-neon-green/70 bg-matrix-gray/5"; // Europa League spots
-                        if (index >= rivalizerArenaData.length - 3) rowClass = "border-l-4 border-red-500/70 bg-matrix-gray/5"; // Relegation zone
-                        
-                        return (
-                          <TableRow key={index} className={rowClass}>
-                            <TableCell className="font-medium">
-                              <div className="flex items-center">
-                                {index === 0 && <Trophy className="h-4 w-4 text-yellow-500 mr-1" />}
-                                {player.position}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Avatar className="h-8 w-8">
-                                  <AvatarImage src={player.avatar} alt={player.player} />
-                                  <AvatarFallback className="bg-neon-green/20 text-neon-green text-xs">
-                                    {player.nickname.substring(0, 2)}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <div className="font-medium">{player.player}</div>
-                                  <div className="text-xs text-gray-400">{player.nickname}</div>
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-center">{player.played}</TableCell>
-                            <TableCell className="text-center text-green-500">{player.won}</TableCell>
-                            <TableCell className="text-center text-yellow-500">{player.drawn}</TableCell>
-                            <TableCell className="text-center text-red-500">{player.lost}</TableCell>
-                            <TableCell className="text-right font-bold">{player.points}</TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
-                
-                <div className="mt-4 flex flex-col gap-2">
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-3 h-3 rounded-full bg-neon-blue"></div>
-                    <span className="text-gray-300">Futmatrix Champions positions</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-3 h-3 rounded-full bg-neon-green"></div>
-                    <span className="text-gray-300">Qualification positions</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <span className="text-gray-300">Relegation zone</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {currentTab === 'week-on-fire' ? renderWeekOnFireTable() : renderRivalizerArenaTable()}
     </div>
   );
 };
