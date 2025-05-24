@@ -95,7 +95,7 @@ const HeroSection = () => {
                   {/* Image container with dynamic effects - no background to let transparency work */}
                   <div className="relative overflow-hidden">
                     <img 
-                      src="/lovable-uploads/051ae979-9afd-4f71-a957-b51c22177400.png" 
+                      src="/lovable-uploads/8bb77508-057d-4437-9118-abf86754f0cb.png" 
                       alt="Gaming Characters"
                       className="w-full h-auto max-w-lg transform group-hover:brightness-110 group-hover:contrast-110 transition-all duration-700"
                     />
@@ -117,7 +117,7 @@ const HeroSection = () => {
           </div>
         </div>
         
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center">
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex flex-col items-center">
           <span className="text-xs text-gray-400 mb-2">Scroll to explore</span>
           <svg className="animate-bounce h-5 w-5 text-neon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
