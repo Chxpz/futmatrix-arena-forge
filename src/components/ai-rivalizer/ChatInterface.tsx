@@ -29,18 +29,19 @@ const ChatInterface = ({ messages, setMessages }: ChatInterfaceProps) => {
       timestamp: new Date().toLocaleTimeString(),
     };
 
-    setMessages([...messages, newMessage]);
+    const updatedMessages = [...messages, newMessage];
+    setMessages(updatedMessages);
     setMessage('');
 
     // Simulate AI response
     setTimeout(() => {
       const aiResponse = {
-        id: messages.length + 2,
+        id: updatedMessages.length + 1,
         type: 'ai' as const,
         content: "🎯 Excellent question! Let me analyze the competitive landscape and find you the perfect opponent. Based on your skill level and recent performance, I have some exciting match proposals...",
         timestamp: new Date().toLocaleTimeString(),
       };
-      setMessages([...messages, newMessage, aiResponse]);
+      setMessages([...updatedMessages, aiResponse]);
     }, 1000);
   };
 
