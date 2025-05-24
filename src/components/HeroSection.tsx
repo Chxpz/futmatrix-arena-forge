@@ -1,8 +1,11 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { removeBackground, loadImage } from '../utils/backgroundRemoval';
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
+  const [processedImageUrl, setProcessedImageUrl] = useState<string>('');
+  const [isProcessing, setIsProcessing] = useState(true);
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,6 +25,39 @@ const HeroSection = () => {
     return () => {
       elements.forEach(el => observer.unobserve(el));
     };
+  }, []);
+
+  useEffect(() => {
+    const processImage = async () => {
+      try {
+        console.log('Starting image background removal...');
+        setIsProcessing(true);
+        
+        // Fetch the original image
+        const response = await fetch('/lovable-uploads/49656df3-fd56-4961-8db9-4b24bd9621bc.png');
+        const blob = await response.blob();
+        
+        // Load the image
+        const imageElement = await loadImage(blob);
+        
+        // Remove background
+        const processedBlob = await removeBackground(imageElement);
+        
+        // Create object URL for the processed image
+        const url = URL.createObjectURL(processedBlob);
+        setProcessedImageUrl(url);
+        setIsProcessing(false);
+        
+        console.log('Background removal completed successfully');
+      } catch (error) {
+        console.error('Failed to process image:', error);
+        setIsProcessing(false);
+        // Fallback to original image
+        setProcessedImageUrl('/lovable-uploads/49656df3-fd56-4961-8db9-4b24bd9621bc.png');
+      }
+    };
+
+    processImage();
   }, []);
   
   return (
@@ -88,11 +124,19 @@ const HeroSection = () => {
                   {/* Holographic overlay */}
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-neon-green/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
                   
+                  {/* Processing indicator */}
+                  {isProcessing && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-matrix-dark/50 z-20">
+                      <div className="text-neon-green animate-pulse">Processing image...</div>
+                    </div>
+                  )}
+                  
                   {/* Main image */}
                   <img 
-                    src="/lovable-uploads/49656df3-fd56-4961-8db9-4b24bd9621bc.png" 
+                    src={processedImageUrl || '/lovable-uploads/49656df3-fd56-4961-8db9-4b24bd9621bc.png'} 
                     alt="Futuristic Gaming AI Agents"
                     className="w-full h-auto max-w-lg transform group-hover:scale-105 transition-transform duration-500 filter brightness-110 contrast-110 saturate-110"
+                    style={{ opacity: isProcessing ? 0.5 : 1 }}
                   />
                   
                   {/* Scanning line animation */}
