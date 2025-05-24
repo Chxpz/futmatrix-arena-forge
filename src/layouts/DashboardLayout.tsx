@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -21,9 +22,9 @@ const DashboardLayout = () => {
   const navLinks = [
     { name: 'Dashboard', path: '/dashboard', icon: Home },
     { name: 'Profile', path: '/profile', icon: User },
-    { name: 'Rivalizer', path: '/rivalizer', icon: Calendar },
-    { name: 'AI Rivalizer', path: '/ai-rivalizer', icon: Swords },
-    { name: 'AI Coach', path: '/ai-coach', icon: Brain },
+    { name: 'Rivalizer Arena', path: '/rivalizer', icon: Calendar },
+    { name: 'Rivalizer Agent', path: '/ai-rivalizer', icon: Swords },
+    { name: 'Coach Agent', path: '/ai-coach', icon: Brain },
     { name: 'Charts', path: '/charts', icon: BarChart },
     { name: 'Upload', path: '/upload', icon: Upload },
   ];
