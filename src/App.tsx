@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import Rivalizer from "./pages/Rivalizer";
 import Coach from "./pages/Coach";
 import AIRivalizer from "./pages/AIRivalizer";
+import AICoach from "./pages/AICoach";
 import Upload from "./pages/Upload";
 import Rankings from "./pages/Rankings";
 import Charts from "./pages/Charts";
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/rivalizer" element={<Rivalizer />} />
             <Route path="/coach" element={<Coach />} />
             <Route path="/ai-rivalizer" element={<AIRivalizer />} />
+            <Route path="/ai-coach" element={<AICoach />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/rankings" element={<Rankings />} />
             <Route path="/charts" element={<Charts />} />
