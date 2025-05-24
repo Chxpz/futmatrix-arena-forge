@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { 
-  Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle 
+  Card, CardContent, CardDescription, CardHeader, CardTitle 
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,9 +83,9 @@ const Profile = () => {
         <p className="text-sm text-gray-400 mt-1">Update your player profile and settings</p>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="max-w-2xl">
         {/* Main profile form */}
-        <Card className="lg:col-span-2 bg-matrix-dark border-matrix-gray/30">
+        <Card className="bg-matrix-dark border-matrix-gray/30">
           <CardHeader>
             <CardTitle>Public Profile</CardTitle>
             <CardDescription>
@@ -207,84 +207,6 @@ const Profile = () => {
             </Form>
           </CardContent>
         </Card>
-
-        {/* Stats card */}
-        <div className="space-y-6">
-          <Card className="bg-matrix-dark border-matrix-gray/30">
-            <CardHeader>
-              <CardTitle>Player Metrics</CardTitle>
-              <CardDescription>Your performance statistics</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-400">Win Rate</p>
-                <div className="flex items-center mt-1">
-                  <div className="w-full bg-matrix-gray/20 rounded-full h-2.5">
-                    <div className="bg-neon-green h-2.5 rounded-full" style={{ width: '65%' }}></div>
-                  </div>
-                  <span className="ml-2 text-sm font-medium">65%</span>
-                </div>
-              </div>
-              
-              <div>
-                <p className="text-sm text-gray-400">Goals per Match</p>
-                <div className="flex items-center mt-1">
-                  <div className="w-full bg-matrix-gray/20 rounded-full h-2.5">
-                    <div className="bg-neon-blue h-2.5 rounded-full" style={{ width: '72%' }}></div>
-                  </div>
-                  <span className="ml-2 text-sm font-medium">2.4</span>
-                </div>
-              </div>
-              
-              <div>
-                <p className="text-sm text-gray-400">Pass Accuracy</p>
-                <div className="flex items-center mt-1">
-                  <div className="w-full bg-matrix-gray/20 rounded-full h-2.5">
-                    <div className="bg-neon-yellow h-2.5 rounded-full" style={{ width: '88%' }}></div>
-                  </div>
-                  <span className="ml-2 text-sm font-medium">88%</span>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <p className="text-xs text-gray-400">
-                All metrics are calculated based on your last 20 matches
-              </p>
-            </CardFooter>
-          </Card>
-          
-          <Card className="bg-matrix-dark border-matrix-gray/30">
-            <CardHeader>
-              <CardTitle>Match History</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div 
-                  key={i} 
-                  className={`p-2 rounded-md text-sm flex justify-between items-center ${
-                    i % 3 === 0 ? 'bg-green-900/20 text-green-400' : 
-                    i % 3 === 1 ? 'bg-red-900/20 text-red-400' : 
-                    'bg-matrix-gray/20 text-gray-400'
-                  }`}
-                >
-                  <span>vs Player{i + 1}</span>
-                  <span>
-                    {i % 3 === 0 ? 'Win' : i % 3 === 1 ? 'Loss' : 'Draw'} 
-                    {' '}{Math.floor(Math.random() * 5)}-{Math.floor(Math.random() * 3)}
-                  </span>
-                </div>
-              ))}
-            </CardContent>
-            <CardFooter>
-              <Button 
-                variant="outline" 
-                className="w-full border-matrix-gray/30 hover:bg-matrix-gray/20"
-              >
-                View Full History
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
       </div>
     </div>
   );
