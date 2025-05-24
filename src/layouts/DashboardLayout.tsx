@@ -4,7 +4,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Swords, Brain 
+  User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Swords, Brain, Edit 
 } from 'lucide-react';
 import RankingsMenu from '@/components/RankingsMenu';
 
@@ -21,7 +21,6 @@ const DashboardLayout = () => {
 
   const navLinks = [
     { name: 'Dashboard', path: '/dashboard', icon: Home },
-    { name: 'Profile', path: '/profile', icon: User },
     { name: 'Rivalizer Arena', path: '/rivalizer', icon: Calendar },
     { name: 'Rivalizer Agent', path: '/ai-rivalizer', icon: Swords },
     { name: 'Coach Agent', path: '/ai-coach', icon: Brain },
@@ -34,6 +33,10 @@ const DashboardLayout = () => {
     console.log("Logout clicked");
     // Add your Supabase auth logic here
     navigate('/');
+  };
+
+  const handleEditProfile = () => {
+    navigate('/profile');
   };
 
   const getActiveStyles = (linkPath: string) => {
@@ -82,10 +85,19 @@ const DashboardLayout = () => {
                   {user.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <div>
+              <div className="flex-1">
                 <p className="text-sm font-medium">{user.name}</p>
                 <p className="text-xs text-gray-400">{user.email}</p>
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 w-6 p-0 text-gray-400 hover:text-white hover:bg-matrix-gray/20"
+                onClick={handleEditProfile}
+                title="Edit Profile"
+              >
+                <Edit size={14} />
+              </Button>
             </div>
           </div>
 
