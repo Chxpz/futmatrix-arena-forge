@@ -1,4 +1,3 @@
-
 # Futmatrix - Football Analytics Dashboard
 
 ## Project Overview
@@ -6,6 +5,237 @@
 **URL**: https://lovable.dev/projects/d1b94ff4-fb4b-4b38-b956-dd2000b91102
 
 Futmatrix is a comprehensive football analytics platform that processes match images using AI to extract performance metrics and provides detailed visualizations for player analysis. The frontend is built with React, TypeScript, and modern data visualization libraries.
+
+## Development Setup
+
+### Prerequisites
+
+- **Node.js**: Version 18.0.0 or higher
+- **npm**: Version 8.0.0 or higher (comes with Node.js)
+- **Git**: For version control
+
+### Local Development
+
+1. **Clone the repository**:
+   ```bash
+   git clone [your-repository-url]
+   cd futmatrix
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Environment Configuration**:
+   Create environment variables for development:
+   ```bash
+   # These should be set in your development environment
+   VITE_SUPABASE_URL=your_supabase_project_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_GA_ID=your_google_analytics_id
+   VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+   ```
+
+4. **Start development server**:
+   ```bash
+   npm run dev
+   ```
+
+5. **Access the application**:
+   - Frontend: http://localhost:8080
+   - The application will automatically reload when you make changes
+
+### Development Tools
+
+- **Production Readiness Checker**: Visit `/production-checklist` (development only)
+- **Dev Mode**: Toggle in the top-left to view/edit code directly
+- **Console Logs**: Check browser developer tools for debugging
+
+## Production Deployment
+
+### Pre-Production Checklist
+
+Before deploying to production, ensure the following are completed:
+
+#### 1. Backend Integration (Critical)
+- [ ] Supabase project created and configured
+- [ ] Database tables and schemas implemented
+- [ ] Row Level Security (RLS) policies configured
+- [ ] Authentication flows tested
+- [ ] API endpoints implemented and tested
+
+#### 2. Environment Variables (Critical)
+Set these in your production environment (Supabase Secrets if using Lovable):
+
+```bash
+# Supabase Configuration (Required)
+VITE_SUPABASE_URL=https://[project-id].supabase.co
+VITE_SUPABASE_ANON_KEY=[your-anon-key]
+
+# Analytics (Optional)
+VITE_GA_ID=[your-google-analytics-id]
+
+# Payment Processing (Optional)
+VITE_STRIPE_PUBLISHABLE_KEY=[your-stripe-publishable-key]
+```
+
+#### 3. Legal Documentation (Critical)
+- [ ] Privacy Policy created and hosted
+- [ ] Terms of Service created and hosted
+- [ ] Cookie policy implemented
+- [ ] GDPR compliance measures
+
+#### 4. Performance Optimization
+- [ ] Image optimization completed
+- [ ] Bundle size optimized
+- [ ] Lazy loading implemented where appropriate
+- [ ] Error boundaries added
+
+#### 5. Monitoring & Analytics
+- [ ] Error tracking service configured (Sentry, LogRocket, etc.)
+- [ ] Analytics service configured (Google Analytics, Mixpanel, etc.)
+- [ ] Performance monitoring setup
+
+### Production Build
+
+1. **Build the application**:
+   ```bash
+   npm run build
+   ```
+
+2. **Preview the production build locally**:
+   ```bash
+   npm run preview
+   ```
+
+3. **Test the production build**:
+   - Verify all features work correctly
+   - Check performance metrics
+   - Test on different devices and browsers
+
+### Deployment Options
+
+#### Option 1: Lovable Hosting (Recommended for MVP)
+1. Click the "Publish" button in Lovable editor
+2. Configure custom domain in Project Settings > Domains (paid plan required)
+3. Set environment variables in Supabase Secrets
+
+#### Option 2: Self-Hosting
+1. Connect to GitHub via Lovable integration
+2. Set up CI/CD pipeline with GitHub Actions
+3. Deploy to your preferred hosting service:
+   - **Vercel**: Zero-config deployment for React apps
+   - **Netlify**: Simple static site hosting
+   - **AWS S3 + CloudFront**: Enterprise-grade hosting
+   - **Google Cloud Storage**: Google Cloud hosting
+
+#### Option 3: Docker Deployment
+```dockerfile
+# Example Dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+EXPOSE 8080
+CMD ["npm", "run", "preview"]
+```
+
+### Environment-Specific Configuration
+
+#### Development
+- All environment variables can be set in your local environment
+- Mock data is used for development
+- Development-only routes are enabled
+
+#### Staging
+- Use staging Supabase environment
+- Enable error reporting but limit analytics
+- Test with production-like data
+
+#### Production
+- All environment variables must be properly configured
+- Enable all monitoring and analytics
+- Disable development routes and features
+
+### Security Considerations
+
+1. **Environment Variables**:
+   - Never commit API keys to version control
+   - Use Supabase Secrets for sensitive data
+   - Validate all environment variables on startup
+
+2. **API Security**:
+   - Implement proper authentication on all API endpoints
+   - Use HTTPS for all communications
+   - Validate and sanitize all user inputs
+
+3. **Content Security**:
+   - Implement Content Security Policy (CSP)
+   - Sanitize user-uploaded content
+   - Validate file types and sizes for uploads
+
+### Performance Guidelines
+
+1. **Bundle Size**:
+   - Keep total bundle size under 1MB
+   - Use code splitting for large components
+   - Implement lazy loading for routes
+
+2. **Image Optimization**:
+   - Use WebP format where supported
+   - Implement responsive images
+   - Compress all images before deployment
+
+3. **Caching Strategy**:
+   - Cache static assets with long TTL
+   - Implement service worker for offline support
+   - Use CDN for static content delivery
+
+### Monitoring & Maintenance
+
+#### Health Checks
+- Monitor application uptime
+- Check API response times
+- Monitor error rates
+
+#### Regular Maintenance
+- Update dependencies monthly
+- Review and rotate API keys quarterly
+- Monitor and optimize performance metrics
+- Regular security audits
+
+#### Backup Strategy
+- Database backups (handled by Supabase)
+- Code backups (handled by GitHub)
+- Asset backups (implement for user uploads)
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Build Failures**:
+   - Check Node.js version compatibility
+   - Clear node_modules and reinstall dependencies
+   - Verify all environment variables are set
+
+2. **Runtime Errors**:
+   - Check browser console for errors
+   - Verify API endpoints are accessible
+   - Check network connectivity
+
+3. **Performance Issues**:
+   - Analyze bundle size with build tools
+   - Check for memory leaks in React components
+   - Monitor network requests
+
+### Getting Help
+
+- **Documentation**: [Lovable Docs](https://docs.lovable.dev/)
+- **Community**: [Discord Community](https://discord.com/channels/1119885301872070706/1280461670979993613)
+- **Support**: support@futmatrix.com
 
 ## Frontend Architecture
 
@@ -555,3 +785,5 @@ When integrating with the backend, the Rivalizer component expects the following
    - Update match results in real-time
 
 The current implementation uses mock data and local state management, which should be replaced with API calls to the endpoints described in the API section.
+
+</edits_to_apply>
