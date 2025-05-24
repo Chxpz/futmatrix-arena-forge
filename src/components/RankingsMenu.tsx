@@ -1,10 +1,22 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Flame, Swords } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 const RankingsMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  
+  // Helper function to determine if a tab is active
+  const isTabActive = (tab: string) => {
+    const searchParams = new URLSearchParams(location.search);
+    const currentTab = searchParams.get('tab');
+    
+    // Default to 'week-on-fire' if no tab is specified
+    if (!currentTab && tab === 'week-on-fire') return true;
+    
+    return currentTab === tab;
+  };
   
   return (
     <div className="space-y-1">
@@ -30,9 +42,9 @@ const RankingsMenu = () => {
         <div className="pl-8 space-y-1">
           <NavLink
             to="/rankings?tab=week-on-fire"
-            className={({ isActive }) => `
+            className={() => `
               flex items-center px-3 py-2 rounded-md text-sm transition-colors
-              ${isActive 
+              ${isTabActive('week-on-fire')
                 ? 'bg-neon-green/10 text-neon-green border border-neon-green/30' 
                 : 'text-gray-300 hover:bg-matrix-gray/20 hover:text-white'
               }
@@ -44,9 +56,9 @@ const RankingsMenu = () => {
           
           <NavLink
             to="/rankings?tab=rivalizer-arena"
-            className={({ isActive }) => `
+            className={() => `
               flex items-center px-3 py-2 rounded-md text-sm transition-colors
-              ${isActive 
+              ${isTabActive('rivalizer-arena')
                 ? 'bg-neon-green/10 text-neon-green border border-neon-green/30' 
                 : 'text-gray-300 hover:bg-matrix-gray/20 hover:text-white'
               }
