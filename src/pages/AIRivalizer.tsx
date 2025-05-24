@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import UserStatsHeader from '@/components/ai-rivalizer/UserStatsHeader';
 import AgentDisplaySection from '@/components/ai-rivalizer/AgentDisplaySection';
 import ChatInterface from '@/components/ai-rivalizer/ChatInterface';
 
@@ -22,11 +23,15 @@ const AIRivalizer = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-matrix-darker via-red-950/20 to-matrix-darker">
-      <div className="flex flex-col lg:flex-row h-screen">
-        {/* Main Content Area */}
+      <div className="flex flex-col h-screen">
+        <UserStatsHeader />
+        
         <div className="flex-1 flex flex-col lg:flex-row">
-          <AgentDisplaySection />
-          <ChatInterface messages={messages} setMessages={setMessages} />
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col lg:flex-row">
+            <AgentDisplaySection />
+            <ChatInterface messages={messages} setMessages={setMessages} />
+          </div>
         </div>
       </div>
     </div>
