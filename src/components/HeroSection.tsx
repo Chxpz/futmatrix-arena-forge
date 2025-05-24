@@ -92,11 +92,11 @@ const HeroSection = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-neon-green/20 to-transparent rounded-3xl blur-2xl transform translate-y-6 opacity-60"></div>
                   <div className="absolute inset-0 bg-gradient-to-b from-neon-blue/15 to-transparent rounded-3xl blur-xl transform -translate-y-2 opacity-40"></div>
                   
-                  {/* Image container with dynamic effects */}
-                  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-matrix-dark/10 to-transparent backdrop-blur-sm">
+                  {/* Image container with dynamic effects - no background to let transparency work */}
+                  <div className="relative overflow-hidden">
                     <img 
-                      src="/lovable-uploads/43b4aae5-404e-48b7-9d0b-f05717d5161a.png" 
-                      alt="Gaming Character"
+                      src="/lovable-uploads/051ae979-9afd-4f71-a957-b51c22177400.png" 
+                      alt="Gaming Characters"
                       className="w-full h-auto max-w-lg transform group-hover:brightness-110 group-hover:contrast-110 transition-all duration-700"
                     />
                     
