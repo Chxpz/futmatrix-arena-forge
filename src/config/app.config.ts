@@ -26,8 +26,8 @@ export const APP_CONFIG = {
     
     // External Services (these would typically be in environment variables in a real deployment)
     eaSports: 'https://www.ea.com/games/ea-sports-fc',
-    supabaseUrl: process.env.SUPABASE_URL || '',
-    supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
+    supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
+    supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
   },
 
   // Feature Flags
@@ -49,7 +49,7 @@ export const APP_CONFIG = {
   api: {
     timeout: 30000, // 30 seconds
     retryAttempts: 3,
-    baseUrl: process.env.API_BASE_URL || '',
+    baseUrl: import.meta.env.VITE_API_BASE_URL || '',
   },
 };
 
