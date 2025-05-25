@@ -62,6 +62,24 @@ const Preview = () => {
                 • 5 interactions with each AI agent
               </div>
             </div>
+
+            {/* Newsletter and Development Transparency Info */}
+            <div className="bg-matrix-gray/10 rounded-lg p-4 border border-matrix-gray/20 mb-6">
+              <div className="text-xs text-gray-400 leading-relaxed">
+                <div className="flex items-start gap-2 mb-2">
+                  <span className="text-neon-green text-sm">📧</span>
+                  <div>
+                    <span className="text-gray-300 font-medium">Newsletter Subscription:</span> By signing up, you'll receive our development newsletter with transparent updates on project milestones.
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-neon-green text-sm">🚧</span>
+                  <div>
+                    <span className="text-gray-300 font-medium">Early Access:</span> This project is in development. We're testing our concept and will keep you informed of our progress.
+                  </div>
+                </div>
+              </div>
+            </div>
             
             <Button 
               className="w-full bg-white text-black hover:bg-gray-200 flex items-center justify-center gap-2"
