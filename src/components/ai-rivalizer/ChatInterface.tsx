@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
+import { Coins, Zap, Crown } from 'lucide-react';
 
 interface Message {
   id: number;
@@ -76,6 +77,10 @@ const ChatInterface = ({
 
   const isLimitReached = interactionLimit !== undefined && interactionLimit <= 0;
 
+  const handleGetTokens = () => {
+    window.open('https://virtuals.io/tokens/FUTM', '_blank');
+  };
+
   return (
     <div className="lg:w-1/2 flex flex-col">
       {/* Chat Header */}
@@ -112,14 +117,33 @@ const ChatInterface = ({
       {/* Input area */}
       <div className="border-t border-red-900/30 bg-gradient-to-r from-red-950/10 to-transparent p-6">
         {isLimitReached ? (
-          <div className="text-center py-4">
-            <p className="text-gray-400 mb-4">You've reached your preview interaction limit</p>
-            <Button
-              className="bg-neon-green text-black hover:bg-neon-green/90"
-              onClick={() => window.open('https://whop.com/futmatrix', '_blank')}
-            >
-              Get Full Access
-            </Button>
+          <div className="text-center py-6">
+            <div className="mb-4">
+              <div className="inline-block p-3 rounded-full bg-gradient-to-br from-orange-500/20 to-red-500/20 mb-3">
+                <Crown className="w-6 h-6 text-orange-400" />
+              </div>
+              <h3 className="text-lg font-bold text-orange-400 mb-2">Ready to Compete?</h3>
+              <p className="text-gray-400 mb-4 text-sm">
+                Join elite players with unlimited AI access and self-betting features
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold"
+                onClick={handleGetTokens}
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Get Tokens & Unlock Power
+              </Button>
+              <Button
+                variant="outline"
+                className="border-neon-green text-neon-green hover:bg-neon-green/10"
+                onClick={() => window.open('https://whop.com/futmatrix', '_blank')}
+              >
+                <Coins className="w-4 h-4 mr-2" />
+                Subscribe Instead
+              </Button>
+            </div>
           </div>
         ) : (
           <ChatInput

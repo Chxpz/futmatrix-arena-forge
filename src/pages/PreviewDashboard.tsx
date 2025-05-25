@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Trophy, Users, Brain, Home } from 'lucide-react';
+import { Bot, Trophy, Users, Brain, Home, Coins, Zap, Crown } from 'lucide-react';
 
 const PreviewDashboard = () => {
   const navigate = useNavigate();
@@ -40,6 +40,10 @@ const PreviewDashboard = () => {
     }
   };
 
+  const handleGetTokens = () => {
+    window.open('https://virtuals.io/tokens/FUTM', '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-matrix-darker p-4">
       <div className="container mx-auto max-w-6xl">
@@ -69,6 +73,34 @@ const PreviewDashboard = () => {
             ⚡ Preview Mode - 5 interactions per agent
           </div>
         </div>
+
+        {/* Token CTA for Elite Players */}
+        {(coachInteractions > 2 || rivalizerInteractions > 2) && (
+          <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30 mb-8">
+            <CardContent className="py-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-full bg-gradient-to-br from-orange-500/20 to-red-500/20">
+                    <Crown className="w-6 h-6 text-orange-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-orange-400 mb-1">Ready to Dominate?</h3>
+                    <p className="text-gray-300 text-sm">
+                      Join elite players with unlimited AI access and competitive advantages
+                    </p>
+                  </div>
+                </div>
+                <Button 
+                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold"
+                  onClick={handleGetTokens}
+                >
+                  <Coins className="w-4 h-4 mr-2" />
+                  Get Tokens
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Agent Selection */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -181,18 +213,33 @@ const PreviewDashboard = () => {
 
         {/* Status Message */}
         {(coachInteractions >= 5 && rivalizerInteractions >= 5) && (
-          <Card className="bg-matrix-dark border-matrix-gray/30 text-center">
+          <Card className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-500/30 text-center">
             <CardContent className="py-8">
-              <h3 className="text-xl font-bold text-white mb-4">Preview Complete!</h3>
-              <p className="text-gray-300 mb-6">
-                You've experienced both AI agents. Ready to unlock unlimited access?
+              <div className="mb-4">
+                <div className="inline-block p-4 rounded-full bg-gradient-to-br from-orange-500/20 to-red-500/20 mb-4">
+                  <Trophy className="w-8 h-8 text-orange-400" />
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-orange-400 mb-2">Preview Complete!</h3>
+              <p className="text-gray-300 mb-6 max-w-md mx-auto">
+                You've experienced both AI agents. Ready to unlock unlimited access and join the competitive elite?
               </p>
-              <Button 
-                className="bg-neon-green text-black hover:bg-neon-green/90"
-                onClick={() => window.open('https://whop.com/futmatrix', '_blank')}
-              >
-                Get Full Access
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button 
+                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold px-8"
+                  onClick={handleGetTokens}
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  Get Tokens & Unlock Full Power
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="border-neon-green text-neon-green hover:bg-neon-green/10"
+                  onClick={() => window.open('https://whop.com/futmatrix', '_blank')}
+                >
+                  Subscribe for Full Access
+                </Button>
+              </div>
             </CardContent>
           </Card>
         )}

@@ -2,9 +2,10 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bot } from 'lucide-react';
+import { ArrowLeft, Bot, Coins, Crown, Target } from 'lucide-react';
 import AgentDisplaySection from '@/components/ai-rivalizer/AgentDisplaySection';
 import ChatInterface from '@/components/ai-rivalizer/ChatInterface';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface Message {
   id: number;
@@ -46,6 +47,10 @@ const PreviewRivalizer = () => {
     }
   };
 
+  const handleGetTokens = () => {
+    window.open('https://virtuals.io/tokens/FUTM', '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-matrix-darker via-red-950/20 to-matrix-darker">
       <div className="flex flex-col h-screen">
@@ -72,6 +77,27 @@ const PreviewRivalizer = () => {
                 </div>
               </div>
             </div>
+            
+            {/* Competitive Edge CTA */}
+            {interactionCount >= 3 && (
+              <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30">
+                <CardContent className="py-2 px-4">
+                  <div className="flex items-center gap-3">
+                    <Target className="w-5 h-5 text-orange-400" />
+                    <div className="text-xs">
+                      <p className="text-orange-400 font-medium">Unlock Self-Betting</p>
+                      <Button 
+                        size="sm"
+                        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs h-6 mt-1"
+                        onClick={handleGetTokens}
+                      >
+                        Get Tokens
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
             
             <div className="text-sm text-gray-400">
               Preview Mode

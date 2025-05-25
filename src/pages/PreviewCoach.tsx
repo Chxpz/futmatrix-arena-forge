@@ -2,9 +2,10 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bot } from 'lucide-react';
+import { ArrowLeft, Bot, Coins, Crown, Zap } from 'lucide-react';
 import CoachDisplaySection from '@/components/ai-coach/CoachDisplaySection';
 import CoachChatInterface from '@/components/ai-coach/CoachChatInterface';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface Message {
   id: number;
@@ -46,6 +47,10 @@ const PreviewCoach = () => {
     }
   };
 
+  const handleGetTokens = () => {
+    window.open('https://virtuals.io/tokens/FUTM', '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-matrix-darker via-teal-950/20 to-matrix-darker">
       <div className="flex flex-col h-screen">
@@ -72,6 +77,27 @@ const PreviewCoach = () => {
                 </div>
               </div>
             </div>
+            
+            {/* Elite Player CTA */}
+            {interactionCount >= 3 && (
+              <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30">
+                <CardContent className="py-2 px-4">
+                  <div className="flex items-center gap-3">
+                    <Crown className="w-5 h-5 text-orange-400" />
+                    <div className="text-xs">
+                      <p className="text-orange-400 font-medium">Unlock Unlimited Training</p>
+                      <Button 
+                        size="sm"
+                        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs h-6 mt-1"
+                        onClick={handleGetTokens}
+                      >
+                        Get Tokens
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
             
             <div className="text-sm text-gray-400">
               Preview Mode

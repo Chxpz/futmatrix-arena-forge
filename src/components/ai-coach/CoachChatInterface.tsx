@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, Mic, Square, User } from 'lucide-react';
+import { Send, Mic, Square, User, Coins, Zap, Brain } from 'lucide-react';
 
 interface Message {
   id: number;
@@ -75,6 +75,10 @@ const CoachChatInterface = ({
 
   const isLimitReached = interactionLimit !== undefined && interactionLimit <= 0;
 
+  const handleGetTokens = () => {
+    window.open('https://virtuals.io/tokens/FUTM', '_blank');
+  };
+
   return (
     <div className="lg:w-1/2 flex flex-col">
       {/* Chat Header */}
@@ -145,14 +149,33 @@ const CoachChatInterface = ({
       {/* Input area */}
       <div className="border-t border-teal-900/30 bg-gradient-to-r from-teal-950/10 to-transparent p-6">
         {isLimitReached ? (
-          <div className="text-center py-4">
-            <p className="text-gray-400 mb-4">You've reached your preview interaction limit</p>
-            <Button
-              className="bg-neon-green text-black hover:bg-neon-green/90"
-              onClick={() => window.open('https://whop.com/futmatrix', '_blank')}
-            >
-              Get Full Access
-            </Button>
+          <div className="text-center py-6">
+            <div className="mb-4">
+              <div className="inline-block p-3 rounded-full bg-gradient-to-br from-orange-500/20 to-red-500/20 mb-3">
+                <Brain className="w-6 h-6 text-orange-400" />
+              </div>
+              <h3 className="text-lg font-bold text-orange-400 mb-2">Unlock Your Potential</h3>
+              <p className="text-gray-400 mb-4 text-sm">
+                Get unlimited AI coaching and personalized training programs
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold"
+                onClick={handleGetTokens}
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Get Tokens & Train Unlimited
+              </Button>
+              <Button
+                variant="outline"
+                className="border-neon-green text-neon-green hover:bg-neon-green/10"
+                onClick={() => window.open('https://whop.com/futmatrix', '_blank')}
+              >
+                <Coins className="w-4 h-4 mr-2" />
+                Subscribe Instead
+              </Button>
+            </div>
           </div>
         ) : (
           <>
