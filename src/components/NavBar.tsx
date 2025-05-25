@@ -40,6 +40,7 @@ const NavBar = () => {
         <div className="hidden md:flex items-center space-x-6">
           <a href="#features" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Features</a>
           <a href="#pricing" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Pricing</a>
+          <Link to="/rules" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Rules</Link>
           <div className="flex space-x-2">
             <Button 
               variant="outline" 
