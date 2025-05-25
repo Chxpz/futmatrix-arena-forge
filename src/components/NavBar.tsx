@@ -41,21 +41,12 @@ const NavBar = () => {
           <a href="#features" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Features</a>
           <a href="#pricing" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Pricing</a>
           <Link to="/rules" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Rules</Link>
-          <div className="flex space-x-2">
-            <Button 
-              variant="outline" 
-              className="text-sm border border-neon-green/50 text-neon-green hover:bg-neon-green/10"
-              onClick={() => navigate('/login')}
-            >
-              Log In
-            </Button>
-            <Button 
-              className="text-sm bg-neon-green text-black hover:bg-neon-green/90"
-              onClick={() => navigate('/signup')}
-            >
-              Sign Up
-            </Button>
-          </div>
+          <Button 
+            className="text-sm bg-neon-green text-black hover:bg-neon-green/90"
+            onClick={() => navigate('/preview')}
+          >
+            Get Preview
+          </Button>
         </div>
 
         <button className="md:hidden text-gray-300 hover:text-white">

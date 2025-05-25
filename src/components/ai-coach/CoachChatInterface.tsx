@@ -14,14 +14,26 @@ interface Message {
 interface CoachChatInterfaceProps {
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  onSendMessage?: () => void;
+  interactionLimit?: number;
 }
 
-const CoachChatInterface = ({ messages, setMessages }: CoachChatInterfaceProps) => {
+const CoachChatInterface = ({ 
+  messages, 
+  setMessages, 
+  onSendMessage,
+  interactionLimit
+}: CoachChatInterfaceProps) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
+    
+    // Check interaction limit
+    if (interactionLimit !== undefined && interactionLimit <= 0) {
+      return;
+    }
 
     const newMessage: Message = {
       id: Date.now(),
@@ -33,12 +45,24 @@ const CoachChatInterface = ({ messages, setMessages }: CoachChatInterfaceProps) 
     setMessages(prev => [...prev, newMessage]);
     setInputMessage('');
 
+    // Call the interaction callback if provided
+    if (onSendMessage) {
+      onSendMessage();
+    }
+
     // Simulate AI response
     setTimeout(() => {
+      const responses = [
+        "Based on your question, I recommend focusing on defensive positioning. Practice using the jockey button (L2/LT) to maintain better control in 1v1 situations.",
+        "Great question! Your shot conversion rate could improve with better timing. Try practicing power shots from just outside the box during training mode.",
+        "I've analyzed similar gameplay patterns - consider working on your build-up play. Quick passes and movement off the ball are key to creating space.",
+        "Excellent focus area! Your counterattacking shows promise. Let's work on maintaining possession to complement your existing strengths.",
+      ];
+
       const aiResponse: Message = {
         id: Date.now() + 1,
         type: 'ai',
-        content: "I've analyzed your question and prepared a personalized training recommendation. Let me break down the key areas where you can improve your gameplay...",
+        content: responses[Math.floor(Math.random() * responses.length)],
         timestamp: new Date().toLocaleTimeString(),
       };
       setMessages(prev => [...prev, aiResponse]);
@@ -48,6 +72,8 @@ const CoachChatInterface = ({ messages, setMessages }: CoachChatInterfaceProps) 
   const toggleListening = () => {
     setIsListening(!isListening);
   };
+
+  const isLimitReached = interactionLimit !== undefined && interactionLimit <= 0;
 
   return (
     <div className="lg:w-1/2 flex flex-col">
@@ -65,7 +91,12 @@ const CoachChatInterface = ({ messages, setMessages }: CoachChatInterfaceProps) 
           </div>
           <div>
             <h2 className="text-xl font-bold text-white">Chat with AI Coach</h2>
-            <p className="text-teal-400 text-sm">Ready to elevate your gameplay</p>
+            <p className="text-teal-400 text-sm">
+              {interactionLimit !== undefined 
+                ? `Ready to elevate your gameplay (${interactionLimit} interactions left)`
+                : 'Ready to elevate your gameplay'
+              }
+            </p>
           </div>
         </div>
       </div>
@@ -113,57 +144,71 @@ const CoachChatInterface = ({ messages, setMessages }: CoachChatInterfaceProps) 
 
       {/* Input area */}
       <div className="border-t border-teal-900/30 bg-gradient-to-r from-teal-950/10 to-transparent p-6">
-        <div className="flex space-x-4">
-          <div className="flex-1">
-            <Textarea
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Ask your AI Coach anything... training tips, strategies, gameplay analysis"
-              className="min-h-[60px] bg-matrix-dark border-teal-800/30 text-white placeholder-gray-400 focus:border-teal-600 focus:ring-teal-600/20 resize-none"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage();
-                }
-              }}
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
+        {isLimitReached ? (
+          <div className="text-center py-4">
+            <p className="text-gray-400 mb-4">You've reached your preview interaction limit</p>
             <Button
-              onClick={handleSendMessage}
-              className="bg-teal-600 hover:bg-teal-700 text-white px-6 shadow-lg hover:shadow-teal-600/20 transition-all"
-              disabled={!inputMessage.trim()}
+              className="bg-neon-green text-black hover:bg-neon-green/90"
+              onClick={() => window.open('https://whop.com/futmatrix', '_blank')}
             >
-              <Send className="w-4 h-4" />
-            </Button>
-            <Button
-              onClick={toggleListening}
-              variant="outline"
-              className={`px-6 border-teal-600 transition-all ${
-                isListening 
-                  ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/20' 
-                  : 'text-teal-400 hover:bg-teal-950/30'
-              }`}
-            >
-              {isListening ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              Get Full Access
             </Button>
           </div>
-        </div>
-        
-        {/* Suggestion chips */}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {['Improve my defense', 'Attacking strategies', 'Training drills', 'Match analysis'].map((suggestion) => (
-            <Button
-              key={suggestion}
-              variant="outline"
-              size="sm"
-              className="text-xs border-teal-700 text-teal-300 hover:bg-teal-950/30 hover:border-teal-600 transition-all"
-              onClick={() => setInputMessage(suggestion)}
-            >
-              {suggestion}
-            </Button>
-          ))}
-        </div>
+        ) : (
+          <>
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <Textarea
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  placeholder="Ask your AI Coach anything... training tips, strategies, gameplay analysis"
+                  className="min-h-[60px] bg-matrix-dark border-teal-800/30 text-white placeholder-gray-400 focus:border-teal-600 focus:ring-teal-600/20 resize-none"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex flex-col space-y-2">
+                <Button
+                  onClick={handleSendMessage}
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-6 shadow-lg hover:shadow-teal-600/20 transition-all"
+                  disabled={!inputMessage.trim()}
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+                <Button
+                  onClick={toggleListening}
+                  variant="outline"
+                  className={`px-6 border-teal-600 transition-all ${
+                    isListening 
+                      ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/20' 
+                      : 'text-teal-400 hover:bg-teal-950/30'
+                  }`}
+                >
+                  {isListening ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                </Button>
+              </div>
+            </div>
+            
+            {/* Suggestion chips */}
+            <div className="mt-4 flex flex-wrap gap-2">
+              {['Improve my defense', 'Attacking strategies', 'Training drills', 'Match analysis'].map((suggestion) => (
+                <Button
+                  key={suggestion}
+                  variant="outline"
+                  size="sm"
+                  className="text-xs border-teal-700 text-teal-300 hover:bg-teal-950/30 hover:border-teal-600 transition-all"
+                  onClick={() => setInputMessage(suggestion)}
+                >
+                  {suggestion}
+                </Button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

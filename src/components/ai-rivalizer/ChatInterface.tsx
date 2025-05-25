@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
 
@@ -13,14 +14,26 @@ interface Message {
 interface ChatInterfaceProps {
   messages: Message[];
   setMessages: (messages: Message[]) => void;
+  onSendMessage?: () => void;
+  interactionLimit?: number;
 }
 
-const ChatInterface = ({ messages, setMessages }: ChatInterfaceProps) => {
+const ChatInterface = ({ 
+  messages, 
+  setMessages, 
+  onSendMessage,
+  interactionLimit
+}: ChatInterfaceProps) => {
   const [message, setMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
 
   const handleSendMessage = () => {
     if (!message.trim()) return;
+    
+    // Check interaction limit
+    if (interactionLimit !== undefined && interactionLimit <= 0) {
+      return;
+    }
 
     const newMessage = {
       id: messages.length + 1,
@@ -33,12 +46,24 @@ const ChatInterface = ({ messages, setMessages }: ChatInterfaceProps) => {
     setMessages(updatedMessages);
     setMessage('');
 
+    // Call the interaction callback if provided
+    if (onSendMessage) {
+      onSendMessage();
+    }
+
     // Simulate AI response
     setTimeout(() => {
+      const responses = [
+        "🎯 Excellent question! I've analyzed the competitive landscape and found some worthy opponents for you. Based on your skill level, I recommend challenging players in the #150-200 rank range.",
+        "🔥 Perfect timing! I see some high-value matches available right now. There's a player with similar stats to yours looking for a challenge - want me to set up the connection?",
+        "⚡ Smart strategy thinking! For your next match, focus on exploiting your opponent's weak defensive positioning. I've identified their pattern from recent games.",
+        "🏆 Great competitive mindset! I recommend warming up with a few skill drills before your next ranked match. Your peak performance window is typically in the evening sessions.",
+      ];
+
       const aiResponse = {
         id: updatedMessages.length + 1,
         type: 'ai' as const,
-        content: "🎯 Excellent question! Let me analyze the competitive landscape and find you the perfect opponent. Based on your skill level and recent performance, I have some exciting match proposals...",
+        content: responses[Math.floor(Math.random() * responses.length)],
         timestamp: new Date().toLocaleTimeString(),
       };
       setMessages([...updatedMessages, aiResponse]);
@@ -48,6 +73,8 @@ const ChatInterface = ({ messages, setMessages }: ChatInterfaceProps) => {
   const toggleListening = () => {
     setIsListening(!isListening);
   };
+
+  const isLimitReached = interactionLimit !== undefined && interactionLimit <= 0;
 
   return (
     <div className="lg:w-1/2 flex flex-col">
@@ -65,7 +92,12 @@ const ChatInterface = ({ messages, setMessages }: ChatInterfaceProps) => {
           </div>
           <div>
             <h2 className="text-xl font-bold text-white">Chat with Rivalizer</h2>
-            <p className="text-red-400 text-sm">Ready to dominate the competition</p>
+            <p className="text-red-400 text-sm">
+              {interactionLimit !== undefined 
+                ? `Ready to dominate the competition (${interactionLimit} interactions left)`
+                : 'Ready to dominate the competition'
+              }
+            </p>
           </div>
         </div>
       </div>
@@ -78,13 +110,27 @@ const ChatInterface = ({ messages, setMessages }: ChatInterfaceProps) => {
       </div>
 
       {/* Input area */}
-      <ChatInput
-        message={message}
-        setMessage={setMessage}
-        isListening={isListening}
-        onSendMessage={handleSendMessage}
-        onToggleListening={toggleListening}
-      />
+      <div className="border-t border-red-900/30 bg-gradient-to-r from-red-950/10 to-transparent p-6">
+        {isLimitReached ? (
+          <div className="text-center py-4">
+            <p className="text-gray-400 mb-4">You've reached your preview interaction limit</p>
+            <Button
+              className="bg-neon-green text-black hover:bg-neon-green/90"
+              onClick={() => window.open('https://whop.com/futmatrix', '_blank')}
+            >
+              Get Full Access
+            </Button>
+          </div>
+        ) : (
+          <ChatInput
+            message={message}
+            setMessage={setMessage}
+            isListening={isListening}
+            onSendMessage={handleSendMessage}
+            onToggleListening={toggleListening}
+          />
+        )}
+      </div>
     </div>
   );
 };

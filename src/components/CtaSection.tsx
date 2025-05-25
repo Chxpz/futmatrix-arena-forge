@@ -24,7 +24,7 @@ const CtaSection = () => {
             </h2>
             
             <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-              Join our elite platform and transform your gameplay with professional-grade analytics, 
+              Get an exclusive preview of our elite platform with professional-grade analytics, 
               AI-powered insights, and tools designed for serious competitors.
             </p>
             
@@ -46,22 +46,15 @@ const CtaSection = () => {
             
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate('/preview')}
                 className="px-8 py-6 text-lg bg-neon-green text-black font-semibold rounded-lg hover:bg-neon-green/90 button-glow transition-all duration-300 hover:scale-105"
               >
-                Start Your Journey
-              </Button>
-              <Button
-                onClick={() => navigate('/login')}
-                variant="outline" 
-                className="px-8 py-6 text-lg bg-transparent border-2 border-neon-green text-neon-green rounded-lg hover:bg-neon-green/10 button-glow transition-all duration-300 hover:scale-105"
-              >
-                Sign In
+                Get Preview Access
               </Button>
             </div>
             
             <p className="text-xs text-gray-500 mt-6">
-              No credit card required • Start competing in minutes
+              No credit card required • Preview available instantly
             </p>
           </div>
         </div>
