@@ -1,22 +1,22 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const PricingCard = ({ 
   plan, 
   price, 
   features, 
   cta, 
-  whopLink, 
   highlight = false 
 }: { 
   plan: string;
   price: string;
   features: string[];
   cta: string;
-  whopLink: string;
   highlight?: boolean;
 }) => {
   const [hover, setHover] = useState(false);
+  const navigate = useNavigate();
   
   return (
     <div 
@@ -44,8 +44,8 @@ const PricingCard = ({
           ))}
         </div>
         
-        <a 
-          href={whopLink} 
+        <button 
+          onClick={() => navigate('/preview')}
           className={`py-3 px-4 rounded-md font-medium transition-all button-glow text-center
             ${highlight 
               ? 'bg-neon-green text-black hover:bg-neon-green/90' 
@@ -53,7 +53,7 @@ const PricingCard = ({
             }`}
         >
           {cta}
-        </a>
+        </button>
       </div>
     </div>
   );
@@ -122,14 +122,12 @@ const PricingSection = () => {
             price={isMonthly ? "$19.63" : "$188.45"}
             features={basicFeatures} 
             cta="Join now" 
-            whopLink="{BASIC_WHOP_LINK}" 
           />
           <PricingCard 
             plan="Advanced" 
             price={isMonthly ? "$29.63" : "$284.45"}
             features={advancedFeatures} 
             cta="Upgrade my game" 
-            whopLink="{ADVANCED_WHOP_LINK}"
             highlight={true} 
           />
         </div>
