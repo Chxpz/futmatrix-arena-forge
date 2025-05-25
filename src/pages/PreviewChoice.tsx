@@ -1,18 +1,29 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, Zap, Crown, Target } from 'lucide-react';
+import { Trophy, Zap, Crown, Target, TrendingUp, Users, Coins } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const PreviewChoice = () => {
   const navigate = useNavigate();
+  const [showTokenModal, setShowTokenModal] = useState(false);
 
   useEffect(() => {
     // Check if user has preview access
     const hasPreviewAccess = localStorage.getItem('previewAccess');
     if (!hasPreviewAccess) {
       navigate('/preview');
+    } else {
+      // Show token modal when page renders
+      setShowTokenModal(true);
     }
   }, [navigate]);
 
@@ -29,8 +40,84 @@ const PreviewChoice = () => {
     }, 2000);
   };
 
+  const handleGetTokens = () => {
+    setShowTokenModal(false);
+    handleUnlockFullPower();
+  };
+
+  const handleContinuePreview = () => {
+    setShowTokenModal(false);
+  };
+
   return (
     <div className="min-h-screen bg-matrix-darker flex items-center justify-center p-4">
+      {/* Token Modal */}
+      <Dialog open={showTokenModal} onOpenChange={setShowTokenModal}>
+        <DialogContent className="bg-matrix-dark border-orange-500/30 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-orange-400 flex items-center gap-2">
+              <Coins className="w-6 h-6" />
+              Unlock Your Competitive Edge
+            </DialogTitle>
+            <DialogDescription className="text-gray-300 mt-4 space-y-4">
+              <div className="text-center">
+                <div className="inline-block p-3 rounded-full bg-gradient-to-br from-orange-500/20 to-red-500/20 mb-4">
+                  <TrendingUp className="w-8 h-8 text-orange-400" />
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <Users className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-medium">Join Elite Players</p>
+                    <p className="text-sm text-gray-400">Serious competitors use tokens for unlimited AI access and advanced features</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Trophy className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-medium">Self-Betting Matches</p>
+                    <p className="text-sm text-gray-400">Stake tokens on your own performance and earn from victories</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Zap className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-medium">Unlimited AI Training</p>
+                    <p className="text-sm text-gray-400">No restrictions on AI Coach and Rivalizer interactions</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg p-3 border border-orange-500/20 mt-4">
+                <p className="text-orange-300 text-sm text-center font-medium">
+                  🚀 Get tokens on Virtuals Protocol and dominate the competition
+                </p>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex flex-col gap-3 mt-6">
+            <Button 
+              className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold"
+              onClick={handleGetTokens}
+            >
+              Get Tokens Now
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full border-matrix-gray/30 text-gray-300 hover:bg-matrix-gray/10"
+              onClick={handleContinuePreview}
+            >
+              Continue with Preview
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
         <div className="text-center mb-12">
