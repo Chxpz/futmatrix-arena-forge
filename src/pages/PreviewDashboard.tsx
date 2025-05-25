@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Trophy, Users, Brain, Home, Coins, Zap, Crown } from 'lucide-react';
+import { Bot, Trophy, Users, Brain, Home, Coins, Zap, Crown, Star } from 'lucide-react';
 
 const PreviewDashboard = () => {
   const navigate = useNavigate();
@@ -74,7 +74,51 @@ const PreviewDashboard = () => {
           </div>
         </div>
 
-        {/* Token CTA for Elite Players */}
+        {/* Prominent Token CTA */}
+        <Card className="bg-gradient-to-br from-orange-500/15 via-red-500/10 to-purple-500/15 border-2 border-orange-500/40 shadow-2xl mb-8 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-400/5 via-red-400/5 to-purple-400/5 animate-pulse"></div>
+          <CardHeader className="text-center relative z-10">
+            <div className="flex justify-center mb-4">
+              <div className="p-4 rounded-full bg-gradient-to-br from-orange-500/30 to-red-500/30 border border-orange-400/50">
+                <Crown className="w-8 h-8 text-orange-400" />
+              </div>
+            </div>
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent mb-2">
+              Unlock Elite Status
+            </CardTitle>
+            <CardDescription className="text-gray-300 text-lg">
+              Join the competitive elite with unlimited AI access and self-betting features
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="flex items-center justify-center gap-2 text-sm text-orange-300">
+                <Star className="w-4 h-4 text-orange-400" />
+                <span>Unlimited AI Training</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-sm text-red-300">
+                <Zap className="w-4 h-4 text-red-400" />
+                <span>Self-Betting Matches</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-sm text-purple-300">
+                <Trophy className="w-4 h-4 text-purple-400" />
+                <span>Competitive Edge</span>
+              </div>
+            </div>
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold px-8 py-3 text-lg shadow-xl transform hover:scale-105 transition-all duration-200"
+              onClick={handleGetTokens}
+            >
+              <Coins className="w-5 h-5 mr-3" />
+              Get FUTM Tokens Now
+              <Zap className="w-5 h-5 ml-3" />
+            </Button>
+            <p className="text-xs text-gray-500 mt-3">Join elite players earning through skill</p>
+          </CardContent>
+        </Card>
+
+        {/* Token CTA for experienced users */}
         {(coachInteractions > 2 || rivalizerInteractions > 2) && (
           <Card className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/30 mb-8">
             <CardContent className="py-6">
