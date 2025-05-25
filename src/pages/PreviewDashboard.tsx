@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Trophy, Users, Brain } from 'lucide-react';
+import { Bot, Trophy, Users, Brain, Home } from 'lucide-react';
 
 const PreviewDashboard = () => {
   const navigate = useNavigate();
@@ -45,11 +45,24 @@ const PreviewDashboard = () => {
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <div className="text-center mb-8 pt-8">
-          <img 
-            src="/lovable-uploads/43b4aae5-404e-48b7-9d0b-f05717d5161a.png" 
-            alt="Futmatrix" 
-            className="h-16 w-auto mx-auto mb-4" 
-          />
+          <div className="flex justify-between items-start mb-4">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/')}
+              className="border-matrix-gray/30 text-gray-400 hover:text-white hover:bg-matrix-dark"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+            <div className="flex-1 flex justify-center">
+              <img 
+                src="/lovable-uploads/43b4aae5-404e-48b7-9d0b-f05717d5161a.png" 
+                alt="Futmatrix" 
+                className="h-16 w-auto" 
+              />
+            </div>
+            <div className="w-[120px]"></div> {/* Spacer to center the logo */}
+          </div>
           <h1 className="text-3xl font-bold text-white mb-2">Welcome to Futmatrix Preview</h1>
           <p className="text-gray-400 text-lg">Choose your AI agent to get started</p>
           <div className="inline-block py-2 px-4 rounded-full bg-neon-green/20 border border-neon-green/40 text-sm text-neon-green mt-4">
