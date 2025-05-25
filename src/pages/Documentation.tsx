@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
@@ -16,7 +17,13 @@ import {
   Target,
   BarChart3,
   Zap,
-  Star
+  Star,
+  MessageCircle,
+  Bot,
+  Flame,
+  ChevronRight,
+  Lock,
+  CheckCircle
 } from 'lucide-react';
 
 const Documentation = () => {
@@ -57,9 +64,10 @@ const Documentation = () => {
               <CardTitle className="text-neon-green">Quick Navigation</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {[
                   { title: "Platform Overview", id: "overview" },
+                  { title: "AI Agents", id: "agents" },
                   { title: "Earning Strategies", id: "earning" },
                   { title: "Tokenomics", id: "tokenomics" },
                   { title: "Platform Rules", id: "rules" }
@@ -93,9 +101,10 @@ const Documentation = () => {
               </CardHeader>
               <CardContent className="text-gray-300">
                 <p>
-                  Futmatrix is the world's first competitive gaming platform that combines AI-powered coaching 
-                  with skill-matched wagered matches for EAFC25 players. We're building an ecosystem where 
-                  skill directly translates to financial rewards.
+                  Futmatrix revolutionizes competitive gaming by combining AI-powered coaching 
+                  with skill-matched wagered matches for EAFC25 players. We've created the first 
+                  ecosystem where your gaming skills directly translate to financial rewards through 
+                  fair competition and intelligent training.
                 </p>
               </CardContent>
             </Card>
@@ -109,8 +118,9 @@ const Documentation = () => {
               </CardHeader>
               <CardContent className="text-gray-300">
                 <p>
-                  Transform your EAFC25 skills into real income through competitive matches, 
-                  AI-driven improvement, and token rewards. The better you play, the more you earn.
+                  Transform your EAFC25 passion into a profitable venture. Our platform offers 
+                  personalized AI coaching, competitive wagered matches, token rewards, and 
+                  a sustainable economy where skill determines success.
                 </p>
               </CardContent>
             </Card>
@@ -140,6 +150,208 @@ const Documentation = () => {
               </div>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      <Separator className="bg-matrix-gray/30" />
+
+      {/* AI Agents Interaction */}
+      <section id="agents" className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-3xl font-bold text-neon-green mb-8">AI Agent Interactions</h2>
+          
+          <div className="grid gap-8">
+            {/* Coach Agent */}
+            <Card className="bg-gradient-to-r from-teal-950/20 to-teal-900/10 border-teal-500/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-teal-400 text-2xl">
+                  <div className="p-2 bg-teal-600/20 rounded-full">
+                    <Brain className="w-6 h-6" />
+                  </div>
+                  AI Coach Agent
+                </CardTitle>
+                <CardDescription className="text-teal-300">
+                  Your personal EAFC25 performance analyst and skill development mentor
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <MessageCircle className="w-4 h-4 text-teal-400" />
+                        How to Interact
+                      </h4>
+                      <ul className="space-y-2 text-gray-300 text-sm">
+                        <li className="flex items-start gap-2">
+                          <ChevronRight className="w-3 h-3 text-teal-400 mt-1 flex-shrink-0" />
+                          Access through the AI Coach section in your dashboard
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <ChevronRight className="w-3 h-3 text-teal-400 mt-1 flex-shrink-0" />
+                          Upload match screenshots or clips for detailed analysis
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <ChevronRight className="w-3 h-3 text-teal-400 mt-1 flex-shrink-0" />
+                          Chat in natural language about tactics and strategies
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <ChevronRight className="w-3 h-3 text-teal-400 mt-1 flex-shrink-0" />
+                          Review personalized training plans and weekly goals
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <Bot className="w-4 h-4 text-teal-400" />
+                        What the Coach Provides
+                      </h4>
+                      <ul className="space-y-2 text-gray-300 text-sm">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3 h-3 text-teal-400 mt-1 flex-shrink-0" />
+                          Match-by-match performance breakdowns
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3 h-3 text-teal-400 mt-1 flex-shrink-0" />
+                          Weakness identification and improvement strategies
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3 h-3 text-teal-400 mt-1 flex-shrink-0" />
+                          Custom training drills based on your playstyle
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3 h-3 text-teal-400 mt-1 flex-shrink-0" />
+                          Tactical advice for specific opponent types
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-teal-950/30 border border-teal-700/30 rounded-lg">
+                    <h4 className="font-semibold text-teal-300 mb-2">💡 Pro Tip: Maximizing Coach Interactions</h4>
+                    <p className="text-gray-300 text-sm">
+                      Upload screenshots of critical moments (goals conceded, missed opportunities) after losses. 
+                      The Coach rewards quality data submissions with tokens (10-30 per upload) while providing 
+                      actionable feedback to improve your next performance.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Rivalizer Agent */}
+            <Card className="bg-gradient-to-r from-red-950/20 to-red-900/10 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-red-400 text-2xl">
+                  <div className="p-2 bg-red-600/20 rounded-full">
+                    <Flame className="w-6 h-6" />
+                  </div>
+                  Rivalizer Agent
+                </CardTitle>
+                <CardDescription className="text-red-300">
+                  Your competitive matchmaking specialist and strategic warfare advisor
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <MessageCircle className="w-4 h-4 text-red-400" />
+                        How to Interact
+                      </h4>
+                      <ul className="space-y-2 text-gray-300 text-sm">
+                        <li className="flex items-start gap-2">
+                          <ChevronRight className="w-3 h-3 text-red-400 mt-1 flex-shrink-0" />
+                          Challenge through the AI Rivalizer section
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <ChevronRight className="w-3 h-3 text-red-400 mt-1 flex-shrink-0" />
+                          Ask for opponent analysis and scouting reports
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <ChevronRight className="w-3 h-3 text-red-400 mt-1 flex-shrink-0" />
+                          Request match scheduling and optimal timing strategies
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <ChevronRight className="w-3 h-3 text-red-400 mt-1 flex-shrink-0" />
+                          Voice commands for real-time tactical adjustments
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <Bot className="w-4 h-4 text-red-400" />
+                        What the Rivalizer Provides
+                      </h4>
+                      <ul className="space-y-2 text-gray-300 text-sm">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3 h-3 text-red-400 mt-1 flex-shrink-0" />
+                          Skill-matched opponent recommendations
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3 h-3 text-red-400 mt-1 flex-shrink-0" />
+                          Pre-match psychological profiles and weaknesses
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3 h-3 text-red-400 mt-1 flex-shrink-0" />
+                          Strategic betting advice and risk assessment
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3 h-3 text-red-400 mt-1 flex-shrink-0" />
+                          Post-match rivalry analysis and grudge tracking
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-red-950/30 border border-red-700/30 rounded-lg">
+                    <h4 className="font-semibold text-red-300 mb-2">⚡ Pro Tip: Leveraging Rivalizer Intelligence</h4>
+                    <p className="text-gray-300 text-sm">
+                      The Rivalizer tracks opponent patterns, optimal betting amounts, and win probabilities. 
+                      Ask specific questions like "Find me a player I can beat with 80% confidence" or 
+                      "What's the best stake amount for my current skill level?"
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Agent Communication Tips */}
+            <Card className="bg-matrix-dark/50 border-matrix-gray/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-purple-400">
+                  <Star className="w-5 h-5" />
+                  Effective Agent Communication
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center p-4 bg-matrix-gray/20 rounded-lg">
+                    <MessageCircle className="w-8 h-8 text-blue-400 mx-auto mb-3" />
+                    <h4 className="font-semibold text-white mb-2">Be Specific</h4>
+                    <p className="text-sm text-gray-300">
+                      Use clear, detailed questions. Instead of "Help me," ask "Analyze my defending in the last match"
+                    </p>
+                  </div>
+                  <div className="text-center p-4 bg-matrix-gray/20 rounded-lg">
+                    <Brain className="w-8 h-8 text-green-400 mx-auto mb-3" />
+                    <h4 className="font-semibold text-white mb-2">Provide Context</h4>
+                    <p className="text-sm text-gray-300">
+                      Share your current goals, preferred playstyle, and recent performance for personalized advice
+                    </p>
+                  </div>
+                  <div className="text-center p-4 bg-matrix-gray/20 rounded-lg">
+                    <Trophy className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
+                    <h4 className="font-semibold text-white mb-2">Follow Through</h4>
+                    <p className="text-sm text-gray-300">
+                      Complete training recommendations and upload proof to earn bonus tokens and improve results
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
@@ -382,7 +594,11 @@ const Documentation = () => {
                       </li>
                       <li className="flex items-start gap-2">
                         <Star className="w-4 h-4 text-neon-green mt-1 flex-shrink-0" />
-                        Collusion or match-fixing results in permanent ban
+                        Collusion or match-fixing results in permanent ban and token forfeiture
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Star className="w-4 h-4 text-neon-green mt-1 flex-shrink-0" />
+                        All matches must be played to completion - disconnections are tracked
                       </li>
                     </ul>
                   </div>
@@ -400,7 +616,29 @@ const Documentation = () => {
                       </li>
                       <li className="flex items-start gap-2">
                         <Star className="w-4 h-4 text-cyan-400 mt-1 flex-shrink-0" />
-                        Respect daily usage limits based on your plan
+                        Respect daily usage limits based on your subscription plan
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Star className="w-4 h-4 text-cyan-400 mt-1 flex-shrink-0" />
+                        Maintain respectful communication in all agent interactions
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-white mb-3">Account Security</h3>
+                    <ul className="space-y-2 text-gray-300">
+                      <li className="flex items-start gap-2">
+                        <Lock className="w-4 h-4 text-purple-400 mt-1 flex-shrink-0" />
+                        One account per person - multiple accounts will be banned
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Lock className="w-4 h-4 text-purple-400 mt-1 flex-shrink-0" />
+                        Keep your wallet credentials secure and never share them
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Lock className="w-4 h-4 text-purple-400 mt-1 flex-shrink-0" />
+                        Report any suspicious activity or unauthorized access immediately
                       </li>
                     </ul>
                   </div>
@@ -424,16 +662,18 @@ const Documentation = () => {
                       <div>
                         <p className="text-gray-300 mb-2">Offenses:</p>
                         <ul className="text-gray-300 space-y-1">
-                          <li>• Spamming AI chat</li>
-                          <li>• Uploading irrelevant images</li>
-                          <li>• Mild toxic behavior</li>
+                          <li>• Spamming AI chat with irrelevant messages</li>
+                          <li>• Uploading non-game related images</li>
+                          <li>• Mild toxic behavior or inappropriate language</li>
+                          <li>• Excessive complaints or unsportsmanlike conduct</li>
                         </ul>
                       </div>
                       <div>
                         <p className="text-gray-300 mb-2">Penalty:</p>
                         <ul className="text-yellow-400 space-y-1">
-                          <li>• 50 token fine</li>
-                          <li>• 24-hour match ban</li>
+                          <li>• 50 token fine (must be paid to resume play)</li>
+                          <li>• 24-hour ban from all matches</li>
+                          <li>• Warning recorded on account</li>
                         </ul>
                       </div>
                     </div>
@@ -445,19 +685,65 @@ const Documentation = () => {
                       <div>
                         <p className="text-gray-300 mb-2">Offenses:</p>
                         <ul className="text-gray-300 space-y-1">
-                          <li>• Hate speech or harassment</li>
-                          <li>• Attempting to exploit the system</li>
+                          <li>• Hate speech, harassment, or discrimination</li>
+                          <li>• Attempting to exploit or hack the system</li>
                           <li>• Repeated yellow card offenses</li>
+                          <li>• Sharing inappropriate content with AI agents</li>
                         </ul>
                       </div>
                       <div>
                         <p className="text-gray-300 mb-2">Penalty:</p>
                         <ul className="text-red-400 space-y-1">
-                          <li>• 200 token fine</li>
-                          <li>• 7-day match ban</li>
+                          <li>• 200 token fine (non-refundable)</li>
+                          <li>• 7-day ban from matches and AI access</li>
+                          <li>• Potential permanent suspension for repeat offenses</li>
                         </ul>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="p-4 bg-matrix-gray/20 rounded-lg">
+                    <h4 className="font-semibold text-white mb-2">Important Notes:</h4>
+                    <ul className="text-gray-300 text-sm space-y-1">
+                      <li>• Fines must be paid before resuming platform access</li>
+                      <li>• No refunds on subscription fees during ban periods</li>
+                      <li>• Appeal process available through customer support</li>
+                      <li>• All penalty tokens are burned (removed from circulation)</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Community Guidelines */}
+            <Card className="bg-gradient-to-r from-blue-400/10 to-purple-400/10 border-blue-400/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-blue-400">
+                  <Users className="w-6 h-6" />
+                  Community Standards
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-white mb-3">Expected Behavior</h4>
+                    <ul className="space-y-2 text-gray-300 text-sm">
+                      <li>✅ Respectful communication with all users</li>
+                      <li>✅ Good sportsmanship in wins and losses</li>
+                      <li>✅ Constructive feedback and helpful advice</li>
+                      <li>✅ Honest gameplay and fair competition</li>
+                      <li>✅ Reporting bugs and issues responsibly</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-3">Prohibited Behavior</h4>
+                    <ul className="space-y-2 text-gray-300 text-sm">
+                      <li>❌ Harassment, bullying, or toxic behavior</li>
+                      <li>❌ Cheating, exploiting, or match manipulation</li>
+                      <li>❌ Sharing personal information of other users</li>
+                      <li>❌ Promoting external gambling or betting sites</li>
+                      <li>❌ Creating multiple accounts to circumvent rules</li>
+                    </ul>
                   </div>
                 </div>
               </CardContent>
