@@ -21,8 +21,8 @@ const Preview = () => {
         localStorage.setItem('coachInteractions', '0');
         localStorage.setItem('rivalizerInteractions', '0');
         
-        // Navigate to preview dashboard
-        navigate('/preview-dashboard');
+        // Navigate to choice interstitial instead of direct dashboard
+        navigate('/preview-choice');
       }, 1000);
     } catch (error) {
       console.error("Error signing up:", error);
@@ -60,6 +60,25 @@ const Preview = () => {
                 • Try our AI Coach for personalized training
                 • Experience the Rivalizer for competitive matching
                 • 5 interactions with each AI agent
+              </div>
+            </div>
+
+            {/* Enhanced Token Information Box */}
+            <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg p-4 border border-orange-500/20 mb-6">
+              <div className="text-sm text-gray-300 leading-relaxed">
+                <div className="flex items-start gap-2">
+                  <span className="text-orange-400 text-lg">🚀</span>
+                  <div>
+                    <span className="text-orange-400 font-medium">Competitive Edge:</span> 
+                    <span className="text-gray-300"> Serious players enhance their game with tokens available on </span>
+                    <button 
+                      onClick={() => window.open('https://virtuals.io/tokens/FUTM', '_blank')}
+                      className="text-orange-400 hover:text-orange-300 underline font-medium"
+                    >
+                      Virtuals Protocol
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 

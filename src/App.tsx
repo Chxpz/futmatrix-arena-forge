@@ -21,6 +21,7 @@ import Charts from "./pages/Charts";
 import ProductionChecklist from "./pages/ProductionChecklist";
 import Documentation from "./pages/Documentation";
 import Preview from "./pages/Preview";
+import PreviewChoice from "./pages/PreviewChoice";
 import PreviewDashboard from "./pages/PreviewDashboard";
 import PreviewCoach from "./pages/PreviewCoach";
 import PreviewRivalizer from "./pages/PreviewRivalizer";
@@ -45,6 +46,7 @@ const App = () => (
           
           {/* Preview routes */}
           <Route path="/preview" element={<Preview />} />
+          <Route path="/preview-choice" element={<PreviewChoice />} />
           <Route path="/preview-dashboard" element={<PreviewDashboard />} />
           <Route path="/preview-coach" element={<PreviewCoach />} />
           <Route path="/preview-rivalizer" element={<PreviewRivalizer />} />
