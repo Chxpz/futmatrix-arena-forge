@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
@@ -459,42 +458,6 @@ const Documentation = () => {
                         </ul>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Plan Limits */}
-            <Card className="bg-matrix-dark/50 border-matrix-gray/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-400">
-                  <Users className="w-6 h-6" />
-                  Plan Limits & Features
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="p-4 bg-matrix-gray/20 rounded-lg">
-                    <h3 className="font-semibold text-white mb-3">Basic Plan - $19.63/month</h3>
-                    <ul className="space-y-2 text-gray-300 text-sm">
-                      <li>• 5 Rivalizer matches per month</li>
-                      <li>• AI Coach feedback on last 5 matches</li>
-                      <li>• Basic performance stats</li>
-                      <li>• Discord community access</li>
-                      <li>• 50 AI chat messages per day</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="p-4 bg-gradient-to-r from-neon-green/10 to-cyan-400/10 border border-neon-green/30 rounded-lg">
-                    <h3 className="font-semibold text-neon-green mb-3">Advanced Plan - $29.63/month</h3>
-                    <ul className="space-y-2 text-gray-300 text-sm">
-                      <li>• Unlimited Rivalizer matches</li>
-                      <li>• Full AI Coach with training plans</li>
-                      <li>• Complete performance analytics</li>
-                      <li>• Real-time dashboard</li>
-                      <li>• 200 AI chat messages per day</li>
-                      <li>• Priority customer support</li>
-                    </ul>
                   </div>
                 </div>
               </CardContent>
