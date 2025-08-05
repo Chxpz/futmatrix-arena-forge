@@ -74,13 +74,33 @@ const Auth = () => {
         return;
       }
       
-      // Use full page redirect instead of iframe/popup to avoid CSP issues
-      window.location.href = response.authUrl;
+      // Open in new tab to avoid iframe CSP restrictions in Lovable preview
+      const authWindow = window.open(response.authUrl, '_blank');
+      
+      if (!authWindow) {
+        setError('Please allow popups and try again');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Check for auth completion by polling
+      const checkAuth = setInterval(() => {
+        try {
+          if (authWindow.closed) {
+            clearInterval(checkAuth);
+            setIsLoading(false);
+            // Refresh the page to check if user is now authenticated
+            window.location.reload();
+          }
+        } catch (e) {
+          // Cross-origin error is expected
+        }
+      }, 1000);
+      
     } catch (error: any) {
       setError('Failed to initiate Whop authentication. Please try again.');
       setIsLoading(false);
     }
-    // Don't set loading to false here since we're redirecting away
   };
 
   return (
