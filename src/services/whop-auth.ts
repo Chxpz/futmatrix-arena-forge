@@ -14,7 +14,7 @@ export interface WhopAuthResponse {
 }
 
 class WhopAuthService {
-  private clientId: string = '';
+  private clientId: string = 'app_dL08bPo6FsVXvA';
   private clientSecret: string = '';
 
   initialize(clientId: string, clientSecret: string) {
