@@ -18,10 +18,6 @@ import Rankings from "./pages/Rankings";
 import Charts from "./pages/Charts";
 import ProductionChecklist from "./pages/ProductionChecklist";
 import Documentation from "./pages/Documentation";
-import PreviewChoice from "./pages/PreviewChoice";
-import PreviewDashboard from "./pages/PreviewDashboard";
-import PreviewCoach from "./pages/PreviewCoach";
-import PreviewRivalizer from "./pages/PreviewRivalizer";
 
 // Layouts
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -38,12 +34,6 @@ const App = () => (
           {/* Public routes */}
           <Route path="/" element={<Index />} />
           <Route path="/rules" element={<Documentation />} />
-          
-          {/* Preview routes */}
-          <Route path="/preview-choice" element={<PreviewChoice />} />
-          <Route path="/preview-dashboard" element={<PreviewDashboard />} />
-          <Route path="/preview-coach" element={<PreviewCoach />} />
-          <Route path="/preview-rivalizer" element={<PreviewRivalizer />} />
           
           {/* Development only route - remove in production */}
           {import.meta.env.DEV && (
