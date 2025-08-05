@@ -1,7 +1,9 @@
 
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -25,8 +27,25 @@ const HeroSection = () => {
   }, []);
   
   return (
-    <section className="relative min-h-screen pt-24 pb-16 flex items-center hero-glow overflow-hidden" ref={heroRef}>
-      <div className="matrix-grid"></div>
+    <section className="relative min-h-screen pt-24 pb-16 flex items-center overflow-hidden" ref={heroRef}>
+      {/* Stadium Background with Overlays */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="/lovable-uploads/25ab6b21-2c68-4f52-93e7-5203eb406fa6.png" 
+          alt="Stadium Background"
+          className="w-full h-full object-cover"
+        />
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-matrix-darker/80"></div>
+        {/* Gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-r from-matrix-darker/90 via-matrix-darker/60 to-matrix-darker/90"></div>
+        {/* Matrix grid overlay */}
+        <div className="absolute inset-0 matrix-grid opacity-30"></div>
+        {/* Neon glow effect */}
+        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-neon-green/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-neon-blue/10 rounded-full blur-3xl"></div>
+      </div>
+
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="lg:w-1/2 space-y-6 reveal">
@@ -41,9 +60,9 @@ const HeroSection = () => {
               Chase performance, money and visibility with our AI-driven tools designed for competitive gamers.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <a href="#pricing" className="px-6 py-3 bg-neon-green text-black font-medium rounded-md hover:bg-neon-green/90 transition-all button-glow">
+              <button onClick={() => navigate('/dashboard')} className="px-6 py-3 bg-neon-green text-black font-medium rounded-md hover:bg-neon-green/90 transition-all button-glow">
                 Get Started
-              </a>
+              </button>
               <a href="#features" className="px-6 py-3 bg-transparent border border-neon-green/50 text-neon-green rounded-md hover:bg-neon-green/10 transition-all button-glow">
                 Explore Features
               </a>
@@ -51,53 +70,56 @@ const HeroSection = () => {
           </div>
           
           <div className="lg:w-1/2 reveal">
-            <div className="relative">
-              <div className="absolute -top-10 -left-10 w-40 h-40 bg-neon-green/20 rounded-full filter blur-3xl"></div>
-              <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-neon-blue/10 rounded-full filter blur-3xl"></div>
-              
-              <div className="hud-panel p-6 animate-float">
-                <div className="text-xs text-neon-green/80 uppercase mb-2 flex justify-between">
-                  <span>Performance Analytics</span>
-                  <span className="text-2xs text-gray-500">LIVE DATA</span>
+            <div className="relative h-[500px] w-full flex items-center justify-center">
+              {/* Elegant floating image container with cool effects */}
+              <div className="relative group">
+                {/* Dynamic ambient glow backdrop */}
+                <div className="absolute -inset-12 bg-gradient-radial from-neon-green/20 via-neon-blue/15 to-transparent rounded-full blur-3xl opacity-70 group-hover:opacity-90 transition-all duration-700 animate-pulse"></div>
+                
+                {/* Orbital light elements */}
+                <div className="absolute top-0 left-0 w-full h-full">
+                  <div className="absolute top-8 right-12 w-3 h-3 bg-neon-green rounded-full animate-bounce opacity-80" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
+                  <div className="absolute bottom-16 left-8 w-2 h-2 bg-neon-blue rounded-full animate-bounce opacity-70" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
+                  <div className="absolute top-1/3 left-4 w-1.5 h-1.5 bg-neon-yellow rounded-full animate-bounce opacity-60" style={{animationDelay: '2s', animationDuration: '5s'}}></div>
+                  <div className="absolute bottom-1/3 right-6 w-2.5 h-2.5 bg-neon-green/80 rounded-full animate-bounce opacity-75" style={{animationDelay: '0.5s', animationDuration: '3.5s'}}></div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="bg-matrix-dark/60 p-3 rounded border border-matrix-gray">
-                    <div className="text-2xs text-gray-400 mb-1">WIN RATE</div>
-                    <div className="text-xl font-bold text-white">78<span className="text-neon-green">%</span></div>
-                  </div>
-                  <div className="bg-matrix-dark/60 p-3 rounded border border-matrix-gray">
-                    <div className="text-2xs text-gray-400 mb-1">MATCHES</div>
-                    <div className="text-xl font-bold text-white">156</div>
-                  </div>
-                  <div className="bg-matrix-dark/60 p-3 rounded border border-matrix-gray">
-                    <div className="text-2xs text-gray-400 mb-1">RANK</div>
-                    <div className="text-xl font-bold text-neon-blue">#231</div>
-                  </div>
-                  <div className="bg-matrix-dark/60 p-3 rounded border border-matrix-gray">
-                    <div className="text-2xs text-gray-400 mb-1">EARNINGS</div>
-                    <div className="text-xl font-bold text-neon-yellow">$147</div>
-                  </div>
-                </div>
+                {/* Rotating energy rings */}
+                <div className="absolute inset-0 rounded-full border border-neon-green/30 animate-spin opacity-20" style={{animationDuration: '20s'}}></div>
+                <div className="absolute inset-8 rounded-full border border-neon-blue/25 animate-spin opacity-15" style={{animationDuration: '15s', animationDirection: 'reverse'}}></div>
                 
-                <div className="bg-matrix-dark/40 p-3 rounded border border-matrix-gray mb-4">
-                  <div className="text-2xs text-gray-400 mb-2">LATEST MATCH RESULTS</div>
-                  <div className="flex space-x-1">
-                    <div className="h-1 flex-1 bg-neon-green rounded"></div>
-                    <div className="h-1 flex-1 bg-neon-green rounded"></div>
-                    <div className="h-1 flex-1 bg-red-500 rounded"></div>
-                    <div className="h-1 flex-1 bg-neon-green rounded"></div>
-                    <div className="h-1 flex-1 bg-neon-green rounded"></div>
+                {/* Main image with elegant hover effects */}
+                <div className="relative transform group-hover:scale-110 transition-all duration-1000 ease-out">
+                  {/* Layered shadow effects */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-neon-green/20 to-transparent rounded-3xl blur-2xl transform translate-y-6 opacity-60"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-neon-blue/15 to-transparent rounded-3xl blur-xl transform -translate-y-2 opacity-40"></div>
+                  
+                  {/* Image container with dynamic effects - no background to let transparency work */}
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="/lovable-uploads/8bb77508-057d-4437-9118-abf86754f0cb.png" 
+                      alt="Gaming Characters"
+                      className="w-full h-auto max-w-lg transform group-hover:brightness-110 group-hover:contrast-110 transition-all duration-700"
+                    />
+                    
+                    {/* Dynamic light overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-neon-green/5 to-neon-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    
+                    {/* Animated light streaks */}
+                    <div className="absolute top-0 left-1/4 w-0.5 h-full bg-gradient-to-b from-neon-green/60 via-neon-green/20 to-transparent opacity-50 group-hover:opacity-80 transition-opacity duration-500 animate-pulse"></div>
+                    <div className="absolute top-0 right-1/3 w-0.5 h-full bg-gradient-to-b from-neon-blue/50 via-neon-blue/15 to-transparent opacity-40 group-hover:opacity-70 transition-opacity duration-500 animate-pulse" style={{animationDelay: '1s'}}></div>
                   </div>
+                  
+                  {/* Floating energy particles */}
+                  <div className="absolute -top-4 -right-4 w-4 h-4 bg-neon-green/70 rounded-full animate-ping opacity-60"></div>
+                  <div className="absolute -bottom-6 -left-6 w-3 h-3 bg-neon-blue/70 rounded-full animate-ping opacity-50" style={{animationDelay: '1.5s'}}></div>
                 </div>
-                
-                <div className="text-xs text-gray-400 text-right">Next match in: <span className="text-neon-green">14:26</span></div>
               </div>
             </div>
           </div>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center">
+        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center">
           <span className="text-xs text-gray-400 mb-2">Scroll to explore</span>
           <svg className="animate-bounce h-5 w-5 text-neon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />

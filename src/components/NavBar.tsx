@@ -1,8 +1,12 @@
 
 import { useState, useEffect } from 'react';
+import { Button } from './ui/button';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -24,19 +28,24 @@ const NavBar = () => {
     }`}>
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">
         <div className="flex items-center">
-          <img 
-            src="/lovable-uploads/43b4aae5-404e-48b7-9d0b-f05717d5161a.png" 
-            alt="Futmatrix" 
-            className="h-14 w-auto hover:opacity-90 transition-opacity" 
-          />
+          <Link to="/">
+            <img 
+              src="/lovable-uploads/43b4aae5-404e-48b7-9d0b-f05717d5161a.png" 
+              alt="Futmatrix" 
+              className="h-14 w-auto hover:opacity-90 transition-opacity" 
+            />
+          </Link>
         </div>
         
         <div className="hidden md:flex items-center space-x-6">
-          <a href="#features" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Features</a>
           <a href="#pricing" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Pricing</a>
-          <a href="#join" className="text-sm px-4 py-2 bg-neon-green/10 border border-neon-green/50 text-neon-green rounded hover:bg-neon-green/20 transition-colors button-glow">
-            Join Discord
-          </a>
+          <Link to="/rules" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Rules</Link>
+          <Button 
+            className="text-sm bg-neon-green text-black hover:bg-neon-green/90"
+            onClick={() => navigate('/dashboard')}
+          >
+            Get Preview
+          </Button>
         </div>
 
         <button className="md:hidden text-gray-300 hover:text-white">

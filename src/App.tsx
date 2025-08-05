@@ -1,10 +1,26 @@
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// Pages
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import Rivalizer from "./pages/Rivalizer";
+import AIRivalizer from "./pages/AIRivalizer";
+import AICoach from "./pages/AICoach";
+import Upload from "./pages/Upload";
+import Rankings from "./pages/Rankings";
+import Charts from "./pages/Charts";
+import ProductionChecklist from "./pages/ProductionChecklist";
+import Documentation from "./pages/Documentation";
+
+// Layouts
+import DashboardLayout from "./layouts/DashboardLayout";
 
 const queryClient = new QueryClient();
 
@@ -15,8 +31,28 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/rules" element={<Documentation />} />
+          
+          {/* Development only route - remove in production */}
+          {import.meta.env.DEV && (
+            <Route path="/production-checklist" element={<ProductionChecklist />} />
+          )}
+          
+          {/* Protected dashboard routes */}
+          <Route path="/" element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/rivalizer" element={<Rivalizer />} />
+            <Route path="/ai-rivalizer" element={<AIRivalizer />} />
+            <Route path="/ai-coach" element={<AICoach />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/rankings" element={<Rankings />} />
+            <Route path="/charts" element={<Charts />} />
+          </Route>
+          
+          {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
