@@ -18,7 +18,7 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     // Check if user is authenticated
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem('whop_token');
     if (!token) {
       navigate('/auth');
       return;
@@ -35,8 +35,7 @@ const DashboardLayout = () => {
   ];
 
   const handleLogout = async () => {
-    localStorage.removeItem('auth_token');
-    apiClient.setToken(null);
+    await apiClient.signOut();
     navigate('/auth');
   };
 

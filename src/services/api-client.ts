@@ -7,10 +7,21 @@ class ApiClient {
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
+    
+    // Try to get token from localStorage on initialization
+    const storedToken = localStorage.getItem('whop_token');
+    if (storedToken) {
+      this.token = storedToken;
+    }
   }
 
   setToken(token: string | null) {
     this.token = token;
+    if (token) {
+      localStorage.setItem('whop_token', token);
+    } else {
+      localStorage.removeItem('whop_token');
+    }
   }
 
   private async request(endpoint: string, options: RequestInit = {}) {
@@ -39,24 +50,23 @@ class ApiClient {
   }
 
   // Auth endpoints
-  async signUp(email: string, password: string) {
-    return this.request('/auth/signup', {
+  async exchangeWhopCode(code: string, redirectUri: string) {
+    return this.request('/auth/whop-exchange', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ code, redirect_uri: redirectUri }),
     });
   }
 
-  async signIn(email: string, password: string) {
-    return this.request('/auth/signin', {
+  async verifyWhopToken(token: string) {
+    return this.request('/auth/whop-verify', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ token }),
     });
   }
 
   async signOut() {
-    return this.request('/auth/signout', {
-      method: 'POST',
-    });
+    this.setToken(null);
+    return { success: true };
   }
 
   async getCurrentUser() {

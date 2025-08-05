@@ -6,6 +6,27 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+interface WhopTokenData {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  refresh_token?: string;
+  scope: string;
+}
+
+interface WhopUser {
+  id: string;
+  email: string;
+  username?: string;
+}
+
+interface WhopMembership {
+  id: string;
+  plan_id: string;
+  status: string;
+  expires_at?: string;
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -23,85 +44,145 @@ serve(async (req) => {
 
     switch (req.method) {
       case 'POST':
-        if (path === 'signup') {
-          const { email, password } = await req.json();
+        if (path === 'whop-exchange') {
+          const { code, redirect_uri } = await req.json();
           
-          const { data, error } = await supabaseClient.auth.admin.createUser({
-            email,
-            password,
-            email_confirm: true
-          });
-
-          if (error) {
+          const clientId = Deno.env.get('WHOP_CLIENT_ID');
+          const clientSecret = Deno.env.get('WHOP_CLIENT_SECRET');
+          
+          if (!clientId || !clientSecret) {
             return new Response(
-              JSON.stringify({ error: error.message }),
-              { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+              JSON.stringify({ error: { message: 'Whop credentials not configured' } }),
+              { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
 
-          // Create user profile
-          const { error: profileError } = await supabaseClient
-            .from('users')
-            .insert({
-              id: data.user.id,
-              platform_auth_id: data.user.id,
-              username: email.split('@')[0],
-              created_at: new Date().toISOString()
+          try {
+            // Exchange code for token
+            const tokenResponse = await fetch('https://api.whop.com/oauth/token', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                client_id: clientId,
+                client_secret: clientSecret,
+                code,
+                redirect_uri,
+                grant_type: 'authorization_code',
+              }),
             });
 
-          if (profileError) {
-            console.error('Profile creation error:', profileError);
-          }
+            if (!tokenResponse.ok) {
+              throw new Error('Failed to exchange code for token');
+            }
 
-          return new Response(
-            JSON.stringify({ user: data.user }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
+            const tokenData: WhopTokenData = await tokenResponse.json();
+            
+            // Get user info
+            const userResponse = await fetch('https://api.whop.com/api/v2/me', {
+              headers: {
+                'Authorization': `Bearer ${tokenData.access_token}`,
+              },
+            });
 
-        if (path === 'signin') {
-          const { email, password } = await req.json();
-          
-          const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-          });
+            if (!userResponse.ok) {
+              throw new Error('Failed to get user info');
+            }
 
-          if (error) {
+            const userData: WhopUser = await userResponse.json();
+
+            // Get memberships
+            const membershipsResponse = await fetch('https://api.whop.com/api/v2/me/memberships', {
+              headers: {
+                'Authorization': `Bearer ${tokenData.access_token}`,
+              },
+            });
+
+            let memberships: WhopMembership[] = [];
+            if (membershipsResponse.ok) {
+              const membershipsData = await membershipsResponse.json();
+              memberships = membershipsData.data || [];
+            }
+
+            // Create or update user in our database
+            const { error: upsertError } = await supabaseClient
+              .from('users')
+              .upsert({
+                id: userData.id,
+                platform_auth_id: userData.id,
+                username: userData.username || userData.email?.split('@')[0] || userData.id,
+                whop_user_id: userData.id,
+                subscription_status: memberships.some(m => m.status === 'active') ? 'active' : 'inactive',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              });
+
+            if (upsertError) {
+              console.error('Error upserting user:', upsertError);
+            }
+
             return new Response(
-              JSON.stringify({ error: error.message }),
+              JSON.stringify({ 
+                token: tokenData.access_token,
+                user: userData,
+                memberships 
+              }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          } catch (error) {
+            console.error('Whop exchange error:', error);
+            return new Response(
+              JSON.stringify({ error: { message: error.message } }),
               { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
-
-          return new Response(
-            JSON.stringify({ user: data.user, session: data.session }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
         }
 
-        if (path === 'signout') {
-          const authHeader = req.headers.get('Authorization');
-          if (!authHeader) {
+        if (path === 'whop-verify') {
+          const { token } = await req.json();
+          
+          try {
+            // Verify token with Whop
+            const userResponse = await fetch('https://api.whop.com/api/v2/me', {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            });
+
+            if (!userResponse.ok) {
+              throw new Error('Invalid token');
+            }
+
+            const userData: WhopUser = await userResponse.json();
+
+            // Get memberships
+            const membershipsResponse = await fetch('https://api.whop.com/api/v2/me/memberships', {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            });
+
+            let memberships: WhopMembership[] = [];
+            if (membershipsResponse.ok) {
+              const membershipsData = await membershipsResponse.json();
+              memberships = membershipsData.data || [];
+            }
+
             return new Response(
-              JSON.stringify({ error: 'No authorization header' }),
+              JSON.stringify({ 
+                token,
+                user: userData,
+                memberships 
+              }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          } catch (error) {
+            return new Response(
+              JSON.stringify({ error: { message: 'Invalid token' } }),
               { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
-
-          const { error } = await supabaseClient.auth.admin.signOut(authHeader.replace('Bearer ', ''));
-
-          if (error) {
-            return new Response(
-              JSON.stringify({ error: error.message }),
-              { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            );
-          }
-
-          return new Response(
-            JSON.stringify({ success: true }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
         }
         break;
 
@@ -115,26 +196,46 @@ serve(async (req) => {
             );
           }
 
-          const { data: { user }, error } = await supabaseClient.auth.getUser(authHeader.replace('Bearer ', ''));
+          const token = authHeader.replace('Bearer ', '');
+          
+          try {
+            // Verify token with Whop
+            const userResponse = await fetch('https://api.whop.com/api/v2/me', {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            });
 
-          if (error) {
+            if (!userResponse.ok) {
+              throw new Error('Invalid token');
+            }
+
+            const userData: WhopUser = await userResponse.json();
+
+            // Get user profile from our database
+            const { data: profile } = await supabaseClient
+              .from('users')
+              .select('*')
+              .eq('whop_user_id', userData.id)
+              .single();
+
             return new Response(
-              JSON.stringify({ error: error.message }),
+              JSON.stringify({ 
+                user: {
+                  id: userData.id,
+                  email: userData.email,
+                  username: userData.username,
+                  ...profile
+                }
+              }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          } catch (error) {
+            return new Response(
+              JSON.stringify({ error: 'Invalid token' }),
               { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
-
-          // Get user profile
-          const { data: profile } = await supabaseClient
-            .from('users')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-
-          return new Response(
-            JSON.stringify({ user, profile }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
         }
         break;
     }
