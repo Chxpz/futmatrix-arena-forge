@@ -18,6 +18,7 @@ import Rankings from "./pages/Rankings";
 import Charts from "./pages/Charts";
 import ProductionChecklist from "./pages/ProductionChecklist";
 import Documentation from "./pages/Documentation";
+import Auth from "./pages/Auth";
 
 // Layouts
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -33,6 +34,7 @@ const App = () => (
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/rules" element={<Documentation />} />
           
           {/* Development only route - remove in production */}

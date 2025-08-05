@@ -1,23 +1,47 @@
-import { useState } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Swords, Brain, Edit, ChevronDown, ChevronRight 
 } from 'lucide-react';
 import RankingsMenu from '@/components/RankingsMenu';
+import { supabase } from '@/integrations/supabase/client';
+import { useCurrentUser } from '@/hooks/use-user-data';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dashboardExpanded, setDashboardExpanded] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const [authUser, setAuthUser] = useState<SupabaseUser | null>(null);
   const navigate = useNavigate();
-  
-  // Placeholder user data - this would come from your auth context
-  const user = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    avatarUrl: ''
-  };
+  const location = useLocation();
+  const { data: user } = useCurrentUser();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      setAuthUser(session?.user ?? null);
+      
+      if (!session) {
+        navigate('/auth');
+      }
+    });
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setAuthUser(session?.user ?? null);
+      
+      if (!session) {
+        navigate('/auth');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   const navLinks = [
     { name: 'Rivalizer Arena', path: '/rivalizer', icon: Calendar },
@@ -27,9 +51,7 @@ const DashboardLayout = () => {
   ];
 
   const handleLogout = async () => {
-    // This will be implemented with Supabase authentication
-    console.log("Logout clicked");
-    // Add your Supabase auth logic here
+    await supabase.auth.signOut();
     navigate('/');
   };
 
@@ -78,14 +100,14 @@ const DashboardLayout = () => {
           <div className="p-4 border-b border-matrix-gray/30">
             <div className="flex items-center space-x-3">
               <Avatar>
-                <AvatarImage src={user.avatarUrl} />
+                <AvatarImage src="" />
                 <AvatarFallback className="bg-neon-green/20 text-neon-green">
-                  {user.name.charAt(0)}
+                  {(user?.username || authUser?.email || 'U').charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <p className="text-sm font-medium">{user.name}</p>
-                <p className="text-xs text-gray-400">{user.email}</p>
+                <p className="text-sm font-medium">{user?.username || 'User'}</p>
+                <p className="text-xs text-gray-400">{authUser?.email}</p>
               </div>
               <Button
                 variant="ghost"

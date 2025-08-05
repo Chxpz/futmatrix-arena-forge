@@ -1,22 +1,21 @@
 
 // Environment configuration
-// Note: In Lovable, these would be managed through Supabase secrets
 export const ENV_CONFIG = {
-  // Supabase Configuration (these should be in Supabase secrets in production)
+  // Supabase Configuration
   supabase: {
-    url: import.meta.env.VITE_SUPABASE_URL || '',
-    anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+    url: 'https://qwwahtsehozxbjzeiajt.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3d2FodHNlaG96eGJqemVpYWp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjY4MzgsImV4cCI6MjA2OTk0MjgzOH0.aSnUz0UI8wnkjS6yFwXjKG-Lf-Utv5t4DiXbHTE2iWE',
   },
 
-  // Analytics (should be in Supabase secrets)
+  // Analytics
   analytics: {
-    googleAnalyticsId: import.meta.env.VITE_GA_ID || '',
+    googleAnalyticsId: '',
   },
 
-  // External APIs (should be in Supabase secrets)
+  // External APIs
   apis: {
     openaiApiKey: '', // This should NEVER be exposed in frontend
-    stripePublishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '',
+    stripePublishableKey: '',
   },
 
   // Environment

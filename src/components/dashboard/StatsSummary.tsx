@@ -1,22 +1,38 @@
 
 import { TrendingDown, TrendingUp } from 'lucide-react';
+import { useCurrentUser, useUserStats, useUserMatches } from '@/hooks/use-user-data';
+import { formatDistanceToNow } from 'date-fns';
 
 type StatsSummaryProps = {
   timeFilter: string;
 }
 
 const StatsSummary = ({ timeFilter }: StatsSummaryProps) => {
-  // In a real app, these metrics would be fetched based on the timeFilter
-  // Using mock data for now
+  const { data: user } = useCurrentUser();
+  const { data: userStats } = useUserStats(user?.id || '');
+  const { data: recentMatches } = useUserMatches(user?.id || '', 5);
+  
+  const lastMatch = recentMatches?.[0];
+  const lastMatchResult = lastMatch ? 
+    (lastMatch.score_user !== undefined && lastMatch.score_opponent !== undefined ?
+      (lastMatch.score_user > lastMatch.score_opponent ? 'Win' : 
+       lastMatch.score_user < lastMatch.score_opponent ? 'Loss' : 'Draw') : 'Completed') 
+    : null;
+
+  const avgGoals = userStats?.goals_scored && userStats?.matches_played ? 
+    (userStats.goals_scored / userStats.matches_played).toFixed(1) : 0;
+
   const metrics = {
-    totalMatches: 23,
-    averageGoals: 1.7,
-    overallPerformance: 72,
-    lastMatchDate: '2025-05-22',
-    lastMatchResult: 'Win',
-    matchesIncrease: true,
-    goalsIncrease: false,
-    performanceIncrease: true
+    totalMatches: userStats?.matches_played || 0,
+    averageGoals: Number(avgGoals),
+    overallPerformance: userStats?.avg_overall_performance ? Math.round(userStats.avg_overall_performance * 100) : 0,
+    lastMatchDate: lastMatch?.timestamp,
+    lastMatchResult,
+    lastMatchScore: lastMatch?.score_user !== undefined && lastMatch?.score_opponent !== undefined ? 
+      `${lastMatch.score_user}-${lastMatch.score_opponent}` : null,
+    matchesIncrease: (userStats?.performance_trend_5 || 0) > 0,
+    goalsIncrease: (userStats?.performance_trend_5 || 0) > 0,
+    performanceIncrease: (userStats?.performance_trend_5 || 0) > 0
   };
 
   return (
@@ -35,7 +51,9 @@ const StatsSummary = ({ timeFilter }: StatsSummaryProps) => {
           <span className="text-2xl font-bold text-white">{metrics.totalMatches}</span>
         </div>
         <div className="mt-1 text-xs text-gray-400">
-          {metrics.matchesIncrease ? '+3 since last month' : '-2 since last month'}
+          {userStats?.performance_trend_5 ? 
+            `${userStats.performance_trend_5 > 0 ? '+' : ''}${Math.round(userStats.performance_trend_5 * 100)}% trend` : 
+            'No trend data'}
         </div>
       </div>
       
@@ -53,7 +71,7 @@ const StatsSummary = ({ timeFilter }: StatsSummaryProps) => {
           <span className="text-2xl font-bold text-white">{metrics.averageGoals}</span>
         </div>
         <div className="mt-1 text-xs text-gray-400">
-          {metrics.goalsIncrease ? '+0.3 since last month' : '-0.2 since last month'}
+          Goals per match average
         </div>
       </div>
       
@@ -71,7 +89,9 @@ const StatsSummary = ({ timeFilter }: StatsSummaryProps) => {
           <span className="text-2xl font-bold text-white">{metrics.overallPerformance}%</span>
         </div>
         <div className="mt-1 text-xs text-gray-400">
-          {metrics.performanceIncrease ? '+5% since last month' : '-3% since last month'}
+          {userStats?.performance_trend_5 ? 
+            `${userStats.performance_trend_5 > 0 ? '+' : ''}${Math.round(userStats.performance_trend_5 * 100)}% trend` : 
+            'Overall match performance'}
         </div>
       </div>
       
@@ -88,10 +108,14 @@ const StatsSummary = ({ timeFilter }: StatsSummaryProps) => {
           </div>
         </div>
         <div className="mt-2">
-          <span className="text-2xl font-bold text-white">May 22</span>
+          <span className="text-2xl font-bold text-white">
+            {metrics.lastMatchDate ? 
+              formatDistanceToNow(new Date(metrics.lastMatchDate), { addSuffix: true }) : 
+              'No matches'}
+          </span>
         </div>
         <div className="mt-1 text-xs text-gray-400">
-          vs. Manchester United (3-1)
+          {metrics.lastMatchScore ? `Score: ${metrics.lastMatchScore}` : 'Start playing!'}
         </div>
       </div>
     </div>

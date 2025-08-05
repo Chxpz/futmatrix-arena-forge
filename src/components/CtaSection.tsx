@@ -46,7 +46,7 @@ const CtaSection = () => {
             
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/auth')}
                 className="px-8 py-6 text-lg bg-neon-green text-black font-semibold rounded-lg hover:bg-neon-green/90 button-glow transition-all duration-300 hover:scale-105"
               >
                 Get Preview Access

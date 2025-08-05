@@ -36,15 +36,8 @@ export const RivalizerCard = ({ userId }: RivalizerCardProps) => {
   const rivalizeMatches = recentMatches?.filter(match => match.match_type === 'rivalizer') || [];
   const lastRivalizerMatch = rivalizeMatches[0];
   
-  // Mock upcoming matches - in real app this would come from scheduled_matches table
-  const upcomingMatches = [
-    {
-      id: '1',
-      opponent: 'Alex Rodriguez',
-      scheduledTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
-      opponentRank: '#145'
-    }
-  ];
+  // For now, no scheduled matches - this would come from a scheduled_matches table
+  const upcomingMatches: any[] = [];
 
   return (
     <Card className="bg-matrix-dark border-matrix-gray/30">
