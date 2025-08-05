@@ -7,47 +7,40 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { supabase } from '@/integrations/supabase/client';
-import type { AuthError } from '@supabase/supabase-js';
+import { apiClient } from '@/services/api-client';
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [message, setMessage] = useState<string>('');
+  const [session, setSession] = useState<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate('/dashboard');
-      }
-    };
-    checkUser();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        navigate('/dashboard');
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    // Check if user is already logged in via session token
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      apiClient.setToken(token);
+      navigate('/dashboard');
+    }
   }, [navigate]);
 
   const handleSignIn = async (email: string, password: string) => {
     setIsLoading(true);
     setError('');
     
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
+    try {
+      const response = await apiClient.signIn(email, password);
+      
+      // Store session token
+      if (response.session?.access_token) {
+        localStorage.setItem('auth_token', response.session.access_token);
+        apiClient.setToken(response.session.access_token);
+        navigate('/dashboard');
+      }
+    } catch (error: any) {
+      setError(error.message || 'Sign in failed');
     }
     
     setIsLoading(false);
@@ -57,20 +50,11 @@ const Auth = () => {
     setIsLoading(true);
     setError('');
     
-    const redirectUrl = `${window.location.origin}/dashboard`;
-    
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl
-      }
-    });
-
-    if (error) {
-      setError(error.message);
-    } else {
-      setMessage('Check your email for the confirmation link!');
+    try {
+      const response = await apiClient.signUp(email, password);
+      setMessage('Account created successfully! You can now sign in.');
+    } catch (error: any) {
+      setError(error.message || 'Sign up failed');
     }
     
     setIsLoading(false);

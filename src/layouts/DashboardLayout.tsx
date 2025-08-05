@@ -6,41 +6,25 @@ import {
   User, LogOut, Home, Calendar, MessageCircle, Upload, Menu, X, BarChart, Swords, Brain, Edit, ChevronDown, ChevronRight 
 } from 'lucide-react';
 import RankingsMenu from '@/components/RankingsMenu';
-import { supabase } from '@/integrations/supabase/client';
+import { apiClient } from '@/services/api-client';
 import { useCurrentUser } from '@/hooks/use-user-data';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dashboardExpanded, setDashboardExpanded] = useState(false);
-  const [session, setSession] = useState<any>(null);
-  const [authUser, setAuthUser] = useState<SupabaseUser | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { data: user } = useCurrentUser();
 
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
-      setAuthUser(session?.user ?? null);
-      
-      if (!session) {
-        navigate('/auth');
-      }
-    });
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setAuthUser(session?.user ?? null);
-      
-      if (!session) {
-        navigate('/auth');
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    // Check if user is authenticated
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      navigate('/auth');
+      return;
+    }
+    
+    apiClient.setToken(token);
   }, [navigate]);
 
   const navLinks = [
@@ -51,8 +35,9 @@ const DashboardLayout = () => {
   ];
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/');
+    localStorage.removeItem('auth_token');
+    apiClient.setToken(null);
+    navigate('/auth');
   };
 
   const handleEditProfile = () => {
@@ -102,12 +87,12 @@ const DashboardLayout = () => {
               <Avatar>
                 <AvatarImage src="" />
                 <AvatarFallback className="bg-neon-green/20 text-neon-green">
-                  {(user?.username || authUser?.email || 'U').charAt(0).toUpperCase()}
+                  {(user?.username || 'U').charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <p className="text-sm font-medium">{user?.username || 'User'}</p>
-                <p className="text-xs text-gray-400">{authUser?.email}</p>
+                <p className="text-xs text-gray-400">{user?.platform_auth_id || 'Loading...'}</p>
               </div>
               <Button
                 variant="ghost"
