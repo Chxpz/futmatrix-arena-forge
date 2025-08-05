@@ -74,12 +74,13 @@ const Auth = () => {
         return;
       }
       
+      // Use full page redirect instead of iframe/popup to avoid CSP issues
       window.location.href = response.authUrl;
     } catch (error: any) {
       setError('Failed to initiate Whop authentication. Please try again.');
-    } finally {
       setIsLoading(false);
     }
+    // Don't set loading to false here since we're redirecting away
   };
 
   return (
