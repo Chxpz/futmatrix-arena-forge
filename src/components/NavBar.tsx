@@ -42,7 +42,7 @@ const NavBar = () => {
           <Link to="/rules" className="text-sm text-gray-300 hover:text-neon-green transition-colors">Rules</Link>
           <Button 
             className="text-sm bg-neon-green text-black hover:bg-neon-green/90"
-            onClick={() => navigate('/preview')}
+            onClick={() => navigate('/dashboard')}
           >
             Get Preview
           </Button>

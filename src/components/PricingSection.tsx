@@ -45,7 +45,7 @@ const PricingCard = ({
         </div>
         
         <button 
-          onClick={() => navigate('/preview')}
+          onClick={() => navigate('/dashboard')}
           className={`py-3 px-4 rounded-md font-medium transition-all button-glow text-center
             ${highlight 
               ? 'bg-neon-green text-black hover:bg-neon-green/90' 

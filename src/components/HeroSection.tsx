@@ -1,7 +1,9 @@
 
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -58,9 +60,9 @@ const HeroSection = () => {
               Chase performance, money and visibility with our AI-driven tools designed for competitive gamers.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <a href="#pricing" className="px-6 py-3 bg-neon-green text-black font-medium rounded-md hover:bg-neon-green/90 transition-all button-glow">
+              <button onClick={() => navigate('/dashboard')} className="px-6 py-3 bg-neon-green text-black font-medium rounded-md hover:bg-neon-green/90 transition-all button-glow">
                 Get Started
-              </a>
+              </button>
               <a href="#features" className="px-6 py-3 bg-transparent border border-neon-green/50 text-neon-green rounded-md hover:bg-neon-green/10 transition-all button-glow">
                 Explore Features
               </a>
