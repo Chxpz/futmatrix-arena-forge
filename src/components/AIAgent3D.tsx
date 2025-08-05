@@ -11,7 +11,7 @@ interface AgentMeshProps {
 }
 
 const AgentMesh = ({ mousePosition, scrollOffset, isMobile }: AgentMeshProps) => {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
   const eyeLeftRef = useRef<THREE.Mesh>(null);
   const eyeRightRef = useRef<THREE.Mesh>(null);
