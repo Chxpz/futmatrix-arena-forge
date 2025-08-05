@@ -44,6 +44,33 @@ serve(async (req) => {
 
     switch (req.method) {
       case 'POST':
+        if (path === 'whop-auth-url') {
+          const { redirect_uri } = await req.json();
+          
+          const clientId = Deno.env.get('WHOP_CLIENT_ID');
+          
+          if (!clientId) {
+            return new Response(
+              JSON.stringify({ error: { message: 'Whop Client ID not configured' } }),
+              { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+
+          const params = new URLSearchParams({
+            client_id: clientId,
+            redirect_uri: redirect_uri,
+            response_type: 'code',
+            scope: 'user:read memberships:read',
+          });
+
+          const authUrl = `https://whop.com/oauth/authorize?${params.toString()}`;
+
+          return new Response(
+            JSON.stringify({ authUrl }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
         if (path === 'whop-exchange') {
           const { code, redirect_uri } = await req.json();
           

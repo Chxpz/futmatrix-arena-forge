@@ -64,13 +64,21 @@ const Auth = () => {
     }
   };
 
-  const handleWhopLogin = () => {
+  const handleWhopLogin = async () => {
     try {
-      const redirectUri = `${window.location.origin}/auth`;
-      const authUrl = whopAuth.getAuthUrl(redirectUri);
-      window.location.href = authUrl;
+      setIsLoading(true);
+      const response = await apiClient.getWhopAuthUrl();
+      
+      if (response.error) {
+        setError(response.error.message);
+        return;
+      }
+      
+      window.location.href = response.authUrl;
     } catch (error: any) {
       setError('Failed to initiate Whop authentication. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 

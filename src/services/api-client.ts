@@ -50,6 +50,13 @@ class ApiClient {
   }
 
   // Auth endpoints
+  async getWhopAuthUrl() {
+    return this.request('/auth/whop-auth-url', {
+      method: 'POST',
+      body: JSON.stringify({ redirect_uri: `${window.location.origin}/auth` }),
+    });
+  }
+
   async exchangeWhopCode(code: string, redirectUri: string) {
     return this.request('/auth/whop-exchange', {
       method: 'POST',
