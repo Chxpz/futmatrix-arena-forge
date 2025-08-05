@@ -8,8 +8,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 // Pages
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import SignUp from "./pages/SignUp";
-import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Rivalizer from "./pages/Rivalizer";
@@ -20,7 +18,6 @@ import Rankings from "./pages/Rankings";
 import Charts from "./pages/Charts";
 import ProductionChecklist from "./pages/ProductionChecklist";
 import Documentation from "./pages/Documentation";
-import Preview from "./pages/Preview";
 import PreviewChoice from "./pages/PreviewChoice";
 import PreviewDashboard from "./pages/PreviewDashboard";
 import PreviewCoach from "./pages/PreviewCoach";
@@ -40,12 +37,9 @@ const App = () => (
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Index />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/rules" element={<Documentation />} />
           
           {/* Preview routes */}
-          <Route path="/preview" element={<Preview />} />
           <Route path="/preview-choice" element={<PreviewChoice />} />
           <Route path="/preview-dashboard" element={<PreviewDashboard />} />
           <Route path="/preview-coach" element={<PreviewCoach />} />

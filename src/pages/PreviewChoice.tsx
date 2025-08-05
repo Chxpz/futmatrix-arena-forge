@@ -17,15 +17,9 @@ const PreviewChoice = () => {
   const [showTokenModal, setShowTokenModal] = useState(false);
 
   useEffect(() => {
-    // Check if user has preview access
-    const hasPreviewAccess = localStorage.getItem('previewAccess');
-    if (!hasPreviewAccess) {
-      navigate('/preview');
-    } else {
-      // Show token modal when page renders
-      setShowTokenModal(true);
-    }
-  }, [navigate]);
+    // Show token modal when page renders
+    setShowTokenModal(true);
+  }, []);
 
   const handleStartPreview = () => {
     navigate('/preview-dashboard');

@@ -11,20 +11,13 @@ const PreviewDashboard = () => {
   const [rivalizerInteractions, setRivalizerInteractions] = useState(0);
 
   useEffect(() => {
-    // Check if user has preview access
-    const hasPreviewAccess = localStorage.getItem('previewAccess');
-    if (!hasPreviewAccess) {
-      navigate('/preview');
-      return;
-    }
-
     // Load interaction counts
     const savedCoachInteractions = parseInt(localStorage.getItem('coachInteractions') || '0');
     const savedRivalizerInteractions = parseInt(localStorage.getItem('rivalizerInteractions') || '0');
     
     setCoachInteractions(savedCoachInteractions);
     setRivalizerInteractions(savedRivalizerInteractions);
-  }, [navigate]);
+  }, []);
 
   const handleAgentClick = (agentType: 'coach' | 'rivalizer') => {
     const currentInteractions = agentType === 'coach' ? coachInteractions : rivalizerInteractions;
