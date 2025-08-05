@@ -1,1 +1,7 @@
 project_id = "qwwahtsehozxbjzeiajt"
+
+[functions.auth]
+verify_jwt = false
+
+[functions.whop-webhooks]
+verify_jwt = false
