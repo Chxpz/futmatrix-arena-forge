@@ -18,7 +18,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Verify auth token
+    // Verify Whop token and get user
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
@@ -27,13 +27,45 @@ serve(async (req) => {
       );
     }
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(authHeader.replace('Bearer ', ''));
-    if (authError || !user) {
+    const token = authHeader.replace('Bearer ', '');
+    
+    // Verify token with Whop API
+    const whopResponse = await fetch('https://api.whop.com/api/v1/me', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!whopResponse.ok) {
       return new Response(
-        JSON.stringify({ error: 'Invalid token' }),
+        JSON.stringify({ error: 'Invalid Whop token' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+    
+    const whopUser = await whopResponse.json();
+    
+    // Get the user from our database
+    const { data: user, error: userError } = await supabaseClient
+      .from('users')
+      .select('id')
+      .eq('whop_id', whopUser.id)
+      .single();
+    
+    if (userError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'User not found in database' }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    // Set the user context for RLS policies
+    await supabaseClient.rpc('set_config', {
+      setting_name: 'app.current_user_id',
+      setting_value: user.id,
+      is_local: true
+    });
 
     const url = new URL(req.url);
     const path = url.pathname.split('/').slice(-2); // Get last two segments

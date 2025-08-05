@@ -33,16 +33,32 @@ serve(async (req) => {
       );
     }
 
-    // TODO: Verify Whop webhook signature
-    // const isValid = verifyWhopSignature(body, whopSignature);
-    // if (!isValid) {
-    //   return new Response(
-    //     JSON.stringify({ error: 'Invalid signature' }),
-    //     { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    //   );
-    // }
-
-    const webhookData = await req.json();
+    // Verify Whop webhook signature
+    const webhookSecret = Deno.env.get('WHOP_WEBHOOK_SECRET');
+    let webhookData;
+    
+    if (webhookSecret) {
+      const body = await req.text();
+      const crypto = await import('node:crypto');
+      const expectedSignature = crypto.createHmac('sha256', webhookSecret)
+        .update(body)
+        .digest('hex');
+      
+      const providedSignature = whopSignature.replace('sha256=', '');
+      
+      if (expectedSignature !== providedSignature) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid webhook signature' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      // Parse the body since we consumed it for verification
+      webhookData = JSON.parse(body);
+    } else {
+      console.warn('WHOP_WEBHOOK_SECRET not set - webhook signature verification disabled');
+      webhookData = await req.json();
+    }
     console.log('Whop webhook received:', webhookData);
 
     // Handle different webhook events

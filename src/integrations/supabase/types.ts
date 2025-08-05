@@ -54,6 +54,13 @@ export type Database = {
             foreignKeyName: "agent_interactions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "rivalizer_matchmaking_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "agent_interactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -168,6 +175,13 @@ export type Database = {
             foreignKeyName: "matches_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "rivalizer_matchmaking_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "matches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -207,6 +221,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "coach_user_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "penalties_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "rivalizer_matchmaking_view"
             referencedColumns: ["user_id"]
           },
           {
@@ -271,6 +292,13 @@ export type Database = {
             foreignKeyName: "processed_metrics_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "rivalizer_matchmaking_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "processed_metrics_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -317,6 +345,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "coach_user_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "replay_uploads_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "rivalizer_matchmaking_view"
             referencedColumns: ["user_id"]
           },
           {
@@ -375,6 +410,13 @@ export type Database = {
             foreignKeyName: "streaming_rewards_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "rivalizer_matchmaking_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "streaming_rewards_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -426,6 +468,13 @@ export type Database = {
             foreignKeyName: "training_plans_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "rivalizer_matchmaking_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "training_plans_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -462,6 +511,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "coach_user_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_plans_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "rivalizer_matchmaking_view"
             referencedColumns: ["user_id"]
           },
           {
@@ -531,6 +587,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "coach_user_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_stats_summary_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "rivalizer_matchmaking_view"
             referencedColumns: ["user_id"]
           },
           {
@@ -623,34 +686,7 @@ export type Database = {
           user_id: string | null
           win_rate: number | null
         }
-        Insert: {
-          avg_overall_performance?: number | null
-          matches_played?: number | null
-          user_id?: string | null
-          win_rate?: number | null
-        }
-        Update: {
-          avg_overall_performance?: number | null
-          matches_played?: number | null
-          user_id?: string | null
-          win_rate?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_stats_summary_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "coach_user_view"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_stats_summary_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Functions: {
